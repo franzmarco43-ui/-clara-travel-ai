@@ -21,6 +21,7 @@ exports.handler = async function (event) {
 
   try {
     const apiKey = process.env.GROQ_API_KEY;
+    console.log("CLARA_KEY_CHECK:", Boolean(apiKey));
 
     if (!apiKey) {
       throw new Error("GROQ_API_KEY fehlt in Netlify.");
