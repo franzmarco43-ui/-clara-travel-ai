@@ -21,7 +21,7 @@ exports.handler = async function (event) {
 
   try {
     const apiKey = process.env.GROQ_API_KEY;
-   const supabaseUrl = "https://ufsglnhebhbmadwzftau.supabase.co";
+   const supabaseUrl = process.env.SUPABASE_PROJECT_URL;
     const supabaseKey = process.env.SUPABASE_ANON_KEY;
 
     if (!apiKey) {
