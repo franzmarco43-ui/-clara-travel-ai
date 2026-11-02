@@ -346,37 +346,37 @@ if('speechSynthesis'in window){loadClaraVoices();speechSynthesis.onvoiceschanged
 function claraSpeechText(value){
   // Expand time abbreviations and prepare Markdown for spoken German.
   let spoken=String(value||'')
-    .replace(/(\\d+(?:[.,]\\d+)?)\\s*(?:h|std\\.?|stunden?)\\s*(\\d+(?:[.,]\\d+)?)\\s*(?:min\\.?|minuten?)\\b/gi,(_,hours,minutes)=>{
+    .replace(/(\d+(?:[.,]\d+)?)\s*(?:h|std\.?|stunden?)\s*(\d+(?:[.,]\d+)?)\s*(?:min\.?|minuten?)\b/gi,(_,hours,minutes)=>{
       const hourLabel=Number(hours.replace(',','.'))===1?'Stunde':'Stunden';
       const minuteLabel=Number(minutes.replace(',','.'))===1?'Minute':'Minuten';
       return hours+' '+hourLabel+' und '+minutes+' '+minuteLabel;
     })
-    .replace(/(\\d+)\\s*[-‐‑‒–—]\\s*(\\d+)\\s*(?:min\\.?|minuten?)\\b/gi,'$1 bis $2 Minuten')
-    .replace(/(\\d+)\\s*[-‐‑‒–—]\\s*(\\d+)\\s*(?:h|std\\.?|stunden?)\\b/gi,'$1 bis $2 Stunden')
-    .replace(/(\\d+(?:[.,]\\d+)?)\\s*(?:min\\.?|minuten?)\\b/gi,(_,n)=>n+' '+(Number(n.replace(',','.'))===1?'Minute':'Minuten'))
-    .replace(/(\\d+(?:[.,]\\d+)?)\\s*(?:h|std\\.?|stunden?)\\b/gi,(_,n)=>n+' '+(Number(n.replace(',','.'))===1?'Stunde':'Stunden'));
+    .replace(/(\d+)\s*[-‐‑‒–—]\s*(\d+)\s*(?:min\.?|minuten?)\b/gi,'$1 bis $2 Minuten')
+    .replace(/(\d+)\s*[-‐‑‒–—]\s*(\d+)\s*(?:h|std\.?|stunden?)\b/gi,'$1 bis $2 Stunden')
+    .replace(/(\d+(?:[.,]\d+)?)\s*(?:min\.?|minuten?)\b/gi,(_,n)=>n+' '+(Number(n.replace(',','.'))===1?'Minute':'Minuten'))
+    .replace(/(\d+(?:[.,]\d+)?)\s*(?:h|std\.?|stunden?)\b/gi,(_,n)=>n+' '+(Number(n.replace(',','.'))===1?'Stunde':'Stunden'));
   return spoken
-    .replace(/\\x60\\x60\\x60[\\s\\S]*?\\x60\\x60\\x60/g,' ')
+    .replace(/\x60\x60\x60[\s\S]*?\x60\x60\x60/g,' ')
     .replace(/<[^>]*>/g,' ')
-    .replace(/!?\\[([^\\]]+)\\]\\([^)]*\\)/g,'$1')
-    .replace(/^\\s*\\|?\\s*:?-{3,}.*$/gm,' ')
-    .replace(/\\r\\n?/g,'\\n')
-    .replace(/^\\s*#{1,6}\\s*/gm,'')
-    .replace(/^\\s*>+\\s*/gm,'')
-    .replace(/\\n(?=\\s*(?:[-*+•▪◦‣]|\\d+[.)])\\s+)/g,'. ')
-    .replace(/\\n{2,}/g,'. ')
-    .replace(/\\n+/g,' ')
-    .replace(/(^|[.!?;:]\\s+)(?:[-*+•▪◦‣]|\\d+[.)])\\s+/g,'$1')
-    .replace(/\\*\\*(.*?)\\*\\*/g,'$1')
+    .replace(/!?\[([^\]]+)\]\([^)]*\)/g,'$1')
+    .replace(/^\s*\|?\s*:?-{3,}.*$/gm,' ')
+    .replace(/\r\n?/g,'\n')
+    .replace(/^\s*#{1,6}\s*/gm,'')
+    .replace(/^\s*>+\s*/gm,'')
+    .replace(/\n(?=\s*(?:[-*+•▪◦‣]|\d+[.)])\s+)/g,'. ')
+    .replace(/\n{2,}/g,'. ')
+    .replace(/\n+/g,' ')
+    .replace(/(^|[.!?;:]\s+)(?:[-*+•▪◦‣]|\d+[.)])\s+/g,'$1')
+    .replace(/\*\*(.*?)\*\*/g,'$1')
     .replace(/__(.*?)__/g,'$1')
-    .replace(/\\*(.*?)\\*/g,'$1')
+    .replace(/\*(.*?)\*/g,'$1')
     .replace(/_(.*?)_/g,'$1')
-    .replace(/\\x60([^\\x60]*)\\x60/g,'$1')
-    .replace(/[~#*_>\\x60]/g,' ')
-    .replace(/[{}\\[\\]<>]/g,' ')
-    .replace(/\\s*([,;:])\\s*/g,'$1 ')
-    .replace(/\\s+([.!?])\\s*/g,'$1 ')
-    .replace(/\\s+/g,' ')
+    .replace(/\x60([^\x60]*)\x60/g,'$1')
+    .replace(/[~#*_>\x60]/g,' ')
+    .replace(/[{}\[\]<>]/g,' ')
+    .replace(/\s*([,;:])\s*/g,'$1 ')
+    .replace(/\s+([.!?])\s*/g,'$1 ')
+    .replace(/\s+/g,' ')
     .trim();
 }
 function setClaraSpeaking(active){['avatarHome','avatarChat'].forEach(id=>document.getElementById(id)?.classList.toggle('speaking',active));}
