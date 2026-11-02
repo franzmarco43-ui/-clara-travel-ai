@@ -191,9 +191,9 @@ exports.handler = async function (event) {
           .filter(place => place.rollatorAccess)
       : [];
     const rollatorContext = rollatorRecordsForPrompt.length
-      ? "\\n\\nROLLATOR-WEGEBEURTEILUNG (ortsspezifisch; keine pauschale Barrierefreiheitszusage):\\n" +
+      ? "\n\nROLLATOR-WEGEBEURTEILUNG (ortsspezifisch; keine pauschale Barrierefreiheitszusage):\n" +
         JSON.stringify({records:rollatorRecordsForPrompt}) +
-        "\\nVerwende diese Angaben ausdrücklich in der Antwort. Unterscheide Rollator und Rollstuhl; Rollstuhl-Angaben sind keine automatische Rollator-Freigabe. " +
+        "\nVerwende diese Angaben ausdrücklich in der Antwort. Unterscheide Rollator und Rollstuhl; Rollstuhl-Angaben sind keine automatische Rollator-Freigabe. " +
         "Bewerte konkrete Teilstrecken nach Untergrund, Steigung, Stufen, Bordsteinen, Wegbreite, Länge, Sitzgelegenheiten, Toiletten, Baustellen und Rückkehr zum Schiff. " +
         "Wenn Liegeplatz oder persönliche Gehfähigkeit entscheidend sind, stelle eine gezielte Rückfrage statt Wegzeiten zu erfinden. " +
         "Kennzeichne ungeprüfte Strecken klar und empfehle bei Unsicherheit die Bestätigung durch Betreiber oder Tourist-Information."
