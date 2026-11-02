@@ -249,11 +249,11 @@
       "type": "river_stop",
       "focus": "Kompakte historische Hauptstadt an der Donau mit Burg, Altstadt und lebendiger Café-Kultur.",
       "highlights": [
-        "Burg Bratislava",
-        "Altstadt und Hauptplatz",
-        "Martinsdom",
-        "Altes Rathaus",
-        "Donaupromenade"
+        "Burg Bratislava mit Terrassen und Aussicht über die Stadt und die Donau",
+        "Altstadt und Hauptplatz (Hlavné námestie)",
+        "Altes Rathaus – historischer Gebäudekomplex und Stadtmuseum; vom Turm bietet sich ein Blick über die Altstadt",
+        "Martinsdom – gotische Kathedrale und ehemalige Krönungskirche ungarischer Könige",
+        "Donauufer und Promenade"
       ],
       "food": [
         "Bryndzové halušky (Kartoffelspätzle mit Schafskäse)",
@@ -261,9 +261,12 @@
         "lokale Backwaren und slowakische Küche"
       ],
       "guestAdvice": [
-        "Die Altstadt eignet sich gut für einen kompakten Rundgang, sofern der Liegeplatz zentral liegt.",
-        "Der Weg zur Burg führt bergauf; Zeit und Mobilität der Gäste berücksichtigen.",
-        "Öffnungszeiten und Eintritt des Historischen Museums in der Burg vorab prüfen."
+        "Vor der Routenplanung den tatsächlichen Liegeplatz bzw. das zugewiesene Ponton beim Schiff erfragen. Nie einen Anleger oder eine Pontonnummer raten.",
+        "Die Altstadt ist von zentralen Anlegestellen häufig zu Fuß erreichbar; die tatsächliche Gehzeit hängt vom Liegeplatz und den Bedingungen an Land ab.",
+        "Die Burg liegt auf einem Hügel. Slovakia.travel gibt den Fußweg vom Stadtzentrum mit ungefähr 15 Minuten an; das ist der einfache Weg bergauf. Für Hin- und Rückweg, Aussicht und Besichtigung deutlich mehr Zeit einplanen.",
+        "Bei nur etwa drei Stunden Aufenthalt und einem geplanten Essen sollte die Burg als Option gelten; ein vollständiger Burgbesuch passt nicht ohne Weiteres in einen kurzen Rundgang.",
+        "Einen Rückkehrpuffer vor der All-aboard-Zeit einplanen und keine knappe Rückkehr auf die letzte Minute empfehlen.",
+        "Bei eingeschränkter Mobilität Steigungen, Pflaster, Bordsteine und den Zugang vom tatsächlichen Liegeplatz berücksichtigen."
       ],
       "seasonality": [
         "Wein-, Kultur- und Weihnachtsmärkte nur mit bestätigtem Veranstaltertermin nennen."
@@ -277,7 +280,20 @@
           "title": "Visit Bratislava – Burg Bratislava",
           "url": "https://www.visitbratislava.com/places/bratislava-castle/"
         }
-      ]
+      ],
+      "itineraryCautions": [
+        "Die offizielle Beschreibung des Alten Rathauses nennt den historischen Gebäudekomplex, das Stadtmuseum und den Aussichtsturm. Eine astronomische Uhr nicht behaupten, solange keine verlässliche offizielle Quelle dafür vorliegt.",
+        "Den Martinsdom als gotische Kathedrale und ehemalige Krönungskirche beschreiben; nicht unbelegt als ältestes Sakralgebäude der Stadt bezeichnen.",
+        "Keine pauschalen 10-Minuten-Angaben für den Burgaufstieg machen. Die offizielle nationale Tourismusinformation nennt etwa 15 Minuten vom Stadtzentrum zur Burg zu Fuß; für Rückweg, Aufenthalt und Besuch zusätzliche Zeit reservieren.",
+        "Kein bestimmtes Burg-Café oder eine Caféterrasse als verlässlichen Aussichtspunkt empfehlen, sofern Existenz und Öffnung nicht aktuell geprüft wurden.",
+        "Bryndzové halušky und Kapustnica als bekannte slowakische Gerichte nennen, aber nicht behaupten, dass die meisten Restaurants sie anbieten. Tageskarte und Zutaten vor Ort prüfen.",
+        "Anlegernamen wie Mlynské Nivy oder 'Mestské Námestie' nicht als Kreuzfahrtliegeplätze nennen, außer der konkrete Betreiber bestätigt sie für die Reise."
+      ],
+      "routeSuggestion": {
+        "title": "Kompakter Landgang bei rund drei Stunden",
+        "guidance": "Bei zentralem Liegeplatz Schwerpunkt auf Donauufer, Altstadt/Hauptplatz und Martinsdom legen. Eine Essenspause und ausreichend Rückkehrpuffer priorisieren. Die Burg nur ergänzen, wenn tatsächliche Gehzeit, Mobilität, Öffnung und All-aboard-Zeit dies zulassen; sie kann alternativ per bestätigtem Transfer erreicht werden.",
+        "timings": "Keine minutengenaue Standardroute ohne bestätigten Liegeplatz, Gehtempo und konkretes Abfahrts-/All-aboard-Zeitfenster ausgeben."
+      }
     },
     {
       "name": "Esztergom",
