@@ -1,6 +1,6 @@
 {
   "datasetTitle": "Schleusen der Donau",
-  "sourceNote": "Technische Bestandsdaten. Stromkilometer und einzelne Kammermaße können je nach Quelle/Referenzachse abweichen. Keine Live-Betriebsdaten.",
+  "sourceNote": "18 Schleusen der Donau-Hauptwasserstraße. Technische Werte (Mindest-Drempeltiefe, lichte Brückenhöhe, maximaler Haltungsunterschied und höchstzulässige Verbandsabmessungen) nach Donaukommission; Stromkilometer, Kammerabmessungen, Kammeranzahl, UKW-Kanal und Telefonnummern mit DoRIS abgeglichen. Abweichende Bezugsachsen oder Rundungen sind im jeweiligen Eintrag notiert. Statische Referenz – keine Live-Betriebsdaten.",
   "count": 18,
   "records": [
     {
