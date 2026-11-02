@@ -1,0 +1,106 @@
+{
+  "id": "passau",
+  "name": "Passau",
+  "country": "Deutschland",
+  "region": "Niederbayern",
+  "languages": ["de", "en", "nl", "fr", "ro"],
+  "summary": {
+    "de": "Passau ist die Dreiflüssestadt: Donau, Inn und Ilz treffen an der Altstadt zusammen. Das barocke Stadtbild, der Dom St. Stephan und die Veste Oberhaus prägen den Besuch.",
+    "en": "Passau is the City of Three Rivers: the Danube, Inn and Ilz meet beside the old town. Its Baroque streetscape, St Stephen's Cathedral and Veste Oberhaus define the visit.",
+    "nl": "Passau is de stad van de drie rivieren: Donau, Inn en Ilz komen samen bij de oude binnenstad. Het barokke stadsbeeld, de Stephansdom en de Veste Oberhaus bepalen het bezoek.",
+    "fr": "Passau est la ville des trois rivières : le Danube, l'Inn et l'Ilz se rejoignent près de la vieille ville. Son paysage baroque, la cathédrale Saint-Étienne et la forteresse Veste Oberhaus marquent la visite.",
+    "ro": "Passau este orașul celor trei râuri: Dunărea, Inn și Ilz se întâlnesc lângă centrul vechi. Peisajul baroc, Catedrala Sfântul Ștefan și fortăreața Veste Oberhaus definesc vizita."
+  },
+  "highlights": [
+    {
+      "name": "Dreiflüsseeck",
+      "category": "Natur und Aussicht",
+      "description": "Aussichtspunkt am Zusammenfluss von Donau, Inn und Ilz. Die unterschiedlich gefärbten Wasser können je nach Wetter und Strömung sichtbar sein; die Farben sind nicht jederzeit gleich deutlich.",
+      "visit_note": "Gut zu Fuß aus der Altstadt erreichbar; bei Hochwasser oder Sperrungen örtliche Hinweise beachten."
+    },
+    {
+      "name": "Dom St. Stephan",
+      "category": "Kirche und Kultur",
+      "description": "Barocker Dom mit bedeutender Orgel. Die offizielle Tourismusinformation hebt die Domorgel als größte Domorgel der Welt hervor.",
+      "visit_note": "Gottesdienste und Proben können Besichtigungen einschränken; aktuelle Besuchsregeln vor Ort prüfen."
+    },
+    {
+      "name": "Veste Oberhaus",
+      "category": "Geschichte und Aussicht",
+      "description": "Hoch über der Stadt gelegene Burganlage, 1219 gegründet. Das Oberhausmuseum vermittelt die Geschichte Passaus und der Region; Aussichtspunkte bieten einen Blick auf Altstadt und Flussmündung.",
+      "visit_note": "Der Aufstieg ist steil. Shuttle- und Busangebote sowie Barrierefreiheit vorab prüfen; nicht alle Bereiche sind barrierefrei."
+    },
+    {
+      "name": "Altstadt und Residenzplatz",
+      "category": "Architektur und Spaziergang",
+      "description": "Barock geprägte Altstadt mit engen Gassen, Residenzplatz und Wittelsbacherbrunnen.",
+      "visit_note": "Geeignet für einen gemütlichen Rundgang; Kopfsteinpflaster und Steigungen berücksichtigen."
+    },
+    {
+      "name": "Altes Rathaus",
+      "category": "Geschichte",
+      "description": "Historisches Rathaus mit repräsentativen Rathaussälen und markantem Standort an der Donau.",
+      "visit_note": "Innenbesichtigung und Öffnungszeiten aktuell prüfen."
+    },
+    {
+      "name": "Höllgasse",
+      "category": "Kunst und Handwerk",
+      "description": "Künstlergasse in der Altstadt mit Ateliers, Werkstätten und Galerien.",
+      "visit_note": "Öffnungszeiten einzelner Ateliers variieren."
+    }
+  ],
+  "excursions": [
+    {
+      "name": "Kompakter Altstadtrundgang",
+      "duration_minutes": "60–90",
+      "effort": "leicht bis mittel",
+      "route": ["Dom St. Stephan", "Residenzplatz", "Altes Rathaus", "Dreiflüsseeck"],
+      "description": "Eine kurze Orientierung zu den wichtigsten Punkten der Altstadt. Dauer hängt von Fotostopps und Innenbesichtigungen ab."
+    },
+    {
+      "name": "Passau mit Panorama",
+      "duration_minutes": "2–3 Stunden",
+      "effort": "mittel bis anspruchsvoll",
+      "route": ["Altstadt", "Dreiflüsseeck", "Veste Oberhaus"],
+      "description": "Kombiniert Altstadt und Aussicht. Der Weg zur Veste ist steil; alternativ Shuttle/Bus nach aktuellem Fahrplan prüfen."
+    },
+    {
+      "name": "Dreiflüsse-Schifffahrt",
+      "duration_minutes": 45,
+      "effort": "leicht",
+      "route": ["Anlegestelle A7/A8 laut Anbieterangabe", "Dreiflüsseeck", "Panoramablick auf Altstadt und Veste"],
+      "description": "Stadtrundfahrt vom Wasser aus. Abfahrten, Preise und Anlegestelle sind saisonabhängig und müssen vor Empfehlung live geprüft werden."
+    }
+  ],
+  "cruise_guest_guidance": {
+    "important": "Nicht jede Flusskreuzfahrt-Anlegestelle liegt direkt an der Altstadt.",
+    "central_moorings": "Einige Liegeplätze befinden sich an der Donaulände nahe der Altstadt; die konkreten Plätze A1–A5 bzw. A13–A14 haben laut offizieller Tourismusseite unterschiedliche Ausstiege.",
+    "lindau": "Lände Lindau liegt etwa 3 km flussabwärts außerhalb der Stadt; laut offizieller Tourismusseite Verbindung mit Citybus Linie 3.",
+    "racklau": "Winterhafen Racklau liegt knapp 2 km flussaufwärts; laut offizieller Tourismusseite Buslinien 8/9 oder 11 bis Stelzhammer Straße, danach etwa 500 m Fußweg.",
+    "rule": "Clara muss vor jeder konkreten Wegbeschreibung den tatsächlichen Liegeplatz bzw. die Anlegestellennummer erfragen. Niemals pauschal behaupten, jedes Schiff liege fußläufig zur Altstadt."
+  },
+  "food": {
+    "guidance": "Passau liegt in Niederbayern und nahe der österreichischen Grenze. Clara kann bayerische und österreichisch geprägte Wirtshausküche als regionale Orientierung nennen, soll aber konkrete Gerichte, Restaurants, Preise und Verfügbarkeit nur nach aktueller Prüfung empfehlen.",
+    "suggestions_to_verify": ["Bayerische Wirtshausküche", "Knödelgerichte", "Fischgerichte aus der Donau-/Inn-Region", "Kuchen und Kaffeehausangebote"],
+    "allergy_note": "Bei Allergien oder Unverträglichkeiten immer direkt beim Restaurant nach Zutaten und Kreuzkontamination fragen."
+  },
+  "local_tips": [
+    "Für ein klassisches Stadtpanorama nennt Passau Tourismus den Blick von der Innstadt auf die Altstadt als Fotospot.",
+    "Die Höllgasse eignet sich für einen ruhigeren Abstecher zu Kunsthandwerk und Ateliers.",
+    "Bei wenig Zeit zuerst den tatsächlichen Schiffsliegeplatz klären und den Rundgang danach planen."
+  ],
+  "live_data_policy": {
+    "must_verify": ["Öffnungszeiten", "Eintrittspreise", "Veranstaltungen", "Fahrpläne", "Anlegestellen und Liegeplätze", "Wetter", "Hochwasser und Sperrungen", "Restaurantöffnungszeiten"],
+    "never_invent": true,
+    "show_checked_at": true,
+    "if_not_live_checked": "Sag ausdrücklich, dass die Information vor Ort oder über die offizielle Quelle geprüft werden muss."
+  },
+  "sources": [
+    {"title": "Passau Tourismus – Sehenswürdigkeiten", "url": "https://tourismus.passau.de/passau-sehen-erleben/sehenswuerdigkeiten-in-passau/"},
+    {"title": "Passau Tourismus – Donaukreuzfahrten und Anlegestellen", "url": "https://tourismus.passau.de/service-infos/donaukreuzfahrten/"},
+    {"title": "Passau Tourismus – Veste Oberhaus", "url": "https://tourismus.passau.de/passau-sehen-erleben/sehenswuerdigkeiten-in-passau/burganlage-veste-oberhaus/"},
+    {"title": "Passau Tourismus – Schifffahrten", "url": "https://tourismus.passau.de/passau-sehen-erleben/fuehrungen-rundfahrten/schifffahrten/"},
+    {"title": "Germany Travel – Passau", "url": "https://www.germany.travel/de/staedte-kultur/passau.html"}
+  ],
+  "last_reviewed": "2026-11-02"
+}
