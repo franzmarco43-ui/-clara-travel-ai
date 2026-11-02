@@ -231,7 +231,7 @@ function renderLockList(){
   const country=document.getElementById('lockCountry')?.value||'';
   const matches=danubeLockRecords.map((lock,index)=>({lock,index})).filter(({lock})=>{
     const text=[lock.name,lock.country,lock.countryCode,lock.riverKm,lock.chamberSize].join(' ').toLowerCase();
-    return (!q||text.includes(q))&&(!country||lock.countryCode===country);
+    return (!q||text.includes(q))&&(!country||lock.countryCode===country||lock.countryCode.split('/').includes(country));
   });
   host.innerHTML=matches.map(({lock,index})=>'<button type="button" class="lock-row '+(index===selectedLockIndex?'active':'')+'" onclick="selectLock('+index+')"><span class="route-number">'+(index+1)+'</span><span><b>'+escapeLockHtml(lock.name)+'</b><small>'+escapeLockHtml(lock.country)+' · km '+escapeLockHtml(lock.riverKm)+'</small></span></button>').join('');
   const status=document.getElementById('lockStatus');
