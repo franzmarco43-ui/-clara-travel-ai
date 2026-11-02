@@ -140,6 +140,7 @@ function filterRelevantResearchResults(message, results) {
       if (inUrl) score += 3;
       if (inContent) score += 1;
     }
+    if (item.likelyOfficial) score += 2;
     return {item, matches, score};
   }).filter(entry => entry.matches >= minimumMatches && entry.score > 0)
     .sort((a, b) => b.score - a.score);
