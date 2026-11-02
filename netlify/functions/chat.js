@@ -190,6 +190,16 @@ exports.handler = async function (event) {
         String(danubeDestinationsKnowledge.rollatorNotice || "Bitte kläre vor dem Landgang mit Reederei oder Tourist-Information, ob die geplante Strecke für dich passend ist.") +
         "\nWichtig: Dies ist ausschließlich ein allgemeiner Hinweis. Gib KEINE konkrete Aussage oder Bewertung zur Eignung/Barrierefreiheit einer Stadt, Sehenswürdigkeit oder Wegstrecke. Empfiehl oder verwerfe keine bestimmten Wege. Erfinde keine Angaben zu Pflaster, Steigung, Stufen oder Bordsteinen an einem konkreten Ort. Verweise nur darauf, die geplante Strecke und den tatsächlichen Liegeplatz vorab mit Reederei oder örtlicher Tourist-Information abzuklären."
       : "";
+
+    // Fail closed for rollator questions until live, source-backed research is integrated.
+    // Do not pass these questions to the language model, which could otherwise infer route suitability.
+    if (asksAboutRollator) {
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ reply: danubeDestinationsKnowledge.rollatorNotice })
+      };
+    }
     // Technical reference data for all 18 locks on the Danube main waterway.
     // This is static reference information, not live operating status.
     const asksAboutLocks = /schleus|locks?|lock chamber|lock dimensions|kammermaß|kammerlänge|kammerbreite|funkkanal|strom.?km|haltungsunterschied|hubhöhe/i.test(userMessage);
