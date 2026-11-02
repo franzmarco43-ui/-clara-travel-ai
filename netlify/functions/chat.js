@@ -158,17 +158,17 @@ exports.handler = async function (event) {
     const asksAboutLocks = /schleus|lock chamber|lock dimensions|kammermaß|kammerlänge|kammerbreite|funkkanal|strom.?km|haltungsunterschied|hubhöhe/i.test(userMessage);
     let lockKnowledge = "";
     if (asksAboutLocks) {
-      const normalize = value => String(value || "").toLowerCase().normalize("NFD").replace(/[\\u0300-\\u036f]/g, "");
+      const normalize = value => String(value || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
       const query = normalize(userMessage);
       const matchedLocks = danubeLocksKnowledge.records.filter(lock => {
-        const names = [lock.name, lock.name.replace(/\\s*\\([^)]*\\)/g, ""), lock.name.replace("Eisernes Tor", "Iron Gate")];
+        const names = [lock.name, lock.name.replace(/\s*\([^)]*\)/g, ""), lock.name.replace("Eisernes Tor", "Iron Gate")];
         return names.some(name => name && query.includes(normalize(name)));
       });
       const records = matchedLocks.length ? matchedLocks : danubeLocksKnowledge.records;
       lockKnowledge =
-        "\\n\\nTECHNISCHE SCHLEUSEN-DATENBANK (statische Referenz, keine Live-Betriebsdaten):\\n" +
+        "\n\nTECHNISCHE SCHLEUSEN-DATENBANK (statische Referenz, keine Live-Betriebsdaten):\n" +
         JSON.stringify({datasetTitle:danubeLocksKnowledge.datasetTitle,sourceNote:danubeLocksKnowledge.sourceNote,records}) +
-        "\\nVerwende die Daten für Kammermaße, Anzahl der Kammern, Stromkilometer, Funkkanal, Telefonnummer und die hinterlegten technischen Zusatzwerte. " +
+        "\nVerwende die Daten für Kammermaße, Anzahl der Kammern, Stromkilometer, Funkkanal, Telefonnummer und die hinterlegten technischen Zusatzwerte. " +
         "Unterscheide Kammerabmessungen von zulässigen Schiffs-/Verbandsabmessungen. Bei abweichenden Werten nenne den Quellenhinweis aus dem Datensatz. " +
         "Behaupte niemals, dass ein Wert den aktuellen Schleusenstatus, Wartezeit, Wasserstand oder eine momentane Sperre beschreibt. " +
         "Verweise für Live-Status und Sperrungen auf DoRIS / viadonau.";
