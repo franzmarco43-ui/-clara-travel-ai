@@ -180,7 +180,8 @@ exports.handler = async function (event) {
         "\nNutze die Einträge als redaktionelle Faktenbasis. Antworte in der Sprache der Anfrage. " +
         "Unterscheide feste Ortsinformationen von veränderlichen Informationen. Erfinde keine aktuellen Öffnungszeiten, Preise, Fahrpläne, Liegeplätze oder Verfügbarkeiten. " +
         "Bei Flusskreuzfahrtfragen vor konkreten Wegbeschreibungen nach dem tatsächlichen Liegeplatz fragen, wenn er nicht genannt wurde. " +
-        "Berücksichtige Liegezeit, Mobilität, Steigungen, Transfers und Rückkehr zum Schiff."
+        "Berücksichtige Liegezeit, Mobilität, Steigungen, Transfers und Rückkehr zum Schiff. " +
+        "Wenn Budapest gefragt ist und im passenden Datensatz nearbyExcursion enthalten ist, erwähne das Donauknie als eigenständige Ausflugsregion nördlich von Budapest. Unterscheide es klar vom Budapester Stadtgebiet und nenne Szentendre, Visegrád und Esztergom als bekannte Orte. Behaupte keine aktuellen Fahrzeiten, Fahrpläne oder Ausflugsmöglichkeiten ohne Live-Quellenprüfung."
       : "";
 
     // Neutral rollator notice only. Do not assess or recommend specific routes.
