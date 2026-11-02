@@ -1,0 +1,606 @@
+{
+  "datasetTitle": "Claras Donau-Reisewissen",
+  "version": 1,
+  "lastReviewed": "2026-11-02",
+  "description": "Redaktionelle Basisinformationen für Reiseberatung. Kein Ersatz für tagesaktuelle Angaben zu Öffnungszeiten, Preisen, Anlegestellen, Verkehrsverbindungen, Wetter oder behördlichen Hinweisen.",
+  "records": [
+    {
+      "name": "Passau",
+      "aliases": [
+        "Passau",
+        "Dreiflüsseeck",
+        "Veste Oberhaus"
+      ],
+      "country": "Deutschland",
+      "type": "river_stop",
+      "focus": "Dreiflüssestadt mit barocker Altstadt am Zusammenfluss von Donau, Inn und Ilz.",
+      "highlights": [
+        "Dreiflüsseeck",
+        "Dom St. Stephan und Domorgel",
+        "Veste Oberhaus mit Stadtpanorama",
+        "Residenzplatz und Altes Rathaus",
+        "Künstlergasse Höllgasse"
+      ],
+      "food": [
+        "Niederbayerische und österreichisch geprägte Wirtshausküche",
+        "Knödelgerichte",
+        "regionale Fischgerichte",
+        "Kuchen und Kaffeehausangebote"
+      ],
+      "guestAdvice": [
+        "Vor jeder Wegbeschreibung den konkreten Schiffs-Liegeplatz oder die Anlegestellennummer erfragen; nicht alle Liegeplätze liegen direkt an der Altstadt.",
+        "Für einen kurzen Rundgang Dreiflüsseeck, Altstadt und Dom kombinieren.",
+        "Der Weg zur Veste Oberhaus ist steil; Transfermöglichkeiten und Zugänglichkeit vorab prüfen."
+      ],
+      "seasonality": [
+        "Stadtführungen, Kulturveranstaltungen und saisonale Märkte nur mit aktuellen Veranstalterangaben nennen."
+      ],
+      "sources": [
+        {
+          "title": "Passau Tourismus – Sehenswürdigkeiten",
+          "url": "https://tourismus.passau.de/passau-sehen-erleben/sehenswuerdigkeiten-in-passau/"
+        },
+        {
+          "title": "Passau Tourismus – Veste Oberhaus",
+          "url": "https://tourismus.passau.de/passau-sehen-erleben/sehenswuerdigkeiten-in-passau/burganlage-veste-oberhaus/"
+        },
+        {
+          "title": "Passau Tourismus – Donaukreuzfahrten und Anlegestellen",
+          "url": "https://tourismus.passau.de/service-infos/donaukreuzfahrten/"
+        }
+      ]
+    },
+    {
+      "name": "Linz",
+      "aliases": [
+        "Linz",
+        "Pöstlingberg",
+        "Ars Electronica",
+        "Linzer Torte"
+      ],
+      "country": "Österreich",
+      "type": "river_stop",
+      "focus": "Donaustadt, in der historische Innenstadt, Medienkunst, Technologie und Industrie aufeinandertreffen.",
+      "highlights": [
+        "Hauptplatz und Altstadt",
+        "Ars Electronica Center",
+        "Lentos Kunstmuseum",
+        "Pöstlingberg und Wallfahrtskirche",
+        "Mariendom",
+        "Mural Harbor"
+      ],
+      "food": [
+        "Linzer Torte",
+        "oberösterreichische Wirtshausküche",
+        "Knödel- und Mehlspeisengerichte"
+      ],
+      "guestAdvice": [
+        "Viele zentrale Ziele lassen sich zu Fuß erkunden; Pöstlingberg liegt erhöht und ist mit der Pöstlingbergbahn erreichbar, deren Betrieb und Fahrplan aktuell prüfen.",
+        "Bei Museumsbesuchen Öffnungszeiten und Ausstellungen am Besuchstag kontrollieren.",
+        "Konkreten Liegeplatz prüfen, bevor Clara Fußwege oder Transfers empfiehlt."
+      ],
+      "seasonality": [
+        "Ars-Electronica- und Kulturveranstaltungen sowie Märkte nur mit aktuellem Termin und Veranstalterquelle empfehlen."
+      ],
+      "sources": [
+        {
+          "title": "Linz Tourismus – Top 10 Sehenswürdigkeiten",
+          "url": "https://www.linztourismus.at/freizeit/linz-entdecken/sehenswertes/top10"
+        },
+        {
+          "title": "Austria Tourism – Linz",
+          "url": "https://www.austria.info/de-de/staedte-und-orte/linz/"
+        },
+        {
+          "title": "Visit-Linz – Stadtwanderwege",
+          "url": "https://www.visitlinz.at/sehen-erleben/auf-den-stadtwanderwege-linz-zu-fuss-entdecken"
+        }
+      ]
+    },
+    {
+      "name": "Melk",
+      "aliases": [
+        "Melk",
+        "Stift Melk",
+        "Melker Stift"
+      ],
+      "country": "Österreich",
+      "type": "river_stop",
+      "focus": "Barockes Stift, historische Altstadt und westliches Tor zur Wachau.",
+      "highlights": [
+        "Benediktinerstift Melk",
+        "Stiftskirche und Bibliothek",
+        "Stiftspark",
+        "Altstadt und Rathausplatz",
+        "Blicke auf Donau und Wachau"
+      ],
+      "food": [
+        "Wachauer Marille und Produkte daraus",
+        "regionale niederösterreichische Küche",
+        "Wachauer Weine"
+      ],
+      "guestAdvice": [
+        "Der Besuch des Stifts benötigt Zeit; offizielle FAQ empfehlen für die vollständige Besichtigung etwa zweieinhalb Stunden.",
+        "Saisonale Öffnungszeiten, Führungszeiten und Eintrittspreise ausschließlich mit der offiziellen Stiftsseite für das konkrete Datum beantworten.",
+        "Anlegestelle, Fußweg und Steigung zum Stift anhand des tatsächlichen Liegeplatzes prüfen."
+      ],
+      "seasonality": [
+        "Marillenblüte, Ernteangebote und Weinveranstaltungen sind saisonabhängig; konkrete Termine jährlich prüfen."
+      ],
+      "sources": [
+        {
+          "title": "Stift Melk – Öffnungszeiten, Preise und Führungen",
+          "url": "https://www.stiftmelk.at/en/visit-experience/opening-hours-prices-guided-tours/"
+        },
+        {
+          "title": "Stift Melk – Häufige Fragen zum Besuch",
+          "url": "https://www.stiftmelk.at/besuchen-erleben/stiftsbesichtigung/faqs-haeufige-fragen-besuch/"
+        },
+        {
+          "title": "Austria Tourism – Wachau",
+          "url": "https://www.austria.info/de-de/regionen/wachau/"
+        }
+      ]
+    },
+    {
+      "name": "Weißenkirchen",
+      "aliases": [
+        "Weißenkirchen",
+        "Weissenkirchen",
+        "Weißenkirchen in der Wachau",
+        "Wachau"
+      ],
+      "country": "Österreich",
+      "type": "river_stop",
+      "focus": "Historischer Weinort in der Wachau, geprägt von Weinterrassen, Donau und Marillenkultur.",
+      "highlights": [
+        "Historischer Ortskern",
+        "Pfarrkirche Mariae Himmelfahrt",
+        "Teisenhoferhof",
+        "Weinterrassen und Aussichtspunkte",
+        "Donauufer und Wachauer Kulturlandschaft"
+      ],
+      "food": [
+        "Wachauer Marille und saisonale Marillenprodukte",
+        "Grüner Veltliner und Riesling aus der Wachau",
+        "Heurigenküche und regionale Jause"
+      ],
+      "guestAdvice": [
+        "Weinbergwege können steil sein; Spaziergänge nach Mobilität und verfügbarer Liegezeit auswählen.",
+        "Heurigenöffnungszeiten und Aussteckzeiten unterscheiden sich je Betrieb und müssen vor dem Besuch geprüft werden.",
+        "Für Weinverkostungen die Rückkehrzeit zum Schiff und einen sicheren Transfer berücksichtigen."
+      ],
+      "seasonality": [
+        "Marillenblüte, Marillenernte und Weinlese sind saisonal; nicht ohne Jahres- und Datumsbezug zusagen."
+      ],
+      "sources": [
+        {
+          "title": "Austria Tourism – Wachau",
+          "url": "https://www.austria.info/de-de/regionen/wachau/"
+        },
+        {
+          "title": "Wachau-Nibelungengau-Kremstal – Tourismusregion",
+          "url": "https://www.donau.com/"
+        },
+        {
+          "title": "Marktgemeinde Weißenkirchen",
+          "url": "https://www.weissenkirchen-wachau.at/"
+        }
+      ]
+    },
+    {
+      "name": "Wien",
+      "aliases": [
+        "Wien",
+        "Vienna",
+        "Stephansdom",
+        "Schönbrunn",
+        "Hofburg"
+      ],
+      "country": "Österreich",
+      "type": "river_stop",
+      "focus": "Kultur- und Musikmetropole mit kaiserlicher Geschichte, Museen und Kaffeehauskultur.",
+      "highlights": [
+        "Stephansdom",
+        "Hofburg und Heldenplatz",
+        "Schloss Schönbrunn und Park",
+        "Belvedere",
+        "Ringstraße und Staatsoper",
+        "Prater und Riesenrad"
+      ],
+      "food": [
+        "Wiener Schnitzel",
+        "Tafelspitz",
+        "Wiener Gulasch",
+        "Sachertorte und Apfelstrudel",
+        "traditionelle Kaffeehauskultur"
+      ],
+      "guestAdvice": [
+        "Wien ist groß: Ziele nach Liegeplatz und verfügbarer Zeit auswählen, nicht versuchen, alle Highlights an einem Landgang zu besuchen.",
+        "Die Innenstadt und Schönbrunn sind unterschiedliche Besuchsbereiche; Transferzeit einplanen.",
+        "Vor konkreter Empfehlung Schiffsstation, Transfer und Rückkehrzeit klären."
+      ],
+      "seasonality": [
+        "Ausstellungen, Konzerte und Märkte benötigen eine tagesaktuelle Prüfung bei WienTourismus oder beim jeweiligen Veranstalter."
+      ],
+      "sources": [
+        {
+          "title": "WienTourismus – Sehenswürdigkeiten von A bis Z",
+          "url": "https://www.wien.info/en/see-do/sights-from-a-to-z"
+        },
+        {
+          "title": "WienTourismus – Kaiserliche Sehenswürdigkeiten",
+          "url": "https://www.wien.info/en/art-culture/imperial-sights"
+        },
+        {
+          "title": "WienTourismus – Aussichtspunkte",
+          "url": "https://www.wien.info/de/sehen-erleben/wiener-aussichtspunkte-365554"
+        }
+      ]
+    },
+    {
+      "name": "Bratislava",
+      "aliases": [
+        "Bratislava",
+        "Pressburg",
+        "Bratislava Castle"
+      ],
+      "country": "Slowakei",
+      "type": "river_stop",
+      "focus": "Kompakte historische Hauptstadt an der Donau mit Burg, Altstadt und lebendiger Café-Kultur.",
+      "highlights": [
+        "Burg Bratislava",
+        "Altstadt und Hauptplatz",
+        "Martinsdom",
+        "Altes Rathaus",
+        "Donaupromenade"
+      ],
+      "food": [
+        "Bryndzové halušky (Kartoffelspätzle mit Schafskäse)",
+        "Kapustnica (Sauerkrautsuppe)",
+        "lokale Backwaren und slowakische Küche"
+      ],
+      "guestAdvice": [
+        "Die Altstadt eignet sich gut für einen kompakten Rundgang, sofern der Liegeplatz zentral liegt.",
+        "Der Weg zur Burg führt bergauf; Zeit und Mobilität der Gäste berücksichtigen.",
+        "Öffnungszeiten und Eintritt des Historischen Museums in der Burg vorab prüfen."
+      ],
+      "seasonality": [
+        "Wein-, Kultur- und Weihnachtsmärkte nur mit bestätigtem Veranstaltertermin nennen."
+      ],
+      "sources": [
+        {
+          "title": "Visit Bratislava – Ein Tag in Bratislava",
+          "url": "https://www.visitbratislava.com/things-to-see-in-bratislava/"
+        },
+        {
+          "title": "Visit Bratislava – Burg Bratislava",
+          "url": "https://www.visitbratislava.com/places/bratislava-castle/"
+        }
+      ]
+    },
+    {
+      "name": "Esztergom",
+      "aliases": [
+        "Esztergom",
+        "Gran",
+        "Basilika Esztergom",
+        "Donauknie"
+      ],
+      "country": "Ungarn",
+      "type": "river_stop",
+      "focus": "Historische Stadt am ungarischen Donauknie mit bedeutender Basilika und königlichem Burgviertel.",
+      "highlights": [
+        "Basilika von Esztergom",
+        "Burgmuseum und Burgberg",
+        "Mária-Valéria-Brücke",
+        "Kleine-Donau-Promenade",
+        "Aussichten auf das Donauknie"
+      ],
+      "food": [
+        "Ungarische Hausmannskost",
+        "Fischsuppe (halászlé) als regionale Speiseoption",
+        "ungarische Mehlspeisen"
+      ],
+      "guestAdvice": [
+        "Basilika und Burg liegen erhöht; Steigungen und verfügbare Zeit vor einem Fußweg berücksichtigen.",
+        "Basilika, Schatzkammer und Kuppel-Aussicht können unterschiedliche Zugänge und Öffnungszeiten haben; offizielle Informationen prüfen.",
+        "Den genauen Liegeplatz und die Rückkehrzeit zum Schiff feststellen."
+      ],
+      "seasonality": [
+        "Besichtigungszeiten, Gottesdienste und Sonderausstellungen vor dem Besuch bei den offiziellen Einrichtungen prüfen."
+      ],
+      "sources": [
+        {
+          "title": "Visit Esztergom – Sehenswürdigkeiten",
+          "url": "https://visitesztergom.hu/en/sights/"
+        },
+        {
+          "title": "Visit Esztergom – Basilika",
+          "url": "https://visitesztergom.hu/en/sights/basilica-of-esztergom/"
+        },
+        {
+          "title": "Esztergom – offizielle Tourismusseite",
+          "url": "https://www.esztergom.hu/en/en_tourism/165-tourism"
+        }
+      ]
+    },
+    {
+      "name": "Budapest",
+      "aliases": [
+        "Budapest",
+        "Buda",
+        "Pest",
+        "Kettenbrücke",
+        "Fischerbastei"
+      ],
+      "country": "Ungarn",
+      "type": "river_stop",
+      "focus": "Großstadt an der Donau mit markanter Architektur, historischem Burgviertel und Thermalbadekultur.",
+      "highlights": [
+        "Ungarisches Parlament",
+        "Burgviertel und Budaer Burg",
+        "Fischerbastei",
+        "Kettenbrücke",
+        "St.-Stephans-Basilika",
+        "Thermalbäder"
+      ],
+      "food": [
+        "Gulyás",
+        "Lángos",
+        "Paprikás csirke",
+        "Kürtőskalács und ungarische Mehlspeisen"
+      ],
+      "guestAdvice": [
+        "Buda und Pest liegen auf gegenüberliegenden Donauseiten; die Route anhand des Liegeplatzes planen.",
+        "Nicht alle Sehenswürdigkeiten sind fußläufig von jeder Anlegestelle erreichbar; Transferzeit realistisch einplanen.",
+        "Bei Thermalbädern und Parlamentstouren aktuelle Tickets, Einlassregeln und Öffnungszeiten prüfen."
+      ],
+      "seasonality": [
+        "Thermen, Museen, Veranstaltungen und Märkte haben eigene Kalender; nur geprüfte Termine nennen."
+      ],
+      "sources": [
+        {
+          "title": "Visit Hungary – Budapest",
+          "url": "https://visithungary.com/destination/budapest"
+        },
+        {
+          "title": "Budapest – offizielle Tourismusinformation",
+          "url": "https://www.budapestinfo.hu/"
+        }
+      ]
+    },
+    {
+      "name": "Puszta",
+      "aliases": [
+        "Puszta",
+        "Hortobágy",
+        "Hortobagy",
+        "Hortobágyi Nationalpark"
+      ],
+      "country": "Ungarn",
+      "type": "land_excursion",
+      "focus": "Weite Landschaft der ungarischen Tiefebene mit traditioneller Weidewirtschaft, Steppenlebensräumen und Vogelwelt.",
+      "highlights": [
+        "Hortobágyi-Nationalpark",
+        "traditionelle Hirtenkultur und Gehöfte",
+        "Besucherzentrum und Puszta-Ausstellungen",
+        "Fischteiche und Vogelbeobachtung",
+        "Kranichzug im Herbst"
+      ],
+      "food": [
+        "Ungarische Hausmannskost",
+        "Gulyás und Pörkölt",
+        "regionale Produkte und traditionelle Gerichte"
+      ],
+      "guestAdvice": [
+        "Die Puszta ist kein Anleger an der Donau-Hauptlinie, sondern ein separater Landausflug mit Landtransfer.",
+        "Vor einer Empfehlung müssen Reiseroute, verfügbare Liegezeit, Transferdauer und Anbieter konkret bestätigt werden.",
+        "Aktuelle Öffnungszeiten, Naturwege und Schutzgebietsregeln beim Nationalpark prüfen."
+      ],
+      "seasonality": [
+        "Der herbstliche Kranichzug ist ein saisonales Naturereignis; aktuelle Beobachtungsbedingungen und Besucherangebote beim Nationalpark prüfen.",
+        "Der Betrieb einzelner Attraktionen und Verkehrsmittel kann eingeschränkt sein."
+      ],
+      "sources": [
+        {
+          "title": "Hortobágyi Nationalpark – Besucherzentrum",
+          "url": "https://www2.hnp.hu/en/szervezeti-egyseg/tourism/oldal/hnp-visitor-center"
+        },
+        {
+          "title": "Hortobágyi Nationalpark – Große Fischteiche und Naturbahn",
+          "url": "https://www.hnp.hu/en/szervezeti-egyseg/tourism/oldal/hortobagy-great-fishponds-and-narrow-gauge-railway"
+        }
+      ]
+    },
+    {
+      "name": "Novi Sad",
+      "aliases": [
+        "Novi Sad",
+        "Petrovaradin",
+        "Petrovaradin-Festung"
+      ],
+      "country": "Serbien",
+      "type": "river_stop",
+      "focus": "Kulturstadt der Vojvodina gegenüber der Festung Petrovaradin, mit entspannter Innenstadt und Donauufer.",
+      "highlights": [
+        "Festung Petrovaradin und Uhrturm",
+        "Freiheitsplatz und Rathaus",
+        "Zmaj Jovina und Dunavska Straße",
+        "Donaupark",
+        "Museen und Galerien"
+      ],
+      "food": [
+        "Fischgerichte in traditionellen čarde (Riverside-Restaurants)",
+        "Spezialitäten der Vojvodina",
+        "Gibanica und regionale Backwaren"
+      ],
+      "guestAdvice": [
+        "Das Stadtzentrum ist vergleichsweise kompakt; die Festung liegt auf der anderen Donauseite und weist Steigungen auf.",
+        "Für die Festung zusätzliche Wege- und Rückkehrzeit einplanen.",
+        "Aktuelle Fähr-, Bus- oder Transfermöglichkeiten nicht voraussetzen; vorab prüfen."
+      ],
+      "seasonality": [
+        "EXIT und weitere Festivals sind terminabhängig; nur mit aktuellem Veranstalterkalender empfehlen."
+      ],
+      "sources": [
+        {
+          "title": "Novi Sad Tourism – Stadtzentrum",
+          "url": "https://novisad.travel/en/city-centre/"
+        },
+        {
+          "title": "Novi Sad Tourism – Festung Petrovaradin",
+          "url": "https://novisad.travel/en/petrovaradin-fortress/"
+        },
+        {
+          "title": "Novi Sad Tourism – Drei-Tage-Vorschlag",
+          "url": "https://novisad.travel/en/novi-sad-za-tri-dana/"
+        }
+      ]
+    },
+    {
+      "name": "Belgrad",
+      "aliases": [
+        "Belgrad",
+        "Belgrade",
+        "Beograd",
+        "Kalemegdan"
+      ],
+      "country": "Serbien",
+      "type": "river_stop",
+      "focus": "Serbiens Hauptstadt am Zusammenfluss von Save und Donau mit Festung, Parks und urbanem Kulturleben.",
+      "highlights": [
+        "Belgrader Festung und Kalemegdan",
+        "Aussicht am Pobednik-Denkmal",
+        "Knez Mihailova",
+        "Sava- und Donauufer",
+        "St.-Sava-Tempel"
+      ],
+      "food": [
+        "Ćevapi und Pljeskavica",
+        "Sarma",
+        "Ajvar und regionale Beilagen",
+        "serbische Hausmannskost"
+      ],
+      "guestAdvice": [
+        "Die Stadt ist groß; Landgang auf Liegeplatz und verfügbare Zeit begrenzen.",
+        "Festungspark und Knez Mihailova lassen sich als Innenstadt-Schwerpunkt kombinieren.",
+        "Bei längeren Transfers und Straßenverkehr ausreichend Puffer für die Rückkehr zum Schiff einplanen."
+      ],
+      "seasonality": [
+        "Konzerte, Festivals und Kulturprogramm nur mit Veranstalter- und Datumsprüfung nennen."
+      ],
+      "sources": [
+        {
+          "title": "Tourist Organization of Belgrade – Belgrade Fortress",
+          "url": "https://www.tob.rs/en/what-to-see/belgrade-attractions/belgrade-fortress"
+        },
+        {
+          "title": "Serbia Travel – The City in Time and Space",
+          "url": "https://www.serbia.travel/en/stories-items/the-city-in-time-and-space/"
+        }
+      ]
+    },
+    {
+      "name": "Russe",
+      "aliases": [
+        "Russe",
+        "Ruse",
+        "Русе",
+        "Sexaginta Prista"
+      ],
+      "country": "Bulgarien",
+      "type": "river_stop",
+      "focus": "Bulgarische Donaustadt mit repräsentativer Architektur, Stadtgeschichte und römischen Spuren.",
+      "highlights": [
+        "Freiheitsplatz und Stadtzentrum",
+        "historische Gebäude und Fassaden",
+        "Römische Festung Sexaginta Prista",
+        "Regionales Historisches Museum",
+        "Donaupromenade"
+      ],
+      "food": [
+        "Banitsa",
+        "Shopska-Salat",
+        "Tarator",
+        "regionale Fischgerichte und bulgarische Küche"
+      ],
+      "guestAdvice": [
+        "Russe ist ein Donauhafen, kein Schleusenstandort.",
+        "Vor einer Wegbeschreibung den konkreten Hafenliegeplatz erfragen; Entfernung und Zugang zur Innenstadt können variieren.",
+        "Bei Sexaginta Prista Öffnungszeiten und Zugänglichkeit aktuell prüfen."
+      ],
+      "seasonality": [
+        "Kulturveranstaltungen und Museumsöffnungszeiten über Gemeinde oder Betreiber tagesaktuell prüfen."
+      ],
+      "sources": [
+        {
+          "title": "Bulgarisches Tourismusministerium – Ruse",
+          "url": "https://www.tourism.government.bg/bg/tourist-destinations/2804/5508"
+        },
+        {
+          "title": "Gemeinde Ruse",
+          "url": "https://www.ruse-bg.eu/"
+        }
+      ]
+    },
+    {
+      "name": "Donaudelta",
+      "aliases": [
+        "Donaudelta",
+        "Danube Delta",
+        "Tulcea",
+        "Mila 23",
+        "Crișan",
+        "Crisan"
+      ],
+      "country": "Rumänien",
+      "type": "river_region",
+      "focus": "Weit verzweigtes Fluss- und Lagunengebiet mit Schilfflächen, Kanälen und außergewöhnlicher Vogelwelt.",
+      "highlights": [
+        "Tulcea als wichtiger Ausgangspunkt",
+        "geführte Bootstouren auf zugelassenen Routen",
+        "Schilfkanäle und Lagunen",
+        "Vogelbeobachtung",
+        "Orte wie Mila 23 und Crișan je nach Route"
+      ],
+      "food": [
+        "Regionale Süßwasserfischgerichte",
+        "Fischsuppe und lokale Küche"
+      ],
+      "guestAdvice": [
+        "Ausflüge nur mit seriösen lokalen Anbietern und unter Beachtung der Schutzgebietsregeln planen.",
+        "Zugang, Besucher- und Bootsberechtigungen sowie erlaubte Routen vorab bei ARBDD prüfen.",
+        "Wasserstand, Wetter und lokale Einschränkungen können Route und Dauer beeinflussen; keine pauschale Befahrbarkeit versprechen."
+      ],
+      "seasonality": [
+        "Vogelbeobachtung und Naturerlebnis sind saisonabhängig; konkrete Sichtungen nicht garantieren."
+      ],
+      "sources": [
+        {
+          "title": "ARBDD – Online-Genehmigungen und Besucherberechtigungen",
+          "url": "https://permise.ddbra.ro/"
+        },
+        {
+          "title": "ARBDD – Biosphärenreservat Donaudelta",
+          "url": "https://www.ddbra.ro/"
+        },
+        {
+          "title": "Touristische Routen im Donaudelta – Informationen zu freigegebenen Routen",
+          "url": "https://www.excursii-delta-dunarii.ro/en/tourist-routes/"
+        }
+      ]
+    }
+  ],
+  "responseRules": [
+    "Antworte in der Sprache der Anfrage. Die Wissensnotizen sind deutsch; übersetze sie natürlich, ohne Fakten zu verändern.",
+    "Verwende nur Einträge, deren Ort oder Alias in der Frage erkennbar ist. Bei mehreren genannten Orten dürfen mehrere passende Einträge kombiniert werden.",
+    "Nenne die Wissensdatei als redaktionelle Orientierung, nicht als Beleg für aktuelle Öffnungszeiten, Preise, Fahrpläne oder Verfügbarkeiten.",
+    "Erfinde keine konkreten Restaurants, Anlegestellen, Liegeplatznummern, Fußwegminuten, Fahrpläne oder Eintrittspreise.",
+    "Bei Flusskreuzfahrtfragen frage nach dem konkreten Liegeplatz, wenn eine präzise Wegbeschreibung oder Transferempfehlung davon abhängt.",
+    "Passe Vorschläge an verfügbare Liegezeit, Mobilität, Steigungen, Kopfsteinpflaster und Rückkehrzeit an.",
+    "Puszta als separaten Landausflug kennzeichnen, nicht als Station an der Donau-Hauptlinie.",
+    "Russe/Ruse ist ein Donauhafen, aber kein Schleusenstandort in der Liste der 18 Schleusen der Donau-Hauptwasserstraße.",
+    "Für das Donaudelta Schutzgebietsregeln, genehmigte Routen und erforderliche Berechtigungen ausdrücklich berücksichtigen."
+  ]
+}
