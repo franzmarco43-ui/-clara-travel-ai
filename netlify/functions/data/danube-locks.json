@@ -1,6 +1,6 @@
 {
   "datasetTitle": "Schleusen der Donau",
-  "sourceNote": "18 Schleusen der Donau-Hauptwasserstraße. Technische Werte (Mindest-Drempeltiefe, lichte Brückenhöhe, maximaler Haltungsunterschied und höchstzulässige Verbandsabmessungen) nach Donaukommission; Stromkilometer, Kammerabmessungen, Kammeranzahl, UKW-Kanal und Telefonnummern mit DoRIS abgeglichen. Abweichende Bezugsachsen oder Rundungen sind im jeweiligen Eintrag notiert. Statische Referenz – keine Live-Betriebsdaten.",
+  "sourceNote": "18 Schleusen der Donau-Hauptwasserstraße. Technische Werte (Mindest-Drempeltiefe, lichte Höhe der Schleusenbrücken, maximaler Haltungsunterschied und höchstzulässige Verbandsabmessungen) nach Donaukommission; Stromkilometer, Kammerabmessungen, Kammeranzahl, UKW-Kanal und reguläre Telefonnummern mit DoRIS abgeglichen. Definitionen erklären die technischen Begriffe; statische Referenz – keine Live-Betriebsdaten. Temporäre Abweichungen bei Betrieb, Funk und Erreichbarkeit können durch aktuelle ELWIS-/DoRIS-Meldungen bekanntgegeben werden.",
   "count": 18,
   "records": [
     {
@@ -331,5 +331,13 @@
       "name": "DoRIS – aktueller Schleusenstatus",
       "url": "https://www.doris.bmimi.gv.at/en/fairway-information/lock-status"
     }
-  ]
+  ],
+  "technicalDefinitions": {
+    "sillDepth": "Mindest-Drempeltiefe: die angegebene Mindestwassertiefe über der Schwelle (dem Drempel) eines Schleusentors innerhalb der Schleusenkammer. Sie ist nicht automatisch die aktuell verfügbare Tiefe im Fahrwasser oder Vorhafen.",
+    "bridgeClearance": "Lichte Höhe der Schleusenbrücke: die in der technischen Übersicht ausgewiesene vertikale Durchfahrtshöhe unter der jeweiligen Schleusenbrücke. Sie ist nicht pauschal auf andere Brücken oder Streckenabschnitte übertragbar.",
+    "maxHead": "Maximaler Haltungsunterschied: größtmögliche Differenz zwischen Oberwasser und Unterwasser, die für die Schleusenanlage in der technischen Tabelle ausgewiesen ist. Das ist nicht der tatsächliche Wasserstandsunterschied bei einer konkreten Schleusung.",
+    "radio": "UKW-Kanal: der der Schleusen-/Revierfunkstelle zugeordnete Sprechfunkkanal. Der Kanal ist schleusenabhängig; Einschränkungen oder Ausfälle des Funkdienstes sind zusätzlich anhand aktueller amtlicher Meldungen zu prüfen.",
+    "phone": "Telefon: regulär veröffentlichte Kontaktangabe aus dem Referenzverzeichnis. Bei temporären Betriebsstörungen oder Arbeiten können amtliche Meldungen abweichende Notfallnummern oder Kontaktwege vorgeben.",
+    "liveStatus": "Betriebszeiten, Sperren, Wartezeiten, Verzögerungen, Funk-/AIS-Ausfälle und temporäre Erreichbarkeiten sind dynamische Informationen. Sie dürfen nicht aus dieser statischen technischen Datentabelle abgeleitet werden; dafür aktuelle ELWIS-/DoRIS-Meldungen prüfen."
+  }
 }
