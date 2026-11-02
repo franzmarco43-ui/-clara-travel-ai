@@ -46,15 +46,14 @@ function sanitizeSearchQuery(message) {
     .replace(/https?:\/\/\S+/gi, " ")
     .replace(/\s+/g, " ").trim().slice(0, 420);
 }
-function isLikelyOfficialResearchSource(url, title) {
+function isLikelyOfficialResearchSource(url) {
   try {
     const host = new URL(url).hostname.toLowerCase().replace(/^www\./, "");
-    return host.endsWith(".gov") || host.includes(".gov.") || host.endsWith(".gv.at") ||
-      host.includes(".gouv.") || host.endsWith(".bund.de") || host === "elwis.de" ||
-      host.endsWith(".elwis.de") || host.endsWith(".bmimi.gv.at") ||
-      host.endsWith(".viadonau.org") || host.endsWith(".danubecommission.org") ||
-      host === "budapestinfo.hu" ||
-      /\b(official|stadt|gemeinde|ministerium|beh[oö]rde|verwaltung|operator|betreiber|tourismusverband)\b/i.test(String(title || ""));
+    return host.startsWith("gov.") || host.endsWith(".gov") || host.includes(".gov.") ||
+      host.endsWith(".gv.at") || host.includes(".gouv.") || host.endsWith(".bund.de") ||
+      host === "elwis.de" || host.endsWith(".elwis.de") ||
+      host.endsWith(".bmimi.gv.at") || host.endsWith(".viadonau.org") ||
+      host.endsWith(".danubecommission.org") || host === "budapestinfo.hu";
   } catch (_) { return false; }
 }
 async function searchTavily(message, apiKey) {
@@ -91,7 +90,7 @@ async function searchTavily(message, apiKey) {
       const content = String(item.content || "").replace(/\s+/g, " ").trim().slice(0, 1500);
       if (!content) return null;
       const score = Number(item.score);
-      return { title, url: parsed.href, domain: parsed.hostname.replace(/^www\./, ""), content, score: Number.isFinite(score) ? score : null, publishedDate: item.published_date ? String(item.published_date).slice(0, 40) : null, likelyOfficial: isLikelyOfficialResearchSource(parsed.href, title) };
+      return { title, url: parsed.href, domain: parsed.hostname.replace(/^www\./, ""), content, score: Number.isFinite(score) ? score : null, publishedDate: item.published_date ? String(item.published_date).slice(0, 40) : null, likelyOfficial: isLikelyOfficialResearchSource(parsed.href) };
     }).filter(Boolean).slice(0, 5);
     const result = { ok: cleanResults.length > 0, reason: cleanResults.length ? null : "no_results", results: cleanResults, cacheHit: false };
     if (result.ok) {
