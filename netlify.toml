@@ -1,4 +1,0 @@
-[build.environment]
-  # These two values are intentionally public Supabase browser configuration.
-  # Keep Groq and Tavily out of this list; they must remain server-side secrets.
-  SECRETS_SCAN_OMIT_KEYS = "SUPABASE_PROJECT_URL,SUPABASE_ANON_KEY"
