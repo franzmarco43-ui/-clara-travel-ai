@@ -474,7 +474,53 @@ function speakClara(value,force=false){
   utterance.onerror=()=>setClaraSpeaking(false);
   speechSynthesis.speak(utterance);
 }
-function addMsg(text,who){const box=document.getElementById('chatbox'),el=document.createElement('div');el.className='msg '+(who==='user'?'user':'');el.textContent=text;box.appendChild(el);box.scrollTop=box.scrollHeight}
+function addMsg(text,who,sources=[],research=null){
+  const box=document.getElementById('chatbox');
+  const el=document.createElement('div');
+  el.className='msg '+(who==='user'?'user':'');
+  el.textContent=text;
+  if(who!=='user'&&Array.isArray(sources)&&sources.length){
+    const sourceBox=document.createElement('div');
+    sourceBox.style.marginTop='10px';
+    sourceBox.style.paddingTop='8px';
+    sourceBox.style.borderTop='1px solid var(--line)';
+    const heading=document.createElement('div');
+    heading.textContent='Quellen aus Claras Live-Recherche'+(research?.searchedAt?' · '+new Date(research.searchedAt).toLocaleString('de-DE'):'');
+    heading.style.fontWeight='700';
+    heading.style.fontSize='12px';
+    heading.style.marginBottom='5px';
+    sourceBox.appendChild(heading);
+    sources.forEach((source,index)=>{
+      try{
+        const url=new URL(source.url);
+        if(url.protocol!=='https:'&&url.protocol!=='http:')return;
+        const line=document.createElement('div');
+        line.style.margin='4px 0';
+        const link=document.createElement('a');
+        link.href=url.href;
+        link.target='_blank';
+        link.rel='noopener noreferrer';
+        link.textContent='['+(index+1)+'] '+String(source.title||source.domain||url.hostname);
+        link.style.color='var(--green)';
+        link.style.textDecoration='underline';
+        link.style.fontSize='12px';
+        line.appendChild(link);
+        if(source.publishedDate){
+          const date=document.createElement('span');
+          date.textContent=' · '+String(source.publishedDate);
+          date.style.fontSize='11px';
+          date.style.color='var(--muted)';
+          line.appendChild(date);
+        }
+        sourceBox.appendChild(line);
+      }catch(_){}
+    });
+    if(sourceBox.children.length>1)el.appendChild(sourceBox);
+  }
+  box.appendChild(el);
+  box.scrollTop=box.scrollHeight;
+}
+
 const claraDestinationKnowledge={
 'Linz':{focus:'Kunst, Musik, moderne Kultur und Donauufer',see:'Hauptplatz, Altstadt, Ars Electronica Center, Lentos und Pöstlingberg.',food:'Linzer Torte, Knödelgerichte und oberösterreichische Wirtshausküche.',season:'Herbstliche Kulturveranstaltungen und ab November Adventmärkte; konkrete Termine jährlich prüfen.',cruise:'Anlegestelle und Baustellenumfeld tagesaktuell prüfen; fußläufige Altstadt- und Donauuferoptionen nach Liegeplatz wählen.',source:'Linz Tourismus, Stadt Linz, Ars Electronica, Hafen-/Schifffahrtsmeldungen'},
 'Passau':{focus:'Drei-Flüsse-Stadt, Altstadt und barocke Architektur',see:'Dom St. Stephan, Ortspitze, Veste Oberhaus und historische Altstadt.',food:'Niederbayerische Wirtshausküche und regionale Süßspeisen.',season:'Stadtführungen, Kulturprogramm und saisonale Märkte aktuell prüfen.',cruise:'Liegeplatz entscheidet über Fußweg in die Altstadt; Rückkehrzeit großzügig planen.',source:'Tourismus Passau, Stadt Passau, Dom St. Stephan'},
@@ -541,7 +587,45 @@ async function createInfluencerContent(){
     status.textContent='Der Entwurf konnte nicht erstellt werden: '+(err.message||'Verbindungsfehler');
   }
 }
-async function sendChat(e){e.preventDefault();const input=document.getElementById('chatInput');const q=input.value.trim();if(!q)return;addMsg(q,'user');input.value='';const asksMemory=/\b(was weißt du|was weisst du|was erinnerst du|mein(e|en)? (interessen|budget|profil|lieblingsziel)|gedächtnis|gedaechtnis|erinnerst du dich)\b/i.test(q);let a='';if(asksMemory){addMsg('Ich prüfe deine freigegebenen persönlichen Angaben …','clara');const ctx=await getClaraMemoryContext();const box=document.getElementById('chatbox');if(box.lastChild?.textContent==='Ich prüfe deine freigegebenen persönlichen Angaben …')box.removeChild(box.lastChild);a=memoryAnswer(ctx);}else{try{const response=await fetch('/.netlify/functions/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q})});let data={};try{data=await response.json()}catch(_){throw new Error('Das Backend hat keine gültige Antwort geliefert.')}if(!response.ok)throw new Error(data.error||('Backend-Fehler '+response.status));a=String(data.reply||data.response||'').trim();if(!a)throw new Error('Clara hat eine leere Antwort erhalten.');}catch(err){console.error('Clara KI-Verbindung:',err);a='Die Verbindung zur KI ist gerade nicht verfügbar ('+(err.message||'Verbindungsfehler')+'). Als lokale Orientierung kann ich dir trotzdem helfen: '+answerFor(q);}}addMsg(a,'clara');speakClara(a)}
+async function sendChat(e){
+  e.preventDefault();
+  const input=document.getElementById('chatInput');
+  const q=input.value.trim();
+  if(!q)return;
+  addMsg(q,'user');
+  input.value='';
+  const asksMemory=/\b(was weißt du|was weisst du|was erinnerst du|mein(e|en)? (interessen|budget|profil|lieblingsziel)|gedächtnis|gedaechtnis|erinnerst du dich)\b/i.test(q);
+  let a='';
+  let sources=[];
+  let research=null;
+  if(asksMemory){
+    addMsg('Ich prüfe deine freigegebenen persönlichen Angaben …','clara');
+    const ctx=await getClaraMemoryContext();
+    const box=document.getElementById('chatbox');
+    if(box.lastChild?.textContent==='Ich prüfe deine freigegebenen persönlichen Angaben …')box.removeChild(box.lastChild);
+    a=memoryAnswer(ctx);
+  }else{
+    try{
+      const response=await fetch('/.netlify/functions/chat',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({message:q})
+      });
+      let data={};
+      try{data=await response.json();}catch(_){throw new Error('Das Backend hat keine gültige Antwort geliefert.');}
+      if(!response.ok)throw new Error(data.error||('Backend-Fehler '+response.status));
+      a=String(data.reply||data.response||'').trim();
+      sources=Array.isArray(data.sources)?data.sources:[];
+      research=data.research||null;
+      if(!a)throw new Error('Clara hat eine leere Antwort erhalten.');
+    }catch(err){
+      console.error('Clara KI-Verbindung:',err);
+      a='Die Verbindung zu Clara ist gerade nicht verfügbar ('+(err.message||'Verbindungsfehler')+'). '+answerFor(q);
+    }
+  }
+  addMsg(a,'clara',sources,research);
+  speakClara(a);
+}
 function quickAsk(q){showPage('clara');document.getElementById('chatInput').value=q;document.querySelector('.chatform').requestSubmit()}
 let toastTimer;function toast(s){let el=document.getElementById('toast');el.textContent=s;el.classList.remove('hidden');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.add('hidden'),2800)}
 
