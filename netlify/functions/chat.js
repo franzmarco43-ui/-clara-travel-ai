@@ -92,7 +92,7 @@ async function searchTavily(message, apiKey) {
       const score = Number(item.score);
       return { title, url: parsed.href, domain: parsed.hostname.replace(/^www\./, ""), content, score: Number.isFinite(score) ? score : null, publishedDate: item.published_date ? String(item.published_date).slice(0, 40) : null, likelyOfficial: isLikelyOfficialResearchSource(parsed.href) };
     }).filter(Boolean).slice(0, 5);
-    const result = { ok: cleanResults.length > 0, reason: cleanResults.length ? null : "no_results", results: cleanResults, cacheHit: false };
+    const relevantResults = filterRelevantResearchResults(message, cleanResults);\n    const result = { ok: relevantResults.length > 0, reason: relevantResults.length ? null : "no_relevant_results", results: relevantResults, cacheHit: false };
     if (result.ok) {
       if (TAVILY_SEARCH_CACHE.size >= 100) {
         const oldestKey = TAVILY_SEARCH_CACHE.keys().next().value;
@@ -104,6 +104,59 @@ async function searchTavily(message, apiKey) {
   } catch (error) {
     return { ok: false, reason: error && error.name === "AbortError" ? "timeout" : "network_error", results: [] };
   } finally { clearTimeout(timeout); }
+}
+const RESEARCH_STOP_WORDS = new Set([
+  "clara", "bitte", "recherchiere", "recherchieren", "recherchiert", "suche", "such", "finde",
+  "aktuell", "aktuellen", "aktuelle", "heute", "jetzt", "derzeit", "momentan", "neueste",
+  "mir", "mich", "mein", "meine", "meinen", "und", "oder", "aber", "auch", "dazu", "dafuer",
+  "dafür", "gib", "nenne", "zeige", "zeig", "quelle", "quellen", "diese", "dieser", "dieses",
+  "bitte", "was", "wie", "wo", "wann", "warum", "welche", "welcher", "welches", "ist", "sind",
+  "der", "die", "das", "den", "dem", "des", "ein", "eine", "einen", "einem", "einer",
+  "im", "in", "am", "an", "auf", "aus", "von", "vom", "mit", "fuer", "für", "zu", "zum",
+  "zur", "ueber", "über", "entlang", "rund", "bitte", "dort", "hier", "heute"
+]);
+function researchQueryTerms(message) {
+  return [...new Set(normalizeResearchText(message).split(" ").filter(term =>
+    term.length >= 4 && !RESEARCH_STOP_WORDS.has(term) && !/^\\d+$/.test(term)
+  ))];
+}
+function filterRelevantResearchResults(message, results) {
+  const terms = researchQueryTerms(message);
+  if (!terms.length) return results.slice(0, 3);
+  const minimumMatches = terms.length >= 5 ? 2 : 1;
+  const ranked = results.map(item => {
+    const title = normalizeResearchText(item.title);
+    const url = normalizeResearchText(item.url);
+    const content = normalizeResearchText(item.content);
+    let matches = 0;
+    let score = 0;
+    for (const term of terms) {
+      const inTitle = (" " + title + " ").includes(" " + term + " ");
+      const inUrl = (" " + url + " ").includes(" " + term + " ");
+      const inContent = (" " + content + " ").includes(" " + term + " ");
+      if (inTitle || inUrl || inContent) matches += 1;
+      if (inTitle) score += 4;
+      if (inUrl) score += 3;
+      if (inContent) score += 1;
+    }
+    return {item, matches, score};
+  }).filter(entry => entry.matches >= minimumMatches && entry.score > 0)
+    .sort((a, b) => b.score - a.score);
+  const seen = new Set();
+  const filtered = [];
+  for (const entry of ranked) {
+    try {
+      const url = new URL(entry.item.url);
+      url.hash = "";
+      url.search = "";
+      const key = url.hostname.toLowerCase().replace(/^www\\./, "") + url.pathname.replace(/\\/$/, "");
+      if (seen.has(key)) continue;
+      seen.add(key);
+      filtered.push(entry.item);
+      if (filtered.length === 4) break;
+    } catch (_) {}
+  }
+  return filtered;
 }
 function buildResearchContext(searchResult) {
   if (!searchResult || !searchResult.ok || !searchResult.results.length) return "";
