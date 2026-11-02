@@ -24,6 +24,7 @@ exports.handler = async function (event) {
    const supabaseUrl = process.env.SUPABASE_PROJECT_URL;
     const supabaseKey = process.env.SUPABASE_ANON_KEY;
     const passauKnowledge = require("./data/passau.json");
+    const danubeLocksKnowledge = require("./data/danube-locks.json");
 
     if (!apiKey) {
       throw new Error("GROQ_API_KEY fehlt in Netlify.");
@@ -152,6 +153,27 @@ exports.handler = async function (event) {
         "Nenne bei veränderlichen Angaben die offizielle Quelle und weise auf Live-Prüfung hin."
       : "";
 
+    // Technical reference data for all 18 locks on the Danube main waterway.
+    // This is static reference information, not live operating status.
+    const asksAboutLocks = /schleus|lock chamber|lock dimensions|kammermaß|kammerlänge|kammerbreite|funkkanal|strom.?km|haltungsunterschied|hubhöhe/i.test(userMessage);
+    let lockKnowledge = "";
+    if (asksAboutLocks) {
+      const normalize = value => String(value || "").toLowerCase().normalize("NFD").replace(/[\\u0300-\\u036f]/g, "");
+      const query = normalize(userMessage);
+      const matchedLocks = danubeLocksKnowledge.records.filter(lock => {
+        const names = [lock.name, lock.name.replace(/\\s*\\([^)]*\\)/g, ""), lock.name.replace("Eisernes Tor", "Iron Gate")];
+        return names.some(name => name && query.includes(normalize(name)));
+      });
+      const records = matchedLocks.length ? matchedLocks : danubeLocksKnowledge.records;
+      lockKnowledge =
+        "\\n\\nTECHNISCHE SCHLEUSEN-DATENBANK (statische Referenz, keine Live-Betriebsdaten):\\n" +
+        JSON.stringify({datasetTitle:danubeLocksKnowledge.datasetTitle,sourceNote:danubeLocksKnowledge.sourceNote,records}) +
+        "\\nVerwende die Daten für Kammermaße, Anzahl der Kammern, Stromkilometer, Funkkanal, Telefonnummer und die hinterlegten technischen Zusatzwerte. " +
+        "Unterscheide Kammerabmessungen von zulässigen Schiffs-/Verbandsabmessungen. Bei abweichenden Werten nenne den Quellenhinweis aus dem Datensatz. " +
+        "Behaupte niemals, dass ein Wert den aktuellen Schleusenstatus, Wartezeit, Wasserstand oder eine momentane Sperre beschreibt. " +
+        "Verweise für Live-Status und Sperrungen auf DoRIS / viadonau.";
+    }
+
     const response = await fetch(
       "https://api.groq.com/openai/v1/chat/completions",
       {
@@ -172,7 +194,7 @@ exports.handler = async function (event) {
                 "Kultur und Flusskreuzfahrten. Erfinde keine aktuellen " +
                 "Öffnungszeiten, Veranstaltungen, Wetterdaten oder " +
                 "Pegelstände. Kennzeichne ungeprüfte Informationen. " +
-                memoryText + destinationKnowledge
+                memoryText + destinationKnowledge + lockKnowledge
             },
             {
               role: "user",
