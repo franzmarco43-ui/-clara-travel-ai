@@ -1,3 +1,5 @@
+const TAVILY_SEARCH_CACHE = new Map();
+
 function normalizeResearchText(value) {
   return String(value || "")
     .toLowerCase()
@@ -58,6 +60,10 @@ function isLikelyOfficialResearchSource(url, title) {
 async function searchTavily(message, apiKey) {
   const queryText = sanitizeSearchQuery(message);
   if (!queryText) return { ok: false, reason: "empty_query", results: [] };
+  const cacheKey = queryText.toLowerCase();
+  const cached = TAVILY_SEARCH_CACHE.get(cacheKey);
+  if (cached && Date.now() - cached.savedAt < 10 * 60 * 1000) return {...cached.value, cacheHit: true};
+  if (cached) TAVILY_SEARCH_CACHE.delete(cacheKey);
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 14000);
   try {
@@ -87,7 +93,15 @@ async function searchTavily(message, apiKey) {
       const score = Number(item.score);
       return { title, url: parsed.href, domain: parsed.hostname.replace(/^www\./, ""), content, score: Number.isFinite(score) ? score : null, publishedDate: item.published_date ? String(item.published_date).slice(0, 40) : null, likelyOfficial: isLikelyOfficialResearchSource(parsed.href, title) };
     }).filter(Boolean).slice(0, 5);
-    return { ok: cleanResults.length > 0, reason: cleanResults.length ? null : "no_results", results: cleanResults };
+    const result = { ok: cleanResults.length > 0, reason: cleanResults.length ? null : "no_results", results: cleanResults, cacheHit: false };
+    if (result.ok) {
+      if (TAVILY_SEARCH_CACHE.size >= 100) {
+        const oldestKey = TAVILY_SEARCH_CACHE.keys().next().value;
+        if (oldestKey) TAVILY_SEARCH_CACHE.delete(oldestKey);
+      }
+      TAVILY_SEARCH_CACHE.set(cacheKey, {savedAt: Date.now(), value: result});
+    }
+    return result;
   } catch (error) {
     return { ok: false, reason: error && error.name === "AbortError" ? "timeout" : "network_error", results: [] };
   } finally { clearTimeout(timeout); }
