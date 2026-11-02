@@ -155,7 +155,7 @@ exports.handler = async function (event) {
 
     // Technical reference data for all 18 locks on the Danube main waterway.
     // This is static reference information, not live operating status.
-    const asksAboutLocks = /schleus|lock chamber|lock dimensions|kammermaß|kammerlänge|kammerbreite|funkkanal|strom.?km|haltungsunterschied|hubhöhe/i.test(userMessage);
+    const asksAboutLocks = /schleus|locks?|lock chamber|lock dimensions|kammermaß|kammerlänge|kammerbreite|funkkanal|strom.?km|haltungsunterschied|hubhöhe/i.test(userMessage);
     let lockKnowledge = "";
     if (asksAboutLocks) {
       const normalize = value => String(value || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -170,8 +170,11 @@ exports.handler = async function (event) {
         JSON.stringify({datasetTitle:danubeLocksKnowledge.datasetTitle,sourceNote:danubeLocksKnowledge.sourceNote,records}) +
         "\nVerwende die Daten für Kammermaße, Anzahl der Kammern, Stromkilometer, Funkkanal, Telefonnummer und die hinterlegten technischen Zusatzwerte. " +
         "Unterscheide Kammerabmessungen von zulässigen Schiffs-/Verbandsabmessungen. Bei abweichenden Werten nenne den Quellenhinweis aus dem Datensatz. " +
-        "Behaupte niemals, dass ein Wert den aktuellen Schleusenstatus, Wartezeit, Wasserstand oder eine momentane Sperre beschreibt. " +
-        "Verweise für Live-Status und Sperrungen auf DoRIS / viadonau.";
+        "Die Donau-Hauptwasserstraße hat 18 Schleusenstandorte; auf der mittleren und unteren Donau liegen die beiden Schleusen am Eisernen Tor I und II. Russe (Ruse) in Bulgarien ist ein Donauhafen, aber kein Schleusenstandort in dieser 18er-Liste. " +
+        "Die technische Haupttabelle für Drempeltiefe, Brückenhöhe, maximalen Haltungsunterschied und Verbandsabmessungen stammt von der Donaukommission: https://www.danubecommission.org/dc/de/die-donauschifffahrt/schleusen-an-der-donau/. " +
+        "Stromkilometer, Kammerabmessungen, Kammeranzahl, UKW-Kanal und Telefonnummern sind mit der DoRIS-Tabelle abgeglichen: https://www.doris.bmimi.gv.at/services/schleusen-an-der-donau. " +
+        "Behaupte niemals, dass ein statischer Wert den aktuellen Schleusenstatus, Wartezeit, Wasserstand oder eine momentane Sperre beschreibt. " +
+        "Verweise für Live-Status und Sperrungen auf DoRIS / viadonau: https://www.doris.bmimi.gv.at/en/fairway-information/lock-status.";
     }
 
     const response = await fetch(
