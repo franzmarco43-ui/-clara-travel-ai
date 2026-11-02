@@ -37,7 +37,7 @@ function needsLiveResearch(message, destinationKnowledge, locksKnowledge) {
   return currentOrVariable || specificResearch || lockQuestion || lockMentioned || (placeMentioned && (travelIntent || /\?|was|welche|wo|wie|wann|warum|empfehl/i.test(normalized)));
 }
 function needsAuthoritativeSources(message) {
-  return /\b(pegel|wasserstand|niedrigwasser|hochwasser|fahrwasser|schifffahrt|schleusenstatus|sperre|sperrung|nautisch|sicherheit|ukw|funkkanal|rollator|barrierefrei)\b/i.test(normalizeResearchText(message));
+  return /\b(pegel|wasserstand|niedrigwasser|hochwasser|fahrwasser|schifffahrt|schleuse|schleusen|lock|locks|schleusenstatus|sperre|sperrung|nautisch|sicherheit|ukw|funkkanal|rollator|barrierefrei)\b/i.test(normalizeResearchText(message));
 }
 function sanitizeSearchQuery(message) {
   return String(message || "")
