@@ -324,8 +324,19 @@ function makePlan(){const name=document.getElementById('destination').value,dura
 function loadClaraVoices(){if(!('speechSynthesis'in window))return;const select=document.getElementById('claraVoice');if(!select)return;const voices=speechSynthesis.getVoices();const german=voices.filter(v=>/^de(-|_)/i.test(v.lang));const previous=select.value;select.innerHTML='<option value="">Automatisch – weich & ruhig</option>'+german.map(v=>`<option value="${encodeURIComponent(v.name)}">${v.name} · ${v.lang}</option>`).join('');if(previous&&german.some(v=>encodeURIComponent(v.name)===previous))select.value=previous;else{const female=german.find(v=>/female|katja|hedda|amala|anna|marlene|vicki|sara|sarah|julia|petra|sophie|eva/i.test(v.name));if(female)select.value=encodeURIComponent(female.name);}const status=document.getElementById('voiceStatus');if(status)status.textContent=german.length===1?'Eine deutsche Systemstimme verfügbar. Clara spricht mit etwas weicherer Betonung; eine echte weibliche Stimme ist damit nicht garantiert.':'Deutsche Stimmen verfügbar. Wenn möglich, ist eine weiblich klingende Stimme vorausgewählt.';}
 if('speechSynthesis'in window){loadClaraVoices();speechSynthesis.onvoiceschanged=loadClaraVoices;}
 function claraSpeechText(value){
-  return String(value||'')
-    .replace(/```[\s\S]*?```/g,' ')
+  // Expand abbreviated time units only in the spoken version; the visible chat stays unchanged.
+  const spoken = String(value||'')
+    .replace(/(\d+(?:[.,]\d+)?)\s*(?:h|std\.?|stunden?)\s*(\d+(?:[.,]\d+)?)\s*(?:min\.?|minuten?)\b/gi,(_,hours,minutes)=>{
+      const hourLabel=Number(hours.replace(',','.'))===1?'Stunde':'Stunden';
+      const minuteLabel=Number(minutes.replace(',','.'))===1?'Minute':'Minuten';
+      return hours+' '+hourLabel+' und '+minutes+' '+minuteLabel;
+    })
+    .replace(/(\d+)\s*[-‐‑‒–—]\s*(\d+)\s*(?:min\.?|minuten?)\b/gi,'$1 bis $2 Minuten')
+    .replace(/(\d+)\s*[-‐‑‒–—]\s*(\d+)\s*(?:h|std\.?|stunden?)\b/gi,'$1 bis $2 Stunden')
+    .replace(/(\d+(?:[.,]\d+)?)\s*(?:min\.?|minuten?)\b/gi,(_,n)=>n+' '+(Number(n.replace(',','.'))===1?'Minute':'Minuten'))
+    .replace(/(\d+(?:[.,]\d+)?)\s*(?:h|std\.?|stunden?)\b/gi,(_,n)=>n+' '+(Number(n.replace(',','.'))===1?'Stunde':'Stunden'));
+  return spoken
+    .replace(/\x60\x60\x60[\s\S]*?\x60\x60\x60/g,' ')
     .replace(/<[^>]*>/g,' ')
     .replace(/!?\[([^\]]+)\]\([^)]*\)/g,'$1')
     .replace(/^\s*\|?\s*:?-{3,}.*$/gm,' ')
@@ -337,8 +348,8 @@ function claraSpeechText(value){
     .replace(/__(.*?)__/g,'$1')
     .replace(/\*(.*?)\*/g,'$1')
     .replace(/_(.*?)_/g,'$1')
-    .replace(/`([^\`]*)`/g,'$1')
-    .replace(/[~#*_>`]/g,' ')
+    .replace(/\x60([^\x60]*)\x60/g,'$1')
+    .replace(/[~#*_>\x60]/g,' ')
     .replace(/[{}\[\]<>]/g,' ')
     .replace(/\s*[,;:]\s*/g,', ')
     .replace(/\s*[.!?]\s*/g,'. ')
