@@ -92,7 +92,8 @@ async function searchTavily(message, apiKey) {
       const score = Number(item.score);
       return { title, url: parsed.href, domain: parsed.hostname.replace(/^www\./, ""), content, score: Number.isFinite(score) ? score : null, publishedDate: item.published_date ? String(item.published_date).slice(0, 40) : null, likelyOfficial: isLikelyOfficialResearchSource(parsed.href) };
     }).filter(Boolean).slice(0, 5);
-    const relevantResults = filterRelevantResearchResults(message, cleanResults);\n    const result = { ok: relevantResults.length > 0, reason: relevantResults.length ? null : "no_relevant_results", results: relevantResults, cacheHit: false };
+    const relevantResults = filterRelevantResearchResults(message, cleanResults);
+    const result = { ok: relevantResults.length > 0, reason: relevantResults.length ? null : "no_relevant_results", results: relevantResults, cacheHit: false };
     if (result.ok) {
       if (TAVILY_SEARCH_CACHE.size >= 100) {
         const oldestKey = TAVILY_SEARCH_CACHE.keys().next().value;
@@ -117,7 +118,7 @@ const RESEARCH_STOP_WORDS = new Set([
 ]);
 function researchQueryTerms(message) {
   return [...new Set(normalizeResearchText(message).split(" ").filter(term =>
-    term.length >= 4 && !RESEARCH_STOP_WORDS.has(term) && !/^\\d+$/.test(term)
+    term.length >= 4 && !RESEARCH_STOP_WORDS.has(term) && !/^\d+$/.test(term)
   ))];
 }
 function filterRelevantResearchResults(message, results) {
@@ -149,7 +150,7 @@ function filterRelevantResearchResults(message, results) {
       const url = new URL(entry.item.url);
       url.hash = "";
       url.search = "";
-      const key = url.hostname.toLowerCase().replace(/^www\\./, "") + url.pathname.replace(/\\/$/, "");
+      const key = url.hostname.toLowerCase().replace(/^www\./, "") + url.pathname.replace(/\/$/, "");
       if (seen.has(key)) continue;
       seen.add(key);
       filtered.push(entry.item);
@@ -323,7 +324,7 @@ exports.handler = async function (event) {
       }
     }
 
-    const asksAboutPassau = /passau|dreifl[uü]sseeck|veste oberhaus|dom st\\.? stephan/i.test(userMessage);
+    const asksAboutPassau = /passau|dreifl[uü]sseeck|veste oberhaus|dom st\.? stephan/i.test(userMessage);
     const destinationKnowledge = asksAboutPassau
       ? "\\n\\nSTRUKTURIERTES REISEWISSEN PASSAU (als Faktenbasis verwenden):\\n" +
         JSON.stringify(passauKnowledge) +
