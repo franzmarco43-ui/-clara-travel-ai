@@ -23,6 +23,7 @@ exports.handler = async function (event) {
     const apiKey = process.env.GROQ_API_KEY;
    const supabaseUrl = process.env.SUPABASE_PROJECT_URL;
     const supabaseKey = process.env.SUPABASE_ANON_KEY;
+    const passauKnowledge = require("./data/passau.json");
 
     if (!apiKey) {
       throw new Error("GROQ_API_KEY fehlt in Netlify.");
@@ -141,6 +142,16 @@ exports.handler = async function (event) {
       }
     }
 
+    const asksAboutPassau = /passau|dreifl[uü]sseeck|veste oberhaus|dom st\\.? stephan/i.test(userMessage);
+    const destinationKnowledge = asksAboutPassau
+      ? "\\n\\nSTRUKTURIERTES REISEWISSEN PASSAU (als Faktenbasis verwenden):\\n" +
+        JSON.stringify(passauKnowledge) +
+        "\\nAntworte in der Sprache der Anfrage (Deutsch, Englisch, Niederländisch, Französisch oder Rumänisch). " +
+        "Nutze nur die passenden Fakten. Erfinde keine Öffnungszeiten, Preise, Fahrpläne oder aktuellen Verfügbarkeiten. " +
+        "Bei Kreuzfahrtfragen zuerst nach dem konkreten Liegeplatz fragen, falls er fehlt. " +
+        "Nenne bei veränderlichen Angaben die offizielle Quelle und weise auf Live-Prüfung hin."
+      : "";
+
     const response = await fetch(
       "https://api.groq.com/openai/v1/chat/completions",
       {
@@ -161,7 +172,7 @@ exports.handler = async function (event) {
                 "Kultur und Flusskreuzfahrten. Erfinde keine aktuellen " +
                 "Öffnungszeiten, Veranstaltungen, Wetterdaten oder " +
                 "Pegelstände. Kennzeichne ungeprüfte Informationen. " +
-                memoryText
+                memoryText + destinationKnowledge
             },
             {
               role: "user",
