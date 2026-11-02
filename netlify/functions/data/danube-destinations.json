@@ -384,7 +384,19 @@
           "title": "Budapest – offizielle Tourismusinformation",
           "url": "https://www.budapestinfo.hu/"
         }
-      ]
+      ],
+      "nearbyExcursion": {
+        "title": "Donauknie (Dunakanyar) – Ausflugsregion nördlich von Budapest",
+        "description": "Das Donauknie ist eine eigenständige Ausflugsregion nördlich von Budapest, in der sich die Donau durch eine markante Flusslandschaft biegt. Zu den bekannten Orten zählen Szentendre mit seiner Künstler- und Altstadt, Visegrád mit der historischen Burganlage und Esztergom mit seiner Basilika.",
+        "places": [
+          "Szentendre",
+          "Visegrád",
+          "Esztergom"
+        ],
+        "planningNote": "Nicht als Sehenswürdigkeit im Budapester Stadtgebiet darstellen. Ob ein Besuch während eines Kreuzfahrtstopps möglich ist, hängt von Liegezeit, Anleger und einer tatsächlich geprüften Verbindung ab. Fahrpläne, Fahrzeiten, Schiffsangebote und Öffnungszeiten nur nach aktueller Quellenprüfung nennen.",
+        "sourceTitle": "Visit Hungary – Wie die Könige mit dem Schiff ankommen!",
+        "sourceUrl": "https://visithungary.com/de/artikel/wie-die-konige-mit-dem-schiff-ankommen"
+      }
     },
     {
       "name": "Puszta",
@@ -625,7 +637,8 @@
     "Bei Erwähnung von Rollator oder Gehhilfe keine konkrete Eignung, Barrierefreiheit, Route oder Einschätzung zu einer Stadt, Sehenswürdigkeit oder Strecke behaupten. Eine konkrete Aussage ist erst nach tatsächlicher Recherche in verlässlichen, aktuellen Quellen zulässig; andernfalls ausschließlich rollatorNotice ausgeben.",
     "Budapest: Buda und Pest sind die zwei bekannten Donauseiten, aber die Stadtgeschichte korrekt einordnen: 1873 wurden Buda, Pest und Óbuda vereinigt.",
     "Quellenregel: Quellen-URLs in der Wissensdatei sind redaktionelle Recherchehinweise. Sage nie, Informationen stammten aus diesen Quellen, laut ihnen bestätigt zu sein oder seien geprüft worden, solange die Seiten nicht in der aktuellen Anfrage tatsächlich abgerufen und ausgewertet wurden.",
-    "Thermen in Budapest: Keine einzelne Therme als aktuell geöffnet oder besuchbar empfehlen, ohne den aktuellen Status auf der offiziellen Betreiberseite zu prüfen. Gellért-Bad war laut offizieller Betreiberseite seit 1. Oktober 2025 geschlossen; geplante Wiedereröffnung 2028. Status vor späteren Empfehlungen erneut prüfen."
+    "Thermen in Budapest: Keine einzelne Therme als aktuell geöffnet oder besuchbar empfehlen, ohne den aktuellen Status auf der offiziellen Betreiberseite zu prüfen. Gellért-Bad war laut offizieller Betreiberseite seit 1. Oktober 2025 geschlossen; geplante Wiedereröffnung 2028. Status vor späteren Empfehlungen erneut prüfen.",
+    "Budapest – Donauknie: Das Donauknie (Dunakanyar) als eigenständige Ausflugsregion nördlich von Budapest behandeln, nicht als Sehenswürdigkeit im Budapester Stadtgebiet. Als bekannte Orte Szentendre, Visegrád und Esztergom nennen. Aktuelle Verbindungen, Fahrzeiten, Ausflugsschiffe und Öffnungszeiten nur nach tatsächlicher Live-Quellenprüfung nennen."
   ],
   "rollatorNotice": "Zu Wegen mit Rollator möchte ich nichts vermuten. Ich kann die konkrete Strecke in dieser Version noch nicht zuverlässig anhand aktueller Quellen prüfen. Deshalb gebe ich keine Eignungsaussage ab."
 }
