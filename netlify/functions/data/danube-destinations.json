@@ -48,35 +48,7 @@
           "title": "Passau Tourismus – Donaukreuzfahrten und Anlegestellen",
           "url": "https://tourismus.passau.de/service-infos/donaukreuzfahrten/"
         }
-      ],
-      "rollatorAccess": {
-        "level": "teilweise geeignet – routeabhängig",
-        "summary": "Ein kurzer Landgang auf ausgewählten, möglichst ebenen Abschnitten kann mit Rollator funktionieren. Die historische Altstadt hat jedoch Kopfsteinpflaster, Stufen, schmale Gehwege und Steigungen.",
-        "easier": [
-          "Dreiflüsseeck ist laut Passau Tourismus barrierefrei erreichbar.",
-          "In Teilen der Altstadt wurden geschnittene Pflasterstreifen und abgesenkte Bordsteine eingebaut, unter anderem im Bereich Steinweg, Domplatz, Pfaffengasse und Große Messergasse."
-        ],
-        "difficult": [
-          "Historische Pflasterflächen und wechselnde Gehwegbreiten können den Rollator bremsen oder instabil machen.",
-          "Veste Oberhaus: Höfe sind über Aufzüge erreichbar, aber Kies, Gras und unebenes Pflaster bleiben; Museumsräume und Aussichtsturm sind nicht barrierefrei. Der Pendelbus ist nicht barrierefrei."
-        ],
-        "guidance": "Für einen kurzen Landgang lieber den konkreten, möglichst ebenen Altstadtabschnitt und das Dreiflüsseeck wählen. Veste Oberhaus nicht ohne Prüfung von Wegbelag, Aufzugbetrieb und Transfer einplanen.",
-        "verify": [
-          "Liegeplatz und Weg vom Schiff",
-          "Bordsteine, Pflaster und Steigung auf der gewählten Route",
-          "Aufzug- und Transferstatus an der Veste"
-        ],
-        "sources": [
-          {
-            "title": "Passau Tourismus – Passau barrierefrei",
-            "url": "https://tourismus.passau.de/mobil-in-passau/passau-barrierefrei/"
-          },
-          {
-            "title": "Passau Tourismus – Veste Oberhaus, Barrierefreiheit",
-            "url": "https://tourismus.passau.de/passau-sehen-erleben/sehenswuerdigkeiten-in-passau/burganlage-veste-oberhaus/"
-          }
-        ]
-      }
+      ]
     },
     {
       "name": "Linz",
@@ -123,39 +95,7 @@
           "title": "Visit-Linz – Stadtwanderwege",
           "url": "https://www.visitlinz.at/sehen-erleben/auf-den-stadtwanderwege-linz-zu-fuss-entdecken"
         }
-      ],
-      "rollatorAccess": {
-        "level": "teilweise geeignet – zentrale Route bevorzugen",
-        "summary": "In Linz gibt es barrierearme Verkehrsmittel und gut planbare zentrale Ziele. Gleichzeitig nennt Linz Tourismus Bordsteine, Pflaster und steile Straßen ausdrücklich als mögliche Hindernisse.",
-        "easier": [
-          "Für ausgewählte Strecken in der Innenstadt öffentliche Verkehrsmittel mit Niederflureinstieg prüfen.",
-          "Die neueren Wagen der Pöstlingbergbahn sind laut Linz Tourismus barrierefrei; historische Nostalgiewagen sind es nicht."
-        ],
-        "difficult": [
-          "Der Fußweg hinauf zum Pöstlingberg ist eine steile, anspruchsvolle Strecke und mit Rollator nicht als Standardroute zu empfehlen.",
-          "Zur Pöstlingbergkirche führt eine Stiege; Aussichtspunkte und historische Altstadtbereiche können unebene Beläge aufweisen."
-        ],
-        "guidance": "Eine kompakte Route im Zentrum wählen und längere oder steile Anstiege vermeiden. Für den Pöstlingberg nur die konkrete Bahnverbindung und den Weg ab der Bergstation prüfen; keine Wanderroute hinauf empfehlen.",
-        "verify": [
-          "Aktuelle Niederflur-/Fahrzeugauswahl der Pöstlingbergbahn",
-          "Einstieg und Ausstieg mit Rollator",
-          "Pflaster, Bordsteine und Steigungen zwischen den geplanten Stationen"
-        ],
-        "sources": [
-          {
-            "title": "Linz Tourismus – Barrierefrei durch Linz",
-            "url": "https://www.linztourismus.at/freizeit/reise-planen/service/linz-barrierefrei"
-          },
-          {
-            "title": "Linz Tourismus – Öffentliche Verkehrsmittel",
-            "url": "https://www.linztourismus.at/freizeit/reise-planen/service/linz-barrierefrei/oeffentliche-verkehrsmittel"
-          },
-          {
-            "title": "Linz Tourismus – Pöstlingbergbahn",
-            "url": "https://www.linztourismus.at/de/freizeit/linz-entdecken/aktivitaeten/rundfahrten/poestlingbergbahn"
-          }
-        ]
-      }
+      ]
     },
     {
       "name": "Melk",
@@ -200,35 +140,7 @@
           "title": "Austria Tourism – Wachau",
           "url": "https://www.austria.info/de-de/regionen/wachau/"
         }
-      ],
-      "rollatorAccess": {
-        "level": "teilweise geeignet – Stiftsbesuch vorab abstimmen",
-        "summary": "Das Stift Melk bietet nach eigenen Angaben für gehbeeinträchtigte Gäste Unterstützung und einen Lift zum Eingang. Der Stiftspark hat Kieswege, die schwierig sein können; die Wege vom Fluss bzw. aus der Stadt zum Stift sind nicht pauschal als rollatorgeeignet bestätigt.",
-        "easier": [
-          "Vom Parkplatz führt ein Lift auf die Ebene des Stiftseingangs; von dort beschreibt das Stift einen ebenen Weg zum Eingang.",
-          "Das Stift bietet Unterstützung für gehbeeinträchtigte Gäste und bittet darum, sich an Kassa bzw. Information zu melden."
-        ],
-        "difficult": [
-          "Kieswege im Stiftspark können mit Rollator anstrengend oder instabil sein.",
-          "Der Zugang aus der Stadt bzw. vom Fluss hinauf zum Stift kann Steigung und längere Gehstrecke bedeuten."
-        ],
-        "guidance": "Vor dem Besuch beim Stift die Rollator-Nutzung und den gewünschten Besichtigungsumfang anmelden. Stiftspark-Kieswege und den Anstieg vom tatsächlichen Anleger nicht ungeprüft einplanen.",
-        "verify": [
-          "Tatsächlichen Anleger und Höhenunterschied bis zum Stift",
-          "Unterstützung und zugänglichen Zugang beim Stift vorab abstimmen",
-          "Kieswege im Park möglichst auslassen, wenn der Rollator dort schwer zu schieben ist"
-        ],
-        "sources": [
-          {
-            "title": "Stift Melk – Barrierefreie Besuche",
-            "url": "https://www.stiftmelk.at/en/visit-experience/opening-hours-prices-guided-tours/"
-          },
-          {
-            "title": "Stift Melk – Häufige Fragen zum Besuch",
-            "url": "https://www.stiftmelk.at/besuchen-erleben/stiftsbesichtigung/faqs-haeufige-fragen-besuch/"
-          }
-        ]
-      }
+      ]
     },
     {
       "name": "Weißenkirchen",
@@ -274,34 +186,7 @@
           "title": "Marktgemeinde Weißenkirchen",
           "url": "https://www.weissenkirchen-wachau.at/"
         }
-      ],
-      "rollatorAccess": {
-        "level": "nicht ausreichend ortsspezifisch geprüft",
-        "summary": "Für Weißenkirchen liegt keine ausreichend detaillierte, offizielle Rollator-Wegbeschreibung für einen vollständigen Landgang vor. Die Donaulände und der Ortskern können als mögliche kurze Route geprüft werden; Weinbergwege und höher gelegene Aussichtspunkte nicht pauschal empfehlen.",
-        "easier": [
-          "Die Donaulände wird als Spazierbereich beschrieben; sie ist ein sinnvoller Kandidat für eine kurze Uferstrecke, sofern der konkrete Belag und Zugang geprüft sind."
-        ],
-        "difficult": [
-          "Weinbergwege, Steigungen und historische Oberflächen können für Rollator-Nutzer ungeeignet sein.",
-          "Für einzelne Wege und öffentliche WCs liegen hier keine bestätigten Rollator-Angaben vor."
-        ],
-        "guidance": "Zunächst eine kurze Ufer- und Ortskernrunde ohne Weinberg-Anstieg vorschlagen – aber erst nach Prüfung von Anleger, Pflaster, Bordsteinen und tatsächlichem Wegverlauf. Weinverkostungen nur mit bestätigtem Zugang und Rückkehrzeit.",
-        "verify": [
-          "Anleger und stufenloser Weg an Land",
-          "Oberflächenbelag und Steigungen der Donaulände-Ortskern-Verbindung",
-          "Zugang zum konkreten Heurigen bzw. Weingut"
-        ],
-        "sources": [
-          {
-            "title": "Niederösterreich Tourismus – Donau Naturstrand Weißenkirchen",
-            "url": "https://www.niederoesterreich.at/ausflug-freizeit/strand-weissenkirchen"
-          },
-          {
-            "title": "Marktgemeinde Weißenkirchen",
-            "url": "https://www.weissenkirchen-wachau.at/"
-          }
-        ]
-      }
+      ]
     },
     {
       "name": "Wien",
@@ -351,35 +236,7 @@
           "title": "WienTourismus – Aussichtspunkte",
           "url": "https://www.wien.info/de/sehen-erleben/wiener-aussichtspunkte-365554"
         }
-      ],
-      "rollatorAccess": {
-        "level": "teilweise geeignet – kurze Abschnitte und Verkehrsmittel kombinieren",
-        "summary": "Wien hat ein breites Angebot an Niederflurbussen, vielen Niederflur-Straßenbahnen und U-Bahn-Stationen mit Aufzügen oder Rampen. Für Rollator-Gäste bleiben jedoch längere Distanzen, Baustellen, Menschenmengen und historische Oberflächen zu berücksichtigen.",
-        "easier": [
-          "Für längere Distanzen können Niederflurbusse und viele Niederflur-Straßenbahnen hilfreich sein.",
-          "U-Bahn-Stationen sind überwiegend per Lift oder Rampe zugänglich; den aktuellen Aufzugsstatus vor Fahrtbeginn prüfen."
-        ],
-        "difficult": [
-          "Die Innenstadt und große Anlagen wie Schönbrunn können lange Gehstrecken bedeuten.",
-          "Historische Sehenswürdigkeiten und Kopfsteinpflasterbereiche können Stufen, Schwellen oder unebene Oberflächen haben."
-        ],
-        "guidance": "Eine kleine, zusammenhängende Teilroute wählen und längere Wege mit öffentlichen Verkehrsmitteln abkürzen. Keine Kombination Stephansdom–Hofburg–Schönbrunn als Fußroute ausgeben. Pausen und Sitzgelegenheiten einplanen.",
-        "verify": [
-          "Aktueller Liftstatus der U-Bahn",
-          "Niederflur-Anzeige der Straßenbahn und Einstieg mit Rollator",
-          "Baustellen, Pflaster, Weglänge, Sitzmöglichkeiten und Toiletten"
-        ],
-        "sources": [
-          {
-            "title": "WienTourismus – Wien barrierefrei",
-            "url": "https://www.wien.info/de/reiseinfos/wien-barrierefrei"
-          },
-          {
-            "title": "WienTourismus – Barrierefrei durch Wien",
-            "url": "https://www.wien.info/en/travel-info/accessible-vienna/accessible-public-transport-338230"
-          }
-        ]
-      }
+      ]
     },
     {
       "name": "Bratislava",
@@ -436,35 +293,6 @@
         "title": "Kompakter Landgang bei rund drei Stunden",
         "guidance": "Bei zentralem Liegeplatz Schwerpunkt auf Donauufer, Altstadt/Hauptplatz und Martinsdom legen. Eine Essenspause und ausreichend Rückkehrpuffer priorisieren. Die Burg nur ergänzen, wenn tatsächliche Gehzeit, Mobilität, Öffnung und All-aboard-Zeit dies zulassen; sie kann alternativ per bestätigtem Transfer erreicht werden.",
         "timings": "Keine minutengenaue Standardroute ohne bestätigten Liegeplatz, Gehtempo und konkretes Abfahrts-/All-aboard-Zeitfenster ausgeben."
-      },
-      "rollatorAccess": {
-        "level": "teilweise geeignet – Altstadt abschnittsweise",
-        "summary": "Visit Bratislava beschreibt die meisten Straßen im Zentrum als gut nutzbar, weist aber ausdrücklich auf historische Pflasterflächen, Unebenheiten und Bordsteine hin. Der Weg zur Burg führt bergauf.",
-        "easier": [
-          "Eine kurze Route auf den besser befestigten Straßen im Zentrum und entlang der Donau kann eine Option sein.",
-          "Das Alte Rathaus / Stadtmuseum verfügt laut Visit Bratislava über Aufzug zwischen den Ausstellungsebenen; der Aussichtsturm ist nicht zugänglich."
-        ],
-        "difficult": [
-          "Historische Pflasterflächen und Bordsteine können mit Rollator unangenehm oder schwierig sein.",
-          "Die Burgzufahrt bzw. der Fußweg zur Burg ist ansteigend; nicht als Standard-Fußroute für Rollator-Gäste planen.",
-          "Einige historische Kirchen und Sehenswürdigkeiten haben Stufen oder eingeschränkten Zugang."
-        ],
-        "guidance": "Für einen kurzen Landgang den flacheren Altstadtbereich und die Donaupromenade bevorzugen. Die Burg nur mit bestätigtem Transfer oder nach Einschätzung der Gehfähigkeit ergänzen; keine steile Fußroute versprechen.",
-        "verify": [
-          "Konkreter Liegeplatz und Weg bis zur Altstadt",
-          "Pflaster- und Bordsteinsituation auf der gewählten Route",
-          "Eingangssituation der gewünschten Sehenswürdigkeiten"
-        ],
-        "sources": [
-          {
-            "title": "Visit Bratislava – Barrierenloses Bratislava",
-            "url": "https://www.visitbratislava.com/de/barrierenloses-bratislava/"
-          },
-          {
-            "title": "Visit Bratislava – Accessible Tourism",
-            "url": "https://www.visitbratislava.com/accessible-tourism-in-bratislava/"
-          }
-        ]
       }
     },
     {
@@ -511,40 +339,7 @@
           "title": "Esztergom – offizielle Tourismusseite",
           "url": "https://www.esztergom.hu/en/en_tourism/165-tourism"
         }
-      ],
-      "rollatorAccess": {
-        "level": "bedingt geeignet – Basilika nur nach Abstimmung",
-        "summary": "Die Basilika liegt erhöht. Für den Kircheneingang kann ein Zugang am Nordtor bzw. eine Öffnung auf Anfrage organisiert werden; andere Bereiche haben Treppen. Die Aussichtsgalerie der Kuppel ist nur über 400 Stufen erreichbar.",
-        "easier": [
-          "Für den Kircheneingang kann die Öffnung eines geeigneten Zugangs laut Basilika telefonisch oder vor Ort erbeten werden.",
-          "Schatzkammer und Panoramasaal haben einen Aufzug; Zugang und Betriebsablauf vor dem Besuch abstimmen."
-        ],
-        "difficult": [
-          "Der Weg vom Ort bzw. Anleger zur Basilika führt bergauf; Steigung und Belag vor Ort prüfen.",
-          "Die Krypta ist nur über Treppen erreichbar.",
-          "Die Kuppel-Aussichtsgalerie ist nur über 400 Stufen zugänglich und keine Rollator-Option."
-        ],
-        "guidance": "Vor dem Landgang die Basilika kontaktieren und den Zugang mit Rollator bestätigen lassen. Den Aufstieg vom Anleger nicht ungeprüft zu Fuß planen; die Kuppelgalerie und Krypta auslassen.",
-        "verify": [
-          "Kontakt zur Basilika wegen geeignetem Eingang und Aufzug",
-          "Anleger, Höhenunterschied und Transfer",
-          "Stufenfreie Wege zwischen Basilika, Burgviertel und Schiff"
-        ],
-        "sources": [
-          {
-            "title": "Basilika Esztergom – Wissenswertes und Möglichkeiten",
-            "url": "https://bazilika-esztergom.hu/de/wissenswertes-und-moglichkeiten.html"
-          },
-          {
-            "title": "Basilika Esztergom – Zugang zur Schatzkammer",
-            "url": "https://bazilika-esztergom.hu/de/das-betreten-der-schatzkammer.html"
-          },
-          {
-            "title": "Basilika Esztergom – Besuch",
-            "url": "https://bazilika-esztergom.hu/en"
-          }
-        ]
-      }
+      ]
     },
     {
       "name": "Budapest",
@@ -589,36 +384,7 @@
           "title": "Budapest – offizielle Tourismusinformation",
           "url": "https://www.budapestinfo.hu/"
         }
-      ],
-      "rollatorAccess": {
-        "level": "teilweise geeignet – mit Verkehrsmittel und genauer Wegwahl",
-        "summary": "Budapest verfügt über Niederflurangebote im öffentlichen Verkehr, doch das historische Burgviertel ist großteils mit Kopfsteinpflaster versehen, das laut Visit Hungary schwierig zu begehen ist. Neuere Beläge gibt es nur in bestimmten Bereichen.",
-        "easier": [
-          "Niederflurbusse und viele Niederflur-Straßenbahnen können längere Wege erleichtern; konkrete Linie und Haltestelle prüfen.",
-          "Der untere Bereich der Fischerbastei wird als leicht zugänglich beschrieben."
-        ],
-        "difficult": [
-          "Das Budaer Burgviertel hat Kopfsteinpflaster und unebene historische Flächen.",
-          "Die Stadt ist weitläufig; lange Fußwege zwischen Buda und Pest vermeiden.",
-          "Steigungen zum Burgviertel nicht ungeprüft zu Fuß einplanen."
-        ],
-        "guidance": "Eine kleine Route in einer Donauseite wählen und längere Strecken mit einem geprüften Niederflur-Verkehrsmittel überbrücken. Burgviertel nur auf ausgewählten befestigten Abschnitten oder mit bestätigtem Transfer.",
-        "verify": [
-          "Aktuelle Niederflur-Linie und Haltestellen",
-          "Pflaster, Steigung und Aufzüge im Burgviertel",
-          "Liegeplatz, Transfer und Rückkehr zum Schiff"
-        ],
-        "sources": [
-          {
-            "title": "Visit Hungary – Zugängliches Ungarn",
-            "url": "https://visithungary.com/de/artikel/zugangliches-ungarn-"
-          },
-          {
-            "title": "Visit Hungary – Budapest für weniger mobile Besucher",
-            "url": "https://visithungary.com/de/artikel/budapest-fur-weniger-mobile-besucher"
-          }
-        ]
-      }
+      ]
     },
     {
       "name": "Puszta",
@@ -661,34 +427,7 @@
           "title": "Hortobágyi Nationalpark – Große Fischteiche und Naturbahn",
           "url": "https://www.hnp.hu/en/szervezeti-egyseg/tourism/oldal/hortobagy-great-fishponds-and-narrow-gauge-railway"
         }
-      ],
-      "rollatorAccess": {
-        "level": "nicht pauschal beurteilbar – Weg- und Wetterprüfung nötig",
-        "summary": "Die Puszta ist ein großflächiges Natur- und Ausflugsgebiet, kein kompakter Stadt-Landgang. Die Eignung hängt stark vom konkreten Nationalparkweg, Untergrund, Wetter und Transfer ab.",
-        "easier": [
-          "Der Nationalpark beschreibt einzelne Naturlehrpfade als ohne schwierige Abschnitte; die Nutzbarkeit der Wege ist jedoch wetterabhängig."
-        ],
-        "difficult": [
-          "Weiche Böden, Schlamm, Kies, Sand und unbefestigte Naturpfade können Rollator-Nutzung verhindern.",
-          "Auf einzelnen Naturwegen gibt es keine Toiletten; Distanz und Pausenmöglichkeiten vorher klären."
-        ],
-        "guidance": "Nur einen vom Nationalpark oder Veranstalter konkret bestätigten, festen und möglichst ebenen Weg auswählen. Keine allgemeine Puszta-Wanderung für Rollator-Nutzer empfehlen.",
-        "verify": [
-          "Konkreter Weg und Oberflächenbelag",
-          "Wetter und Bodenverhältnisse am Ausflugstag",
-          "Stufen, Stege, Geländer, Toiletten, Sitzplätze und Transferfahrzeug"
-        ],
-        "sources": [
-          {
-            "title": "Hortobágyi Nationalpark – Große Fischteiche und Naturlehrpfad",
-            "url": "https://www.hnp.hu/en/szervezeti-egyseg/tourism/oldal/hortobagy-great-fishponds-nature-trail"
-          },
-          {
-            "title": "Hortobágyi Nationalpark – Besucherzentrum",
-            "url": "https://www2.hnp.hu/en/szervezeti-egyseg/tourism/oldal/hnp-visitor-center"
-          }
-        ]
-      }
+      ]
     },
     {
       "name": "Novi Sad",
@@ -733,31 +472,7 @@
           "title": "Novi Sad Tourism – Drei-Tage-Vorschlag",
           "url": "https://novisad.travel/en/novi-sad-za-tri-dana/"
         }
-      ],
-      "rollatorAccess": {
-        "level": "teilweise geeignet – Zentrum und Festung unterscheiden",
-        "summary": "Die serbische Tourismusorganisation nennt angepasste Wege und Aussichtspunkte an der Festung Petrovaradin. Das ist kein Nachweis, dass alle Zugänge, Steigungen und Pflasterflächen mit Rollator einfach nutzbar sind.",
-        "easier": [
-          "Für eine kurze, flache Runde im Stadtzentrum und an der Donaupromenade können geeignete Teilstrecken geprüft werden.",
-          "Die serbische Tourismusorganisation nennt angepasste Wege und Aussichtspunkte an Petrovaradin."
-        ],
-        "difficult": [
-          "Die Festung liegt erhöht; Steigungen, historische Pflasterflächen und längere Wege können anstrengend sein.",
-          "Nicht alle Wege und Innenbereiche der Festung sind als rollatorgeeignet bestätigt."
-        ],
-        "guidance": "Bei begrenzter Zeit eine kurze Runde im Zentrum bzw. am Flussufer bevorzugen. Petrovaradin nur mit konkreter Wegauskunft zu Steigung, Belag und Zugang einplanen.",
-        "verify": [
-          "Liegeplatz und Weg in die Innenstadt",
-          "Für die Festung: Transfer, Steigung, Pflaster und stufenfreie Teilroute",
-          "Sitzgelegenheiten und Toiletten entlang der Route"
-        ],
-        "sources": [
-          {
-            "title": "Serbien Tourismus – Zugängliche Reiseziele für jedermann",
-            "url": "https://www.serbia.travel/de/zugaengliche-reiseziele-fuer-jedermann/"
-          }
-        ]
-      }
+      ]
     },
     {
       "name": "Belgrad",
@@ -800,31 +515,7 @@
           "title": "Serbia Travel – The City in Time and Space",
           "url": "https://www.serbia.travel/en/stories-items/the-city-in-time-and-space/"
         }
-      ],
-      "rollatorAccess": {
-        "level": "teilweise geeignet – ausgewählte Promenaden und Innenstadtwege",
-        "summary": "Die serbische Tourismusorganisation nennt Rampen und flache Wege an Teilen der Festung, in der Knez Mihailova, Skadarlija sowie an der Save-Promenade und Belgrade Waterfront. Belgrad bleibt groß und die Eignung ist streckenabhängig.",
-        "easier": [
-          "Sava-Promenade und Belgrade Waterfront werden als barrierearme Spazierbereiche beschrieben.",
-          "Teile der Knez Mihailova und Belgrader Festung werden mit Rampen bzw. flachen Wegen ausgewiesen."
-        ],
-        "difficult": [
-          "Festungsbereich und historische Viertel können Steigungen, längere Distanzen und unebene Abschnitte enthalten.",
-          "Die Eignung des öffentlichen Verkehrs und die durchgehende Bordsteinabsenkung müssen für die konkrete Route geprüft werden."
-        ],
-        "guidance": "Eine einzelne Promenade oder einen kompakten Innenstadtabschnitt auswählen. Nicht mehrere weit auseinanderliegende Stadtteile zu einer Fußroute verbinden. Für die Festung den genauen Startpunkt und Wegbelag prüfen.",
-        "verify": [
-          "Liegeplatz und Transfer zur gewählten Route",
-          "Durchgängigkeit ebener Wege, Bordsteinabsenkungen und Rampenneigung",
-          "Sitz- und Toilettenmöglichkeiten sowie Rückfahrt"
-        ],
-        "sources": [
-          {
-            "title": "Serbien Tourismus – Zugängliche Reiseziele für jedermann",
-            "url": "https://www.serbia.travel/de/zugaengliche-reiseziele-fuer-jedermann/"
-          }
-        ]
-      }
+      ]
     },
     {
       "name": "Russe",
@@ -867,31 +558,7 @@
           "title": "Gemeinde Ruse",
           "url": "https://www.ruse-bg.eu/"
         }
-      ],
-      "rollatorAccess": {
-        "level": "teilweise geeignet – einzelne Einrichtungen und Parkwege",
-        "summary": "Ein bulgarischer Leitfaden für zugängliche Sehenswürdigkeiten nennt in Ruse unter anderem Rampen und zugängliche Eingänge am Regionalmuseum und Pantheon sowie ebene Wege im Jugendpark. Die durchgängige Eignung der Gehwege zwischen Hafen und Zentrum ist damit nicht bestätigt.",
-        "easier": [
-          "Regionalmuseum Ruse: im Zugänglichkeitsführer werden Rampen und Aufzüge genannt.",
-          "Jugendpark: der Führer beschreibt ebene Wege und zugängliche Sanitäranlagen."
-        ],
-        "difficult": [
-          "Die Route vom konkreten Schiffsanleger in die Innenstadt kann Bordsteine, unebene Gehwege und längere Distanzen enthalten.",
-          "Nicht jede historische Sehenswürdigkeit und nicht jeder Zugang ist geprüft."
-        ],
-        "guidance": "Als mögliche Ziele das Regionalmuseum oder den Jugendpark erst nach Prüfung des Weges ab Anleger anbieten. Die gesamte Stadt nicht pauschal als rollatorfreundlich bezeichnen.",
-        "verify": [
-          "Konkreter Hafenliegeplatz und sicherer Weg ins Zentrum",
-          "Bordsteine, Pflaster, Baustellen und Straßenquerungen",
-          "Aktueller Zugang und Aufzugstatus der gewünschten Einrichtung"
-        ],
-        "sources": [
-          {
-            "title": "BART – Leitfaden für zugängliche touristische Objekte in Bulgarien",
-            "url": "https://www.bartbg.com/%D0%BF%D1%8A%D1%82%D0%B5%D0%B2%D0%BE%D0%B4%D0%B8%D1%82%D0%B5%D0%BB-%D0%B7%D0%B0-%D0%B4%D0%BE%D1%81%D1%82%D1%8A%D0%BF%D0%BD%D0%B8-%D1%82%D1%83%D1%80%D0%B8%D1%81%D1%82%D0%B8%D1%87%D0%B5%D1%81%D0%BA/"
-          }
-        ]
-      }
+      ]
     },
     {
       "name": "Donaudelta",
@@ -938,36 +605,7 @@
           "title": "Touristische Routen im Donaudelta – Informationen zu freigegebenen Routen",
           "url": "https://www.excursii-delta-dunarii.ro/en/tourist-routes/"
         }
-      ],
-      "rollatorAccess": {
-        "level": "nicht pauschal beurteilbar – Boot und Naturwege einzeln prüfen",
-        "summary": "Im Donaudelta hängt die Eignung besonders von Ponton, Gangway und Boot ab. Für kleinere Ausflugsboote und Naturwege sind keine durchgängigen Rollator-Standards bestätigt.",
-        "easier": [
-          "Auf größeren Fahrgastschiffen kann der Zugang über Ponton und Gangway möglich sein; dies muss vom konkreten Betreiber für den jeweiligen Anleger bestätigt werden."
-        ],
-        "difficult": [
-          "Schmale oder steile Gangways, Schwankungen, Stufen und enge Einstiege können das Ein- und Aussteigen mit Rollator erschweren.",
-          "Sandige, schlammige oder unbefestigte Wege sind für Rollatoren häufig ungeeignet.",
-          "Kleine Boote können enge Einstiege und wenig Platz zur sicheren Verstauung des Rollators haben."
-        ],
-        "guidance": "Vor Buchung Betreiber und Schiffscrew konkret fragen: Gangwaybreite und Neigung, Handlauf, Stufen, Hilfe beim Einstieg, sichere Rollator-Verstauung, Toilette an Bord und fester Untergrund am Ausflugsziel. Ohne bestätigte Angaben keine Bootstour als rollatorgeeignet empfehlen.",
-        "verify": [
-          "Ponton- und Gangwaydaten für die konkrete Anlegestelle",
-          "Stufen und Einstiegshöhe des Bootes",
-          "Möglichkeit, Rollator sicher zu verstauen und wieder zu erreichen",
-          "Fester Untergrund, Entfernungen, Sitzplätze und Toiletten am Ziel"
-        ],
-        "sources": [
-          {
-            "title": "ARBDD – Biosphärenreservat Donaudelta",
-            "url": "https://www.ddbra.ro/"
-          },
-          {
-            "title": "ARBDD – Besucher- und Zugangsberechtigungen",
-            "url": "https://permise.ddbra.ro/"
-          }
-        ]
-      }
+      ]
     }
   ],
   "responseRules": [
@@ -980,11 +618,10 @@
     "Puszta als separaten Landausflug kennzeichnen, nicht als Station an der Donau-Hauptlinie.",
     "Russe/Ruse ist ein Donauhafen, aber kein Schleusenstandort in der Liste der 18 Schleusen der Donau-Hauptwasserstraße.",
     "Für das Donaudelta Schutzgebietsregeln, genehmigte Routen und erforderliche Berechtigungen ausdrücklich berücksichtigen.",
-    "Bei Fragen zu Rollator, Rollatornutzung, Gehhilfe oder eingeschränkter Gehfähigkeit immer den passenden rollatorAccess-Eintrag verwenden. Wenn keine Stadt genannt ist, die Unterschiede aller passenden Ziele kurz darstellen und nach dem Reiseziel fragen.",
-    "Rollator-Eignung nicht aus Rollstuhl- oder allgemeiner Barrierefreiheitsangabe ableiten. Rollstuhlzugänglichkeit kann Hinweise liefern, ist aber keine Rollator-Freigabe und umgekehrt.",
-    "Jede Route für Rollator-Nutzer nach Oberfläche, Steigung, Stufen, Bordsteinen, Wegbreite, Länge, Sitzmöglichkeiten, Toiletten, Baustellen und Rückkehr zum Schiff beurteilen. Nur tatsächlich bestätigte Eigenschaften als gesichert bezeichnen.",
-    "Keine pauschalen Aussagen wie rollatorfreundlich oder barrierefrei für eine ganze Stadt. Abschnitte und einzelne Sehenswürdigkeiten getrennt bewerten.",
     "Wenn der konkrete Anleger nicht bekannt ist, keine Gehzeit oder Route vom Schiff erfinden. Zuerst Liegeplatz, Aufenthaltsdauer und tatsächliches Gehvermögen erfragen; nur notwendige Angaben erheben.",
-    "Bei unklaren oder nicht geprüften Wegen offen sagen, dass die Rollator-Eignung nicht ausreichend bestätigt ist, und den Betreiber bzw. die Tourist-Information zur Prüfung empfehlen."
-  ]
+    "Bei Erwähnung von Rollator oder Gehhilfe ausschließlich den allgemeinen rollatorNotice-Hinweis ausgeben. Keine konkrete Eignung, Barrierefreiheit oder Nicht-Eignung einer Stadt, Sehenswürdigkeit oder Strecke behaupten.",
+    "Keine Rollator-Routen, Wegempfehlungen, Bewertungen, Einstufungen oder Aussagen über geeignete/ungeeignete Teilstrecken erstellen. Nur darauf hinweisen, dass Untergrund, Pflaster, Steigungen, Stufen, Bordsteine, Entfernungen und der konkrete Liegeplatz variieren können und die geplante Strecke mit Reederei oder Tourist-Information abgeklärt werden sollte.",
+    "Rollator-Hinweis ist eine allgemeine Vorsichtsnotiz und keine Aussage zur individuellen Mobilität oder zur tatsächlichen Eignung eines Weges."
+  ],
+  "rollatorNotice": "Hinweis für Gäste mit Rollator: Untergrund, Pflaster, Steigungen, Stufen, Bordsteine und Entfernungen können je nach Weg und Liegeplatz variieren. Bitte kläre vor dem Landgang mit der Reederei oder der örtlichen Tourist-Information, ob die von dir geplante Strecke für dich passend ist. Clara gibt hierzu keine konkrete Eignungs- oder Barrierefreiheitszusage."
 }
