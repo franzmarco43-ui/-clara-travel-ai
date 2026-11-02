@@ -25,6 +25,7 @@ exports.handler = async function (event) {
     const supabaseKey = process.env.SUPABASE_ANON_KEY;
     const passauKnowledge = require("./data/passau.json");
     const danubeLocksKnowledge = require("./data/danube-locks.json");
+    const danubeDestinationsKnowledge = require("./data/danube-destinations.json");
 
     if (!apiKey) {
       throw new Error("GROQ_API_KEY fehlt in Netlify.");
@@ -153,6 +154,35 @@ exports.handler = async function (event) {
         "Nenne bei veränderlichen Angaben die offizielle Quelle und weise auf Live-Prüfung hin."
       : "";
 
+
+    // Destination-specific travel knowledge for all Danube stations.
+    // Attach only matching locations to keep the prompt focused.
+    const normalizePlace = value => String(value || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\\u0300-\\u036f]/g, "")
+      .replace(/[^a-z0-9]+/g, " ")
+      .trim();
+    const normalizedQuery = " " + normalizePlace(userMessage) + " ";
+    const matchedDestinationRecords = danubeDestinationsKnowledge.records.filter(place => {
+      const names = [place.name, ...(place.aliases || [])];
+      return names.some(name => {
+        const normalizedName = normalizePlace(name);
+        return normalizedName && normalizedQuery.includes(" " + normalizedName + " ");
+      });
+    });
+    const destinationRecordsForPrompt = matchedDestinationRecords.filter(place =>
+      !(asksAboutPassau && place.name === "Passau")
+    );
+    const destinationContext = destinationRecordsForPrompt.length
+      ? "\\n\\nSTRUKTURIERTES DONAU-REISEWISSEN (nur passende, in der Nutzerfrage erkannte Orte):\\n" +
+        JSON.stringify({records:destinationRecordsForPrompt, responseRules:danubeDestinationsKnowledge.responseRules}) +
+        "\\nNutze die Einträge als redaktionelle Faktenbasis. Antworte in der Sprache der Anfrage. " +
+        "Unterscheide feste Ortsinformationen von veränderlichen Informationen. Erfinde keine aktuellen Öffnungszeiten, Preise, Fahrpläne, Liegeplätze oder Verfügbarkeiten. " +
+        "Bei Flusskreuzfahrtfragen vor konkreten Wegbeschreibungen nach dem tatsächlichen Liegeplatz fragen, wenn er nicht genannt wurde. " +
+        "Berücksichtige Liegezeit, Mobilität, Steigungen, Transfers und Rückkehr zum Schiff."
+      : "";
+
     // Technical reference data for all 18 locks on the Danube main waterway.
     // This is static reference information, not live operating status.
     const asksAboutLocks = /schleus|locks?|lock chamber|lock dimensions|kammermaß|kammerlänge|kammerbreite|funkkanal|strom.?km|haltungsunterschied|hubhöhe/i.test(userMessage);
@@ -197,7 +227,7 @@ exports.handler = async function (event) {
                 "Kultur und Flusskreuzfahrten. Erfinde keine aktuellen " +
                 "Öffnungszeiten, Veranstaltungen, Wetterdaten oder " +
                 "Pegelstände. Kennzeichne ungeprüfte Informationen. " +
-                memoryText + destinationKnowledge + lockKnowledge
+                memoryText + destinationKnowledge + destinationContext + lockKnowledge
             },
             {
               role: "user",
