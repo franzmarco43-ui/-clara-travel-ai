@@ -88,19 +88,19 @@
 </div><div id="toast" class="toast hidden"></div>
 <script>
 const places=[
-{name:'Passau',country:'Deutschland',emoji:'⛪',tag:'Drei-Flüsse-Stadt',desc:'Historische Altstadt am Zusammenfluss von Donau, Inn und Ilz.'},
-{name:'Linz',country:'Österreich',emoji:'🎨',tag:'Kunst & Donauufer',desc:'Kultur, moderne Kunst und Spaziergänge an der Donau.'},
-{name:'Weißenkirchen',country:'Österreich',emoji:'🍇',tag:'Wachau & Wein',desc:'Weinorte, Marillen und Spaziergänge durch die Wachauer Landschaft.'},
-{name:'Melk',country:'Österreich',emoji:'🏰',tag:'Stift & Wachau',desc:'Barockes Stift und die bezaubernde Wachau entdecken.'},
-{name:'Wien',country:'Österreich',emoji:'🎻',tag:'Kaiserliche Kultur',desc:'Kaffeehauskultur, Museen und imperiale Geschichte.'},
-{name:'Bratislava',country:'Slowakei',emoji:'🏛️',tag:'Altstadt & Burg',desc:'Gassen der Altstadt und Ausblicke von der Burg.'},
-{name:'Budapest',country:'Ungarn',emoji:'🌉',tag:'Thermen & Kulinarik',desc:'Donaupanorama, Thermalbäder und ungarische Küche.'},
-{name:'Puszta',country:'Ungarn',emoji:'🐎',tag:'Natur & Tradition',desc:'Weite Landschaften und die Kultur der ungarischen Tiefebene.'},
-{name:'Novi Sad',country:'Serbien',emoji:'🎨',tag:'Kultur an der Donau',desc:'Lebendige Plätze und die Festung Petrovaradin.'},
-{name:'Belgrad',country:'Serbien',emoji:'🌆',tag:'Stadt am Zusammenfluss',desc:'Kalemegdan, Flussblicke und serbische Spezialitäten.'},
-{name:'Donaudelta',country:'Rumänien',emoji:'🛶',tag:'Wildnis & Wasserwege',desc:'Kanäle, Vogelwelt und besondere Naturerlebnisse.'}
+{name:'Passau',country:'Deutschland',emoji:'⛪',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Passau_Altstadt_Dom.jpg',tag:'Drei-Flüsse-Stadt',desc:'Historische Altstadt am Zusammenfluss von Donau, Inn und Ilz.'},
+{name:'Linz',country:'Österreich',emoji:'🎨',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Linz_Ars_Electronica_center-5529.jpg',tag:'Kunst & Donauufer',desc:'Kultur, moderne Kunst und Spaziergänge an der Donau.'},
+{name:'Weißenkirchen',country:'Österreich',emoji:'🍇',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Wei%C3%9Fenkirchen_in_der_Wachau%2C_20210728_1212_0700.jpg',tag:'Wachau & Wein',desc:'Weinorte, Marillen und Spaziergänge durch die Wachauer Landschaft.'},
+{name:'Melk',country:'Österreich',emoji:'🏰',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Melk_Abbey.jpg',tag:'Stift & Wachau',desc:'Barockes Stift und die bezaubernde Wachau entdecken.'},
+{name:'Wien',country:'Österreich',emoji:'🎻',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Vienna_Schonbrunn_Palace.jpg',tag:'Kaiserliche Kultur',desc:'Kaffeehauskultur, Museen und imperiale Geschichte.'},
+{name:'Bratislava',country:'Slowakei',emoji:'🏛️',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Bratislava_Castle.jpg',tag:'Altstadt & Burg',desc:'Gassen der Altstadt und Ausblicke von der Burg.'},
+{name:'Budapest',country:'Ungarn',emoji:'🌉',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Hungarian_Parliament_Budapest.jpg',tag:'Thermen & Kulinarik',desc:'Donaupanorama, Thermalbäder und ungarische Küche.'},
+{name:'Puszta',country:'Ungarn',emoji:'🐎',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Hortobagy_National_Park.jpg',tag:'Natur & Tradition',desc:'Weite Landschaften und die Kultur der ungarischen Tiefebene.'},
+{name:'Novi Sad',country:'Serbien',emoji:'🎨',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Petrovaradin_Fortress.jpg',tag:'Kultur an der Donau',desc:'Lebendige Plätze und die Festung Petrovaradin.'},
+{name:'Belgrad',country:'Serbien',emoji:'🌆',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Belgrade_Kalemegdan_Fortress.jpg',tag:'Stadt am Zusammenfluss',desc:'Kalemegdan, Flussblicke und serbische Spezialitäten.'},
+{name:'Donaudelta',country:'Rumänien',emoji:'🛶',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Danube_Delta_Romania.jpg',tag:'Wildnis & Wasserwege',desc:'Kanäle, Vogelwelt und besondere Naturerlebnisse.'}
 ];
-function placeCard(p){return `<article class="destination"><div class="dest-img">${p.emoji}<span>${p.country}</span></div><div class="dest-info"><h3>${p.name}</h3><p>${p.desc}</p><button onclick="selectDestination('${p.name}')">Mit Clara entdecken →</button></div></article>`}
+function placeCard(p){return `<article class="destination"><div class="dest-img" style="background-image:linear-gradient(180deg,#102f2820,#102f2866),url('${p.image}');background-size:cover;background-position:center" role="img" aria-label="Ansicht von ${p.name}"><span>${p.country}</span></div><div class="dest-info"><h3>${p.name}</h3><p>${p.desc}</p><button onclick="selectDestination('${p.name}')">Mit Clara entdecken →</button></div></article>`}
 document.getElementById('destinations').innerHTML=places.map(placeCard).join('');
 document.getElementById('mapDestinations').innerHTML=places.map(placeCard).join('');
 document.getElementById('destination').innerHTML=places.map(p=>`<option>${p.name}</option>`).join('');
