@@ -344,8 +344,31 @@ function loadClaraVoices(){
 }
 if('speechSynthesis'in window){loadClaraVoices();speechSynthesis.onvoiceschanged=loadClaraVoices;}
 function claraSpeechText(value){
-  // Expand time abbreviations and prepare Markdown for spoken German.
+  // German number words for measurements read aloud by the browser voice.
+  const numberWords = input => {
+    const n = Math.floor(Number(input));
+    if (!Number.isFinite(n) || n < 0 || n > 999999) return String(input);
+    const ones = ["null","eins","zwei","drei","vier","fünf","sechs","sieben","acht","neun"];
+    const teens = ["zehn","elf","zwölf","dreizehn","vierzehn","fünfzehn","sechzehn","siebzehn","achtzehn","neunzehn"];
+    const tens = ["","","zwanzig","dreißig","vierzig","fünfzig","sechzig","siebzig","achtzig","neunzig"];
+    const underHundred = x => {
+      if (x < 10) return ones[x];
+      if (x < 20) return teens[x-10];
+      const unit=x%10, decade=Math.floor(x/10);
+      return (unit ? (unit===1?"ein":ones[unit])+"und" : "")+tens[decade];
+    };
+    const underThousand = x => {
+      const hundred=Math.floor(x/100), rest=x%100;
+      return (hundred ? (hundred===1?"ein":ones[hundred])+"hundert" : "")+(rest?underHundred(rest):"");
+    };
+    if(n===0)return "null";
+    if(n<100)return underHundred(n);
+    if(n<1000)return underThousand(n);
+    const thousand=Math.floor(n/1000), rest=n%1000;
+    return (thousand===1?"eintausend":underThousand(thousand)+"tausend")+(rest?underThousand(rest):"");
+  };
   let spoken=String(value||'')
+    // Example: 2 h 30 min -> zwei Stunden und dreißig Minuten.
     .replace(/(\d+(?:[.,]\d+)?)\s*(?:h|std\.?|stunden?)\s*(\d+(?:[.,]\d+)?)\s*(?:min\.?|minuten?)\b/gi,(_,hours,minutes)=>{
       const hourLabel=Number(hours.replace(',','.'))===1?'Stunde':'Stunden';
       const minuteLabel=Number(minutes.replace(',','.'))===1?'Minute':'Minuten';
@@ -355,6 +378,28 @@ function claraSpeechText(value){
     .replace(/(\d+)\s*[-‐‑‒–—]\s*(\d+)\s*(?:h|std\.?|stunden?)\b/gi,'$1 bis $2 Stunden')
     .replace(/(\d+(?:[.,]\d+)?)\s*(?:min\.?|minuten?)\b/gi,(_,n)=>n+' '+(Number(n.replace(',','.'))===1?'Minute':'Minuten'))
     .replace(/(\d+(?:[.,]\d+)?)\s*(?:h|std\.?|stunden?)\b/gi,(_,n)=>n+' '+(Number(n.replace(',','.'))===1?'Stunde':'Stunden'));
+
+  // Dimensions such as 230 × 24 m: both values refer to metres.
+  spoken=spoken.replace(/(\d+)\s*[×x]\s*(\d+(?:[.,]\d{1,2})?)\s*(?:m|meter|metern)\b/gi,(_,length,width)=>
+    numberWords(length)+' mal '+numberWords(width.replace(',','.').split('.')[0])+
+    (width.match(/[.,](\d{1,2})$/)?' Komma '+numberWords(width.match(/[.,](\d{1,2})$/)[1]):'')+' Meter'
+  );
+  // Two decimal places are rendered as metres and centimetres, e.g. 2,50 m.
+  spoken=spoken.replace(/(\d+)[,.](\d{2})\s*(?:m|meter|metern)\b/gi,(_,metres,centimetres)=>{
+    const m=Number(metres), cm=Number(centimetres);
+    if(m===0&&cm===0)return 'null Meter';
+    if(m===0)return numberWords(cm)+' Zentimeter';
+    if(cm===0)return numberWords(m)+' '+(m===1?'Meter':'Meter');
+    return numberWords(m)+' Meter und '+numberWords(cm)+' Zentimeter';
+  });
+  // One decimal place stays a decimal reading; whole values are spelled out too.
+  spoken=spoken.replace(/(\d+)[,.](\d)\s*(?:m|meter|metern)\b/gi,(_,metres,decimal)=>
+    numberWords(metres)+' Komma '+numberWords(decimal)+' Meter'
+  );
+  spoken=spoken.replace(/(\d+)\s*(?:m|meter|metern)\b/gi,(_,metres)=>
+    numberWords(metres)+' '+(Number(metres)===1?'Meter':'Meter')
+  );
+
   return spoken
     .replace(/\x60\x60\x60[\s\S]*?\x60\x60\x60/g,' ')
     .replace(/<[^>]*>/g,' ')
