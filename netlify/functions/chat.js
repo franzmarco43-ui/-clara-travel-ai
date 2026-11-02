@@ -183,6 +183,22 @@ exports.handler = async function (event) {
         "Berücksichtige Liegezeit, Mobilität, Steigungen, Transfers und Rückkehr zum Schiff."
       : "";
 
+    // Rollator-specific guidance: keep it distinct from wheelchair accessibility.
+    const asksAboutRollator = /rollator|gehwagen|gehstock|gehst[uü]tze|rollatornutz|mit gehhilfe|gehbehindert|eingeschr[aä]nkte gehf[aä]higkeit/i.test(userMessage);
+    const rollatorRecordsForPrompt = asksAboutRollator
+      ? (matchedDestinationRecords.length ? matchedDestinationRecords : danubeDestinationsKnowledge.records)
+          .map(place => ({name:place.name, country:place.country, rollatorAccess:place.rollatorAccess}))
+          .filter(place => place.rollatorAccess)
+      : [];
+    const rollatorContext = rollatorRecordsForPrompt.length
+      ? "\\n\\nROLLATOR-WEGEBEURTEILUNG (ortsspezifisch; keine pauschale Barrierefreiheitszusage):\\n" +
+        JSON.stringify({records:rollatorRecordsForPrompt}) +
+        "\\nVerwende diese Angaben ausdrücklich in der Antwort. Unterscheide Rollator und Rollstuhl; Rollstuhl-Angaben sind keine automatische Rollator-Freigabe. " +
+        "Bewerte konkrete Teilstrecken nach Untergrund, Steigung, Stufen, Bordsteinen, Wegbreite, Länge, Sitzgelegenheiten, Toiletten, Baustellen und Rückkehr zum Schiff. " +
+        "Wenn Liegeplatz oder persönliche Gehfähigkeit entscheidend sind, stelle eine gezielte Rückfrage statt Wegzeiten zu erfinden. " +
+        "Kennzeichne ungeprüfte Strecken klar und empfehle bei Unsicherheit die Bestätigung durch Betreiber oder Tourist-Information."
+      : "";
+
     // Technical reference data for all 18 locks on the Danube main waterway.
     // This is static reference information, not live operating status.
     const asksAboutLocks = /schleus|locks?|lock chamber|lock dimensions|kammermaß|kammerlänge|kammerbreite|funkkanal|strom.?km|haltungsunterschied|hubhöhe/i.test(userMessage);
@@ -228,7 +244,7 @@ exports.handler = async function (event) {
                 "Öffnungszeiten, Veranstaltungen, Wetterdaten oder " +
                 "Pegelstände. Kennzeichne ungeprüfte Informationen. " +
                 "Schreibe Zeitangaben immer vollständig aus: Minuten statt min, Stunden statt h oder Std. Verwende keine abgekürzten Zeiteinheiten. Formuliere zum Beispiel 10 bis 15 Minuten oder 2 Stunden und 30 Minuten. " +
-                memoryText + destinationKnowledge + destinationContext + lockKnowledge
+                memoryText + destinationKnowledge + destinationContext + rollatorContext + lockKnowledge
             },
             {
               role: "user",
