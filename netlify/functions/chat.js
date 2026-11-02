@@ -227,6 +227,7 @@ exports.handler = async function (event) {
                 "Kultur und Flusskreuzfahrten. Erfinde keine aktuellen " +
                 "Öffnungszeiten, Veranstaltungen, Wetterdaten oder " +
                 "Pegelstände. Kennzeichne ungeprüfte Informationen. " +
+                "Schreibe Zeitangaben immer vollständig aus: Minuten statt min, Stunden statt h oder Std. Verwende keine abgekürzten Zeiteinheiten. Formuliere zum Beispiel 10 bis 15 Minuten oder 2 Stunden und 30 Minuten. " +
                 memoryText + destinationKnowledge + destinationContext + lockKnowledge
             },
             {
