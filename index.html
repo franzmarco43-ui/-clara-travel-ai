@@ -362,6 +362,7 @@ function claraSpeechText(value){
       return (hundred ? (hundred===1?"ein":ones[hundred])+"hundert" : "")+(rest?underHundred(rest):"");
     };
     if(n===0)return "null";
+    if(n===1)return "ein";
     if(n<100)return underHundred(n);
     if(n<1000)return underThousand(n);
     const thousand=Math.floor(n/1000), rest=n%1000;
@@ -378,6 +379,10 @@ function claraSpeechText(value){
     .replace(/(\d+)\s*[-‐‑‒–—]\s*(\d+)\s*(?:h|std\.?|stunden?)\b/gi,'$1 bis $2 Stunden')
     .replace(/(\d+(?:[.,]\d+)?)\s*(?:min\.?|minuten?)\b/gi,(_,n)=>n+' '+(Number(n.replace(',','.'))===1?'Minute':'Minuten'))
     .replace(/(\d+(?:[.,]\d+)?)\s*(?:h|std\.?|stunden?)\b/gi,(_,n)=>n+' '+(Number(n.replace(',','.'))===1?'Stunde':'Stunden'));
+
+  // Preserve comparison signs before reading measurement values aloud.
+  spoken=spoken.replace(/(?:>|≥)\s*(?=\d+(?:[.,]\d+)?\s*(?:m|meter|metern)\b)/gi,'mehr als ');
+  spoken=spoken.replace(/(?:<|≤)\s*(?=\d+(?:[.,]\d+)?\s*(?:m|meter|metern)\b)/gi,'weniger als ');
 
   // Dimensions such as 230 × 24 m: both values refer to metres.
   spoken=spoken.replace(/(\d+)\s*[×x]\s*(\d+(?:[.,]\d{1,2})?)\s*(?:m|meter|metern)\b/gi,(_,length,width)=>
