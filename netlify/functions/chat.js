@@ -183,22 +183,13 @@ exports.handler = async function (event) {
         "Berücksichtige Liegezeit, Mobilität, Steigungen, Transfers und Rückkehr zum Schiff."
       : "";
 
-    // Rollator-specific guidance: keep it distinct from wheelchair accessibility.
+    // Neutral rollator notice only. Do not assess or recommend specific routes.
     const asksAboutRollator = /rollator|gehwagen|gehstock|gehst[uü]tze|rollatornutz|mit gehhilfe|gehbehindert|eingeschr[aä]nkte gehf[aä]higkeit/i.test(userMessage);
-    const rollatorRecordsForPrompt = asksAboutRollator
-      ? (matchedDestinationRecords.length ? matchedDestinationRecords : danubeDestinationsKnowledge.records)
-          .map(place => ({name:place.name, country:place.country, rollatorAccess:place.rollatorAccess}))
-          .filter(place => place.rollatorAccess)
-      : [];
-    const rollatorContext = rollatorRecordsForPrompt.length
-      ? "\n\nROLLATOR-WEGEBEURTEILUNG (ortsspezifisch; keine pauschale Barrierefreiheitszusage):\n" +
-        JSON.stringify({records:rollatorRecordsForPrompt}) +
-        "\nVerwende diese Angaben ausdrücklich in der Antwort. Unterscheide Rollator und Rollstuhl; Rollstuhl-Angaben sind keine automatische Rollator-Freigabe. " +
-        "Bewerte konkrete Teilstrecken nach Untergrund, Steigung, Stufen, Bordsteinen, Wegbreite, Länge, Sitzgelegenheiten, Toiletten, Baustellen und Rückkehr zum Schiff. " +
-        "Wenn Liegeplatz oder persönliche Gehfähigkeit entscheidend sind, stelle eine gezielte Rückfrage statt Wegzeiten zu erfinden. " +
-        "Kennzeichne ungeprüfte Strecken klar und empfehle bei Unsicherheit die Bestätigung durch Betreiber oder Tourist-Information."
+    const rollatorContext = asksAboutRollator
+      ? "\n\nALLGEMEINER HINWEIS FÜR GÄSTE MIT ROLLATOR:\n" +
+        String(danubeDestinationsKnowledge.rollatorNotice || "Bitte kläre vor dem Landgang mit Reederei oder Tourist-Information, ob die geplante Strecke für dich passend ist.") +
+        "\nWichtig: Dies ist ausschließlich ein allgemeiner Hinweis. Gib KEINE konkrete Aussage oder Bewertung zur Eignung/Barrierefreiheit einer Stadt, Sehenswürdigkeit oder Wegstrecke. Empfiehl oder verwerfe keine bestimmten Wege. Erfinde keine Angaben zu Pflaster, Steigung, Stufen oder Bordsteinen an einem konkreten Ort. Verweise nur darauf, die geplante Strecke und den tatsächlichen Liegeplatz vorab mit Reederei oder örtlicher Tourist-Information abzuklären."
       : "";
-
     // Technical reference data for all 18 locks on the Danube main waterway.
     // This is static reference information, not live operating status.
     const asksAboutLocks = /schleus|locks?|lock chamber|lock dimensions|kammermaß|kammerlänge|kammerbreite|funkkanal|strom.?km|haltungsunterschied|hubhöhe/i.test(userMessage);
