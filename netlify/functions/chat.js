@@ -160,7 +160,7 @@ exports.handler = async function (event) {
     const normalizePlace = value => String(value || "")
       .toLowerCase()
       .normalize("NFD")
-      .replace(/[\\u0300-\\u036f]/g, "")
+      .replace(/[\u0300-\u036f]/g, "")
       .replace(/[^a-z0-9]+/g, " ")
       .trim();
     const normalizedQuery = " " + normalizePlace(userMessage) + " ";
@@ -175,9 +175,9 @@ exports.handler = async function (event) {
       !(asksAboutPassau && place.name === "Passau")
     );
     const destinationContext = destinationRecordsForPrompt.length
-      ? "\\n\\nSTRUKTURIERTES DONAU-REISEWISSEN (nur passende, in der Nutzerfrage erkannte Orte):\\n" +
+      ? "\n\nSTRUKTURIERTES DONAU-REISEWISSEN (nur passende, in der Nutzerfrage erkannte Orte):\n" +
         JSON.stringify({records:destinationRecordsForPrompt, responseRules:danubeDestinationsKnowledge.responseRules}) +
-        "\\nNutze die Einträge als redaktionelle Faktenbasis. Antworte in der Sprache der Anfrage. " +
+        "\nNutze die Einträge als redaktionelle Faktenbasis. Antworte in der Sprache der Anfrage. " +
         "Unterscheide feste Ortsinformationen von veränderlichen Informationen. Erfinde keine aktuellen Öffnungszeiten, Preise, Fahrpläne, Liegeplätze oder Verfügbarkeiten. " +
         "Bei Flusskreuzfahrtfragen vor konkreten Wegbeschreibungen nach dem tatsächlichen Liegeplatz fragen, wenn er nicht genannt wurde. " +
         "Berücksichtige Liegezeit, Mobilität, Steigungen, Transfers und Rückkehr zum Schiff."
