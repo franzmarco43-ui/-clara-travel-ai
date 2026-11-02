@@ -387,7 +387,7 @@ exports.handler = async function (event) {
                 "Sind Quellen veraltet, widersprüchlich, nicht amtlich genug oder nicht aussagekräftig, sage das klar. Trenne gesicherte Fakten, redaktionelles Ortswissen und offene Punkte. Ergänze keine plausibel klingenden Details. " +
                 "Bei Rollator- oder Mobilitätsfragen niemals konkrete Weg-Eignung, Barrierefreiheit oder Routen behaupten, solange dafür keine verlässliche aktuelle Quelle tatsächlich geprüft wurde. Ohne solche Prüfung ausschließlich den neutralen Hinweis aus der Wissensdatei verwenden. " +
                 "Schreibe Zeitangaben immer vollständig aus: Minuten statt min, Stunden statt h oder Std. Verwende keine abgekürzten Zeiteinheiten. Formuliere zum Beispiel 10 bis 15 Minuten oder 2 Stunden und 30 Minuten. " +
-                memoryText + destinationKnowledge + destinationContext + rollatorContext + lockKnowledge
+                memoryText + destinationKnowledge + destinationContext + rollatorContext + lockKnowledge + researchContext
             },
             {
               role: "user",
@@ -416,7 +416,11 @@ exports.handler = async function (event) {
       statusCode: 200,
       headers,
       body: JSON.stringify({
-        reply: result.choices?.[0]?.message?.content || ""
+        reply: result.choices?.[0]?.message?.content || "",
+        sources: researchSources,
+        research: researchNeeded
+          ? {status: "searched", provider: "Tavily", searchedAt: new Date().toISOString(), resultCount: researchSources.length}
+          : {status: "not_requested"}
       })
     };
 
