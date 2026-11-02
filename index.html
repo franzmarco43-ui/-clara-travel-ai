@@ -385,7 +385,7 @@ function answerFor(q){
   }
   for(const [name,d] of Object.entries(claraDestinationKnowledge)){
     if(s.includes(name.toLowerCase())||(name==='Weißenkirchen'&&s.includes('weissenkirchen'))){
-      return `Für ${name} empfehle ich dir ${d.focus}. Sehenswert: ${d.see} Kulinarisch: ${d.food} ${d.season} Für Flusskreuzfahrtgäste: ${d.cruise} Als vorrangige Quellen nutze ich: ${d.source}. Wichtig: konkrete Öffnungszeiten, Veranstaltungen, Wetter- und Schifffahrtsmeldungen prüfe ich mit aktuellem Datum, bevor ich sie als aktuell ausgebe.`;
+      return `Für ${name} habe ich einen gespeicherten redaktionellen Überblick: ${d.focus}. Zu den bekannten Sehenswürdigkeiten zählen: ${d.see} Regionale Spezialitäten: ${d.food} ${d.season} Hinweis für Flusskreuzfahrtgäste: ${d.cruise} Dieser Überblick ist nicht live geprüft. Aktuelle Öffnungszeiten, Eintrittspreise, Veranstaltungstermine, Verkehrslage und Anlegestellen kann ich mit dieser lokalen Antwort nicht bestätigen. Mögliche offizielle Anlaufstellen für eine spätere Prüfung: ${d.source}. Diese Quellen wurden in dieser Antwort nicht live abgerufen.`;
     }
   }
   if(/heurig|wein|weingut/.test(s))return 'Für Wein und Heurige ist besonders die Wachau mit Weißenkirchen und den umliegenden Weinorten interessant. Ich berücksichtige Grüner Veltliner, Riesling, regionale Heurigenküche und veröffentlichte Aussteckzeiten. Konkrete Öffnungstermine müssen aktuell beim Betrieb bestätigt werden.';
