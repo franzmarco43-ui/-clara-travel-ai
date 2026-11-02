@@ -329,6 +329,29 @@ exports.handler = async function (event) {
         "Verweise für Live-Status und Sperrungen auf DoRIS / viadonau: https://www.doris.bmimi.gv.at/en/fairway-information/lock-status.";
     }
 
+    // Live research is triggered for current/variable facts, destination questions and lock topics.
+    // Rollator requests stay neutral by explicit product decision and return above.
+    const researchNeeded = needsLiveResearch(userMessage, danubeDestinationsKnowledge, danubeLocksKnowledge);
+    let researchResult = null;
+    let researchContext = "";
+    let researchSources = [];
+    if (researchNeeded) {
+      const tavilyKey = process.env.TAVILY_API_KEY;
+      if (!tavilyKey) {
+        return { statusCode: 200, headers, body: JSON.stringify({ reply: researchFailureMessage("not_configured"), sources: [], research: {status: "not_configured", provider: "Tavily"} }) };
+      }
+      researchResult = await searchTavily(userMessage, tavilyKey);
+      if (!researchResult.ok) {
+        console.warn("Clara live research unavailable:", researchResult.reason, researchResult.providerStatus || "");
+        return { statusCode: 200, headers, body: JSON.stringify({ reply: researchFailureMessage(researchResult.reason), sources: [], research: {status: researchResult.reason || "unavailable", provider: "Tavily"} }) };
+      }
+      researchSources = researchResult.results.map(item => ({ title: item.title, url: item.url, domain: item.domain, publishedDate: item.publishedDate, likelyOfficial: item.likelyOfficial }));
+      if (needsAuthoritativeSources(userMessage) && !researchResult.results.some(item => item.likelyOfficial)) {
+        return { statusCode: 200, headers, body: JSON.stringify({ reply: "Ich habe zwar Suchergebnisse gefunden, darunter aber keine ausreichend erkennbare Behörden- oder Betreiberquelle. Bei dieser sicherheits- oder betriebsrelevanten Frage möchte ich daraus keine konkrete Aussage ableiten. Bitte prüfe die zuständige offizielle Stelle.", sources: researchSources, research: {status: "insufficient_official_sources", provider: "Tavily", searchedAt: new Date().toISOString()} }) };
+      }
+      researchContext = buildResearchContext(researchResult);
+    }
+
     const response = await fetch(
       "https://api.groq.com/openai/v1/chat/completions",
       {
