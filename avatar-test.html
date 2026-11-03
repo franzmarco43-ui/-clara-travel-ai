@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#123c3a">
+<title>Clara – kostenloser Live-Avatar-Test</title>
+<style>
+:root{color-scheme:light;--green:#123c3a;--mint:#dcebe4;--cream:#f7f4ec;--ink:#172b29;--muted:#687773}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--cream);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;display:grid;place-items:center;padding:20px}
+main{width:min(100%,760px);background:white;border:1px solid #e2e8e3;border-radius:24px;padding:24px;box-shadow:0 14px 40px #183b3012}
+h1{margin:0 0 6px;color:var(--green);font-size:clamp(25px,5vw,36px)}p{color:var(--muted)}
+#avatar{height:min(55vh,440px);min-height:300px;border-radius:18px;background:radial-gradient(ellipse at 50% 40%,#527b68,#123c3a);overflow:hidden;position:relative}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
+button{border:0;border-radius:12px;padding:12px 17px;background:var(--green);color:white;font-weight:700;cursor:pointer}
+button.secondary{background:var(--mint);color:var(--green)}button:disabled{opacity:.5;cursor:not-allowed}
+#status{padding:12px 14px;border-radius:12px;background:#f2f6f1;color:#43564d;min-height:46px}
+.note{font-size:13px;margin-top:14px}
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js",
+    "three/examples/jsm/": "https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/",
+    "@interviewflowai/talking-avatar": "https://cdn.jsdelivr.net/npm/@interviewflowai/talking-avatar@0.1.0/dist/index.js"
+  }
+}
+</script>
+</head>
+<body>
+<main>
+  <h1>Clara – Live-Avatar-Test</h1>
+  <p>Erster kostenloser Techniktest mit der eingebauten weiblichen 3D-Figur. Das ist noch nicht Claras endgültiges Aussehen.</p>
+  <div id="avatar" aria-label="3D-Avatar"></div>
+  <div class="controls">
+    <button id="start">Mikrofon-Test starten</button>
+    <button id="stop" class="secondary" disabled>Test beenden</button>
+  </div>
+  <div id="status" role="status">Avatar wird geladen …</div>
+  <p class="note">Für den Test bitte Kopfhörer verwenden. Der Browser fragt nach Mikrofonzugriff. Deine Mikrofon-Audio wird lokal im Browser verarbeitet und vom Avatar wiedergegeben. Die Seite benötigt HTTPS.</p>
+</main>
+<script type="module">
+import { TalkingAvatar } from "@interviewflowai/talking-avatar";
+
+const container = document.getElementById("avatar");
+const startButton = document.getElementById("start");
+const stopButton = document.getElementById("stop");
+const status = document.getElementById("status");
+let avatar = null;
+let stream = null;
+
+try {
+  avatar = new TalkingAvatar({
+    container,
+    onError: (error) => {
+      console.error("Talking Avatar:", error);
+      status.textContent = "Avatar-Fehler: " + (error?.message || "Unbekannter Fehler");
+    }
+  });
+  await avatar.ready;
+  status.textContent = "Die 3D-Figur ist bereit. Klicke auf „Mikrofon-Test starten“.";
+} catch (error) {
+  console.error(error);
+  status.textContent = "Der Avatar konnte nicht geladen werden. Bitte Seite neu laden oder einen aktuellen Chrome-/Edge-Browser verwenden.";
+  startButton.disabled = true;
+}
+
+startButton.addEventListener("click", async () => {
+  if (!avatar) return;
+  startButton.disabled = true;
+  status.textContent = "Bitte Mikrofonzugriff erlauben …";
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    await avatar.attachStream(stream);
+    startButton.disabled = true;
+    stopButton.disabled = false;
+    status.textContent = "Live-Test läuft. Sprich ins Mikrofon – die 3D-Figur sollte synchron den Mund bewegen.";
+  } catch (error) {
+    console.error(error);
+    status.textContent = error?.name === "NotAllowedError"
+      ? "Mikrofonzugriff wurde nicht erlaubt. Bitte in den Browser-Einstellungen freigeben."
+      : "Mikrofon konnte nicht gestartet werden: " + (error?.message || "Unbekannter Fehler");
+    startButton.disabled = false;
+  }
+});
+
+stopButton.addEventListener("click", () => {
+  avatar?.detachStream();
+  stream?.getTracks().forEach(track => track.stop());
+  stream = null;
+  stopButton.disabled = true;
+  startButton.disabled = false;
+  status.textContent = "Test beendet. Du kannst ihn erneut starten.";
+});
+
+window.addEventListener("pagehide", () => {
+  avatar?.dispose();
+  stream?.getTracks().forEach(track => track.stop());
+});
+</script>
+</body>
+</html>
