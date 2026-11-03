@@ -36,6 +36,12 @@
 .dest-info button:hover{background:linear-gradient(135deg,#245c50,#123c3a);border-color:#245c50;color:#fff;transform:translateY(-1px);box-shadow:0 7px 16px #123c3a25}
 @media(max-width:520px){.dest-img{height:112px}.dest-info{padding:11px}.dest-info p{min-height:48px}}
 @media(prefers-reduced-motion:reduce){.destination,.dest-info button{transition:none}}
+
+/* Clara speaking animation – stronger and easier to see on the portrait */
+.clara-photo-wrap.speaking .clara-mouth{display:block!important;top:62.5%;width:18px;height:5px;background:#713238;border:1px solid #51252b;box-shadow:0 1px 4px #49202680;animation:claraMouthVisible .22s ease-in-out infinite alternate!important;transform:translateX(-50%);}
+.clara-photo-wrap.speaking .clara-mouth:after{inset:2px 3px;background:#efaaa0;}
+@keyframes claraMouthVisible{0%{height:3px;width:13px;border-radius:50%;transform:translateX(-50%) scaleY(.75)}50%{height:8px;width:18px;border-radius:45% 45% 55% 55%;transform:translateX(-50%) scaleY(1)}100%{height:5px;width:15px;border-radius:50%;transform:translateX(-50%) scaleY(.85)}}
+@media(prefers-reduced-motion:reduce){.clara-photo-wrap.speaking .clara-mouth{animation:none!important;height:6px;width:16px}}
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -589,9 +595,12 @@ function speakClara(value,force=false){
   utterance.rate=Number.isFinite(rate)?Math.min(1.02,Math.max(0.86,rate)):1.00;
   utterance.pitch=1.03;
   utterance.volume=1;
-  setClaraSpeaking(true);
+  setClaraSpeaking(false);
+  utterance.onstart=()=>setClaraSpeaking(true);
   utterance.onend=()=>setClaraSpeaking(false);
   utterance.onerror=()=>setClaraSpeaking(false);
+  utterance.onpause=()=>setClaraSpeaking(false);
+  utterance.onresume=()=>setClaraSpeaking(true);
   speechSynthesis.speak(utterance);
 }
 function addMsg(text,who,sources=[],research=null){
