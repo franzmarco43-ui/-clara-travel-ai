@@ -753,6 +753,7 @@ let toastTimer;function toast(s){let el=document.getElementById('toast');el.text
 let claraSupabase = null;
 let claraUser = null;
 let claraRecoveryTokenHash = null;
+let claraRecoveryCode = null;
 const CLARA_CONFIG_KEY = 'clara.travel.supabase.public.v1';
 // Public browser configuration only. Never place a Supabase Secret/service_role key here.
 const CLARA_DEFAULT_SUPABASE_URL = 'https://ufsglnhebhbmadwzftau.supabase.co';
@@ -767,6 +768,12 @@ function connectSupabase(){
   try{
     localStorage.setItem(CLARA_CONFIG_KEY,JSON.stringify({url,key}));
     claraSupabase=window.supabase.createClient(url,key);
+    claraSupabase.auth.onAuthStateChange((event,session)=>{
+      if(event==='PASSWORD_RECOVERY'){
+        document.getElementById('passwordRecoveryPanel')?.classList.remove('hidden');
+        memoryStatus('passwordRecoveryStatus','Wiederherstellung bestätigt. Bitte gib dein neues Passwort zweimal ein.');
+      }
+    });
     claraSupabase.auth.getSession().then(({data,error})=>{
       if(error) throw error;
       claraUser=data.session?.user||null;
@@ -787,7 +794,31 @@ function restoreClaraConnection(){
   }catch(e){memoryStatus('sbStatus','Verbindung konnte nicht vorbereitet werden: '+e.message,true);}
 }
 function toggleClaraPasswordVisibility(){const input=document.getElementById('authPassword'),button=document.getElementById('toggleAuthPassword');if(!input||!button)return;const show=input.type==='password';input.type=show?'text':'password';button.textContent=show?'🙈 Verbergen':'👁 Anzeigen';button.setAttribute('aria-label',show?'Passwort verbergen':'Passwort anzeigen');button.setAttribute('aria-pressed',String(show));}
-function detectClaraRecovery(){const search=new URLSearchParams(window.location.search),hash=new URLSearchParams(window.location.hash.replace(/^#/,''));const tokenHash=search.get('token_hash');const isRecovery=search.get('type')==='recovery'||hash.get('type')==='recovery';if(!isRecovery)return;claraRecoveryTokenHash=tokenHash||null;document.getElementById('passwordRecoveryPanel')?.classList.remove('hidden');memoryStatus('passwordRecoveryStatus',tokenHash?'Wiederherstellungslink erkannt. Bitte gib dein neues Passwort zweimal ein.':'Wiederherstellungsprozess erkannt. Falls die E-Mail einen Code enthält, gib ihn oben ein.');}
+async function detectClaraRecovery(){
+  const search=new URLSearchParams(window.location.search),hash=new URLSearchParams(window.location.hash.replace(/^#/, ''));
+  const tokenHash=search.get('token_hash'),code=search.get('code');
+  const isRecovery=search.get('type')==='recovery'||hash.get('type')==='recovery'||!!tokenHash||!!code;
+  if(!isRecovery)return;
+  document.getElementById('passwordRecoveryPanel')?.classList.remove('hidden');
+  if(tokenHash){
+    claraRecoveryTokenHash=tokenHash;
+    memoryStatus('passwordRecoveryStatus','Wiederherstellungslink erkannt. Bitte gib dein neues Passwort zweimal ein.');
+    return;
+  }
+  if(code && code!==claraRecoveryCode){
+    claraRecoveryCode=code;
+    memoryStatus('passwordRecoveryStatus','Wiederherstellungslink wird geprüft …');
+    const {error}=await claraSupabase.auth.exchangeCodeForSession(code);
+    if(error){
+      memoryStatus('passwordRecoveryStatus','Der Wiederherstellungslink konnte nicht bestätigt werden. Bitte fordere eine neue E-Mail an.',true);
+      return;
+    }
+    try{history.replaceState(null,document.title,window.location.pathname);}catch(_){}
+    memoryStatus('passwordRecoveryStatus','Wiederherstellung bestätigt. Bitte gib dein neues Passwort zweimal ein.');
+    return;
+  }
+  memoryStatus('passwordRecoveryStatus','Wiederherstellungsprozess erkannt. Bitte gib dein neues Passwort zweimal ein.');
+}
 async function signInClara(){if(!claraSupabase){memoryStatus('authStatus','Bitte zuerst Supabase verbinden.',true);return;}const email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value;if(!email||!password){memoryStatus('authStatus','Bitte E-Mail und Passwort eingeben.',true);return;}const {data,error}=await claraSupabase.auth.signInWithPassword({email,password});if(error){memoryStatus('authStatus',error.message,true);return;}claraUser=data.user;memoryStatus('authStatus','Angemeldet als '+claraUser.email);await loadClaraProfile();}
 async function requestClaraPasswordReset(){if(!claraSupabase){memoryStatus('authStatus','Bitte zuerst Supabase verbinden.',true);return;}const email=document.getElementById('authEmail').value.trim();if(!email){memoryStatus('authStatus','Bitte trage zuerst deine E-Mail-Adresse ein.',true);return;}const redirectTo=window.location.origin+window.location.pathname;const {error}=await claraSupabase.auth.resetPasswordForEmail(email,{redirectTo});if(error){memoryStatus('authStatus','Die Passwort-Wiederherstellung konnte nicht gestartet werden: '+error.message,true);return;}document.getElementById('passwordRecoveryPanel').classList.remove('hidden');memoryStatus('authStatus','Die Wiederherstellungs-E-Mail wurde angefordert. Bitte prüfe deinen Posteingang und Spam-Ordner.');memoryStatus('passwordRecoveryStatus','Öffne den speziellen Clara-Link in der E-Mail oder gib den Code ein, falls deine E-Mail einen solchen enthält.');}
 async function saveClaraNewPassword(){if(!claraSupabase){memoryStatus('passwordRecoveryStatus','Supabase ist noch nicht verbunden. Bitte Seite neu laden.',true);return;}const password=document.getElementById('recoveryPassword').value,confirmPassword=document.getElementById('recoveryPasswordConfirm').value;if(password.length<8){memoryStatus('passwordRecoveryStatus','Bitte verwende mindestens 8 Zeichen.',true);return;}if(password!==confirmPassword){memoryStatus('passwordRecoveryStatus','Die beiden Passwörter stimmen nicht überein.',true);return;}let verifiedUser=null;if(claraRecoveryTokenHash){const {data,error}=await claraSupabase.auth.verifyOtp({token_hash:claraRecoveryTokenHash,type:'recovery'});if(error){memoryStatus('passwordRecoveryStatus','Der Wiederherstellungslink ist ungültig oder abgelaufen. Bitte fordere eine neue E-Mail an.',true);return;}verifiedUser=data.user||null;}else{const code=document.getElementById('recoveryToken').value.trim(),email=document.getElementById('authEmail').value.trim();if(code){if(!email){memoryStatus('passwordRecoveryStatus','Bitte trage auch deine E-Mail-Adresse ein.',true);return;}const {data,error}=await claraSupabase.auth.verifyOtp({email,token:code,type:'recovery'});if(error){memoryStatus('passwordRecoveryStatus','Der Sicherheitscode ist ungültig oder abgelaufen. Bitte fordere einen neuen an.',true);return;}verifiedUser=data.user||null;}else{const {data,error}=await claraSupabase.auth.getSession();if(error||!data.session||!data.session.user){memoryStatus('passwordRecoveryStatus','Bitte öffne den persönlichen Clara-Link aus der E-Mail oder gib den Sicherheitscode ein.',true);return;}verifiedUser=data.session.user;}}
