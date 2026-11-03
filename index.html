@@ -114,26 +114,25 @@
 <div class="panel" style="margin-bottom:15px"><div class="row"><span class="tag">Wissensbasis · Version 1.0</span><span class="tag">Datenstand-Beispiel: 31.10.2026</span></div><h3>Was Clara bei jeder Empfehlung berücksichtigt</h3><p>Clara ordnet Reiseideen nach Reiseziel, Saison, Interesse, Reisezeit und Erreichbarkeit. Sie unterscheidet dauerhaftes Ortswissen von tagesaktuellen Meldungen. Öffnungszeiten, Preise, Veranstaltungen, Wetter, Verkehr und Schifffahrt gelten nur dann als aktuell, wenn sie mit Datum und Quelle frisch geprüft wurden.</p><div class="cards"><div><b>Sehenswürdigkeiten</b><p class="muted">Kultur, Geschichte, Aussichtspunkte und Spaziergänge.</p></div><div><b>Kulinarik</b><p class="muted">Regionale Gerichte, Märkte, Restaurants, Heurige und Weingüter.</p></div><div><b>Saison & Veranstaltungen</b><p class="muted">Märkte, Festivals, Weinlese, Advent und Naturereignisse.</p></div><div><b>River-Cruise-Modus</b><p class="muted">Liegestelle, Fußwege, verfügbare Zeit, Transfers und Alternativen.</p></div></div></div>
 <div class="panel" id="influencerStudio" style="margin:18px 0"><div class="eyebrow">CLARA CREATOR STUDIO</div><h2 style="margin:6px 0">Clara als Influencerin</h2><p class="muted">Erstelle aus einem Reiseziel oder Erlebnis einen fertigen Social-Media-Entwurf in Claras persönlicher Stimme.</p><div class="formgrid"><div class="field"><label for="creatorPlatform">Plattform</label><select id="creatorPlatform"><option>Instagram</option><option>TikTok</option><option>Facebook</option><option>YouTube</option></select></div><div class="field"><label for="creatorFormat">Format</label><select id="creatorFormat"><option>Reel / Kurzvideo mit Szenen und Voice-over</option><option>Instagram-Story in 4 Slides</option><option>Social-Media-Beitrag mit Caption</option><option>YouTube-Short</option></select></div><div class="field"><label for="creatorLanguage">Sprache</label><select id="creatorLanguage"><option>Deutsch</option><option>English</option><option>Nederlands</option><option>Français</option><option>Română</option></select></div><div class="field"><label for="creatorTopic">Reiseziel / Thema</label><input id="creatorTopic" value="Passau – drei Stunden in der Dreiflüssestadt" placeholder="z. B. Wachau im Herbst"></div></div><div class="field" style="margin-top:12px"><label for="creatorBrief">Besondere Wünsche (optional)</label><textarea id="creatorBrief" rows="3" style="width:100%;padding:12px;border:1px solid var(--line);border-radius:12px" placeholder="z. B. Kreuzfahrtgäste, Geheimtipps, kulinarischer Schwerpunkt …"></textarea></div><div class="panel" style="margin-top:12px;padding:13px;background:#f8f6ef;border:1px solid var(--line);border-radius:12px"><b>✦ Clara Identity Lock – vorläufig aktiv</b><p class="muted" style="margin:6px 0 0;font-size:13px">Claras Gesicht, Augen, Haarfarbe und Frisur bleiben in allen Szenen gleich. Nur Kleidung, Pose und Umgebung dürfen sich ändern. Das Master-Porträt wird nach dem Upload als feste Bildreferenz ergänzt.</p><div style="height:1px;background:var(--line);margin:10px 0"></div><b>♫ Claras Standardstimme: Microsoft Seraphina Online (Natural)</b><p class="muted" style="margin:6px 0 0;font-size:13px">Deutsch (Deutschland) · de-DE · weich, warm und einladend · Sprechtempo 1,00. Für Video-Sprachspuren wird die tatsächlich ausgewählte Browserstimme aufgenommen; es wird keine fremde Voice-ID vorausgesetzt.</p></div><button class="btn gold" style="margin-top:14px" onclick="createInfluencerContent()">✦ Content mit Clara erstellen</button><div id="creatorStatus" class="muted" style="font-size:13px;margin-top:10px" aria-live="polite"></div><div id="creatorResult" class="hidden" style="margin-top:14px;padding:16px;background:#f7faf6;border:1px solid var(--line);border-radius:14px;white-space:pre-wrap"></div></div><div class="panel" id="claraVideoStudio" style="margin:18px 0">
   <div class="eyebrow">CLARA VIDEO STUDIO · SCHRITT 1</div>
-  <h2 style="margin:6px 0">Claras Stimme als Audiodatei aufnehmen</h2>
-  <p class="muted">Erzeuge mit derselben deutschen Browserstimme, die du im Clara-Chat ausgewählt hast, eine Sprachspur für Claras sprechenden Video-Avatar.</p>
+  <h2 style="margin:6px 0">Claras Seraphina-Sprachspur erzeugen</h2>
+  <p class="muted">Die Sprachdatei wird direkt mit Microsoft Neural TTS in Claras festgelegter Stimme erzeugt. Sie ist unabhängig von der Browser-Audioaufnahme und kann anschließend für Claras sprechenden Video-Avatar verwendet werden.</p>
   <div class="field">
     <label for="claraVideoNarration">Sprechertext für das Video</label>
-    <textarea id="claraVideoNarration" rows="5" style="width:100%;padding:12px;border:1px solid var(--line);border-radius:12px" placeholder="Füge hier Claras fertigen Voice-over-Text ein. Beispiel: Hallo, ich bin Clara von Donau. Heute nehme ich dich mit nach Passau. Hier treffen Donau, Inn und Ilz aufeinander – und die Altstadt erzählt an jeder Ecke ihre eigene Geschichte. Kommst du mit?">Hallo, ich bin Clara von Donau. Heute nehme ich dich mit nach Passau. Hier treffen Donau, Inn und Ilz aufeinander – und die Altstadt erzählt an jeder Ecke ihre eigene Geschichte. Kommst du mit?</textarea>
+    <textarea id="claraVideoNarration" rows="5" maxlength="4000" style="width:100%;padding:12px;border:1px solid var(--line);border-radius:12px" placeholder="Füge hier Claras fertigen Voice-over-Text ein. Beispiel: Hallo, ich bin Clara von Donau. Heute nehme ich dich mit nach Passau. Hier treffen Donau, Inn und Ilz aufeinander – und die Altstadt erzählt an jeder Ecke ihre eigene Geschichte. Kommst du mit?">Hallo, ich bin Clara von Donau. Heute nehme ich dich mit nach Passau. Hier treffen Donau, Inn und Ilz aufeinander – und die Altstadt erzählt an jeder Ecke ihre eigene Geschichte. Kommst du mit?</textarea>
   </div>
   <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:12px">
-    <button class="btn gold" id="claraRecordVideoVoice" type="button" onclick="recordClaraVideoVoice()">♫ Sprachspur mit Claras Stimme aufnehmen</button>
-    <button class="btn outline" id="claraStopVideoVoice" type="button" onclick="stopClaraVideoVoice()" disabled>■ Aufnahme stoppen</button>
+    <button class="btn gold" id="claraRecordVideoVoice" type="button" onclick="generateClaraVideoVoice()">♫ Seraphina-Sprachspur als MP3 erzeugen</button>
   </div>
-  <div id="claraVideoVoiceStatus" class="muted" role="status" aria-live="polite" style="font-size:12px;margin-top:10px">Beim nächsten Schritt im Browserdialog den aktuellen Edge-Tab auswählen und „Tab-Audio teilen“ aktivieren. Aufgenommen wird nur der Tab-Ton, nicht dein Mikrofon.</div>
+  <div id="claraVideoVoiceStatus" class="muted" role="status" aria-live="polite" style="font-size:12px;margin-top:10px">Die Erzeugung nutzt Microsoft Azure Speech. Dafür muss ein Speech-Schlüssel im Netlify-Functions-Bereich hinterlegt sein.</div>
   <audio id="claraVideoVoicePreview" controls class="hidden" style="display:block;width:100%;margin-top:12px"></audio>
-  <p class="muted" style="font-size:11px;margin:10px 0 0">Die Audiodatei wird lokal im Browser erstellt und heruntergeladen. Sie wird nicht an Clara oder Netlify hochgeladen.</p>
+  <p class="muted" style="font-size:11px;margin:10px 0 0">Dein Sprechertext wird über Claras geschützte Netlify-Funktion an Microsoft Speech gesendet. Der geheime Azure-Schlüssel bleibt ausschließlich serverseitig. Die fertige MP3-Datei wird in deinem Browser heruntergeladen.</p>
   <div style="margin-top:14px;padding:13px;background:#f8f6ef;border:1px solid var(--line);border-radius:12px">
     <b>Schritt 2 · Clara als sprechenden Avatar animieren</b>
-    <p class="muted" style="font-size:12px;margin:6px 0 8px">Für den ersten Test verwenden wir SadTalker: Claras Masterporträt plus die eben aufgenommene Audiodatei werden zu einem kurzen Talking-Head-Video. Die Animation läuft in einer separaten GPU-Umgebung, nicht auf deinem Celeron.</p>
+    <p class="muted" style="font-size:12px;margin:6px 0 8px">Für den ersten Test verwenden wir SadTalker: Claras Masterporträt plus die MP3-Sprachspur werden zu einem kurzen Talking-Head-Video. Die Animation läuft in einer separaten GPU-Umgebung, nicht auf deinem Celeron.</p>
     <a href="https://colab.research.google.com/github/Winfredy/SadTalker/blob/main/quick_demo.ipynb" target="_blank" rel="noopener" style="color:var(--green);font-weight:700">SadTalker Colab-Vorlage öffnen ↗</a>
     <p class="muted" style="font-size:11px;margin:7px 0 0">Kostenlose Colab-GPU ist nicht immer verfügbar. Die Notebook-Vorlage kann Anpassungen benötigen. Zuerst nur einen kurzen Testclip erstellen.</p>
   </div>
-</div>
+</div>>
 <div class="section-head"><h2>Reiseziele entlang der Donau</h2></div><div id="intelligenceDestinations" class="cards"></div>
 <div class="panel" style="margin-top:15px"><h3>River-Cruise-Prüfliste</h3><ul><li>Konkrete Anlegestelle und tatsächliche Liegezeit bei Reederei oder Hafenbetreiber bestätigen.</li><li>Fußweg, Steigung, Barrierefreiheit und Rückkehrzeit zum Schiff berücksichtigen.</li><li>Bei Bauarbeiten, Niedrigwasser oder Sperrungen keine Passierbarkeit vermuten: zuständige Schifffahrtsbehörde und Schiffsführung prüfen.</li><li>Bei Einschränkungen eine fußläufige Alternative im Zentrum oder einen bestätigten Transfer anbieten.</li><li>Keine Navigations- oder Sicherheitsfreigabe geben; maßgeblich sind Schiffsführung und Behörden.</li></ul></div>
 <div class="panel" style="margin-top:15px"><h3>Quellen, Aktualität und Vertrauensregeln</h3><p>Primärquellen haben Vorrang: offizielle Tourismusverbände, Gemeinden, Sehenswürdigkeiten, Veranstalter, Nationalparks, Wetterdienste, Verkehrsunternehmen, Hafenbetreiber und zuständige Schifffahrtsbehörden. Jede wichtige Meldung benötigt Quellenname, direkten Link, Veröffentlichungs-/Prüfdatum, Gültigkeitszeitraum und Abrufdatum.</p><p><b>Qualitätsregeln:</b> Keine erfundenen Öffnungszeiten, Preise, Veranstaltungen, Restaurantverfügbarkeiten oder Wasserstandsmeldungen. Widersprüchliche Angaben offen markieren. Abgelaufene Meldungen als historisch kennzeichnen. Wetter- und Navigationsdaten nie aus älteren Reisebeiträgen ableiten.</p><p class="muted" style="font-size:12px">Der unten angeführte Überblick ist redaktionelles Ortswissen und ein Recherche-Snapshot, kein Live-Datenfeed. Die vorherige Tagesrecherche vom 31.10.2026 muss vor Veröffentlichung jeder Einzelmeldung erneut verifiziert werden.</p></div>
@@ -590,137 +589,52 @@ function preferredGermanVoice(voices){
   return german.slice().sort((a,b)=>score(b)-score(a))[0];
 }
 
-let claraVideoCaptureStream=null;
-let claraVideoRecorder=null;
-let claraVideoChunks=[];
-let claraVideoSpeechUtterance=null;
+let claraVideoVoiceUrl=null;
 function setClaraVideoVoiceStatus(message){
   const node=document.getElementById('claraVideoVoiceStatus');
   if(node)node.textContent=message;
 }
-function stopClaraVideoVoiceTracks(){
-  if(claraVideoCaptureStream){
-    claraVideoCaptureStream.getTracks().forEach(track=>{try{track.stop();}catch(_){}});
-    claraVideoCaptureStream=null;
-  }
-}
-function stopClaraVideoVoice(){
-  if('speechSynthesis'in window)speechSynthesis.cancel();
-  if(claraVideoRecorder&&claraVideoRecorder.state!=='inactive'){
-    try{claraVideoRecorder.stop();}catch(error){console.warn('Clara Videoaufnahme:',error);}
-  }else{
-    stopClaraVideoVoiceTracks();
-    const start=document.getElementById('claraRecordVideoVoice');
-    const stop=document.getElementById('claraStopVideoVoice');
-    if(start)start.disabled=false;
-    if(stop)stop.disabled=true;
-  }
-}
-async function recordClaraVideoVoice(){
+async function generateClaraVideoVoice(){
   const text=document.getElementById('claraVideoNarration')?.value?.trim()||'';
-  const start=document.getElementById('claraRecordVideoVoice');
-  const stop=document.getElementById('claraStopVideoVoice');
+  const button=document.getElementById('claraRecordVideoVoice');
   const preview=document.getElementById('claraVideoVoicePreview');
   if(!text){setClaraVideoVoiceStatus('Bitte zuerst einen Sprechertext eingeben.');return;}
-  if(!('speechSynthesis'in window)||typeof SpeechSynthesisUtterance==='undefined'){
-    setClaraVideoVoiceStatus('Dieser Browser unterstützt keine Sprachausgabe. Bitte Microsoft Edge verwenden.');
-    return;
-  }
-  if(!navigator.mediaDevices?.getDisplayMedia||typeof MediaRecorder==='undefined'){
-    setClaraVideoVoiceStatus('Dieser Browser unterstützt keine Tab-Audioaufnahme. Bitte eine aktuelle Version von Microsoft Edge verwenden.');
-    return;
-  }
-  if(location.protocol!=='https:'&&location.hostname!=='localhost'&&location.hostname!=='127.0.0.1'){
-    setClaraVideoVoiceStatus('Für die Aufnahme wird eine sichere HTTPS-Verbindung benötigt.');
-    return;
-  }
-  if(start)start.disabled=true;
-  if(stop)stop.disabled=false;
+  if(button)button.disabled=true;
   if(preview){preview.pause();preview.removeAttribute('src');preview.classList.add('hidden');}
+  if(claraVideoVoiceUrl){URL.revokeObjectURL(claraVideoVoiceUrl);claraVideoVoiceUrl=null;}
+  setClaraVideoVoiceStatus('Clara erzeugt deine Sprachspur mit Microsoft Seraphina Neural …');
   try{
-    speechSynthesis.cancel();
-    setClaraVideoVoiceStatus('Bitte im Browserdialog diesen Edge-Tab auswählen und „Tab-Audio teilen“ aktivieren.');
-    const displayStream=await navigator.mediaDevices.getDisplayMedia({video:true,audio:true});
-    claraVideoCaptureStream=displayStream;
-    const audioTracks=displayStream.getAudioTracks();
-    if(!audioTracks.length){
-      stopClaraVideoVoiceTracks();
-      if(start)start.disabled=false;
-      if(stop)stop.disabled=true;
-      setClaraVideoVoiceStatus('Es wurde kein Tab-Ton freigegeben. Bitte erneut starten, den Edge-Tab wählen und „Tab-Audio teilen“ einschalten.');
-      return;
-    }
-    const audioOnlyStream=new MediaStream(audioTracks);
-    const mimeCandidates=['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus'];
-    const mimeType=mimeCandidates.find(type=>MediaRecorder.isTypeSupported(type))||'';
-    const recorder=mimeType?new MediaRecorder(audioOnlyStream,{mimeType}):new MediaRecorder(audioOnlyStream);
-    claraVideoRecorder=recorder;
-    claraVideoChunks=[];
-    recorder.ondataavailable=event=>{if(event.data&&event.data.size)claraVideoChunks.push(event.data);};
-    recorder.onerror=event=>{
-      setClaraVideoVoiceStatus('Die Audioaufnahme ist fehlgeschlagen. Bitte prüfe die Tab-Audiofreigabe und versuche es erneut.');
-      console.warn('Clara Video MediaRecorder:',event.error||event);
-    };
-    recorder.onstop=()=>{
-      const blobType=recorder.mimeType||'audio/webm';
-      const audioBlob=new Blob(claraVideoChunks,{type:blobType});
-      claraVideoChunks=[];
-      stopClaraVideoVoiceTracks();
-      claraVideoRecorder=null;
-      claraVideoSpeechUtterance=null;
-      if(start)start.disabled=false;
-      if(stop)stop.disabled=true;
-      if(audioBlob.size<1000){
-        setClaraVideoVoiceStatus('Die Audiodatei ist leer oder zu kurz. Prüfe, ob Edge den Tab-Ton mit freigegeben hat.');
-        return;
-      }
-      const ext=blobType.includes('ogg')?'ogg':blobType.includes('mp4')?'m4a':'webm';
-      const url=URL.createObjectURL(audioBlob);
-      if(preview){preview.src=url;preview.classList.remove('hidden');}
-      const link=document.createElement('a');
-      link.href=url;
-      link.download='clara-voiceover-'+new Date().toISOString().slice(0,10)+'.'+ext;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      setTimeout(()=>URL.revokeObjectURL(url),60000);
-      setClaraVideoVoiceStatus('Fertig! Claras Sprachspur wurde heruntergeladen. Du kannst sie jetzt für die Avatar-Animation verwenden.');
-    };
-    displayStream.getVideoTracks().forEach(track=>{
-      track.addEventListener('ended',()=>{if(claraVideoRecorder&&claraVideoRecorder.state!=='inactive')stopClaraVideoVoice();});
-    });
-    recorder.start(250);
-    const voices=speechSynthesis.getVoices().filter(v=>/^de(-|_)/i.test(v.lang));
-    const voiceSelect=document.getElementById('claraVoice');
-    const selected=voices.find(v=>encodeURIComponent(v.name)===voiceSelect?.value);
-    const chosen=selected||preferredGermanVoice(voices);
-    const utterance=new SpeechSynthesisUtterance(claraSpeechText(text));
-    utterance.lang=chosen?.lang||'de-DE';
-    if(chosen)utterance.voice=chosen;
     const rate=Number(document.getElementById('claraRate')?.value||1.00);
-    utterance.rate=Number.isFinite(rate)?Math.min(1.02,Math.max(0.86,rate)):1.00;
-    utterance.pitch=1.0;
-    utterance.volume=1;
-    claraVideoSpeechUtterance=utterance;
-    utterance.onstart=()=>setClaraVideoVoiceStatus('Clara spricht – ihre Tab-Audiospur wird aufgenommen …');
-    utterance.onend=()=>{if(claraVideoRecorder&&claraVideoRecorder.state!=='inactive')claraVideoRecorder.stop();};
-    utterance.onerror=event=>{
-      setClaraVideoVoiceStatus('Claras Sprachausgabe konnte nicht abgeschlossen werden: '+String(event.error||'unbekannter Fehler'));
-      if(claraVideoRecorder&&claraVideoRecorder.state!=='inactive')claraVideoRecorder.stop();
-    };
-    speechSynthesis.speak(utterance);
-  }catch(error){
-    stopClaraVideoVoiceTracks();
-    claraVideoRecorder=null;
-    claraVideoSpeechUtterance=null;
-    if(start)start.disabled=false;
-    if(stop)stop.disabled=true;
-    if(error?.name==='NotAllowedError'){
-      setClaraVideoVoiceStatus('Aufnahme abgebrochen oder Tab-Audio nicht freigegeben. Bitte erneut starten und den Edge-Tab mit Audio teilen.');
-    }else{
-      setClaraVideoVoiceStatus('Aufnahme konnte nicht gestartet werden: '+String(error?.message||error));
+    const response=await fetch('/.netlify/functions/tts',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({text,rate})
+    });
+    const contentType=response.headers.get('content-type')||'';
+    if(!response.ok){
+      let message='Microsoft Speech konnte die Audiodatei nicht erzeugen.';
+      if(contentType.includes('application/json')){
+        try{const data=await response.json();message=String(data.error||message);}catch(_){}
+      }
+      throw new Error(message);
     }
-    console.warn('Clara Video Voice capture:',error);
+    if(!contentType.includes('audio/'))throw new Error('Der Sprachdienst hat keine Audiodatei zurückgegeben. Bitte die Netlify-Funktion prüfen.');
+    const blob=await response.blob();
+    if(blob.size<1000)throw new Error('Die erzeugte MP3-Datei ist unerwartet klein. Bitte erneut versuchen.');
+    claraVideoVoiceUrl=URL.createObjectURL(blob);
+    if(preview){preview.src=claraVideoVoiceUrl;preview.classList.remove('hidden');}
+    const link=document.createElement('a');
+    link.href=claraVideoVoiceUrl;
+    link.download='clara-seraphina-voiceover-'+new Date().toISOString().slice(0,10)+'.mp3';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setClaraVideoVoiceStatus('Fertig! Claras Seraphina-Sprachspur wurde als MP3 heruntergeladen. Bitte die Datei kurz anhören, bevor du sie für die Avatar-Animation verwendest.');
+  }catch(error){
+    console.error('Clara Seraphina TTS:',error);
+    setClaraVideoVoiceStatus(error.message||'Claras Sprachspur konnte gerade nicht erzeugt werden.');
+  }finally{
+    if(button)button.disabled=false;
   }
 }
 
@@ -845,10 +759,8 @@ async function createInfluencerContent(){
   status.textContent='Clara entwickelt deinen Content …';
   result.classList.add('hidden');
   try{
-    const voiceSelect=document.getElementById('claraVoice');
-    const voiceName=voiceSelect?.selectedOptions?.[0]?.textContent?.trim()||'Microsoft Seraphina Online (Natural) · de-DE';
-    const speechRate=document.getElementById('claraRate')?.value||'1.00';
-    const voiceLock='\n\nCLARA VOICE PROFILE:\nFür die vorbereitete Video-Sprachspur ist diese Browserstimme vorgesehen: '+voiceName+'. Sprechtempo: '+speechRate+'. Die echte Audiodatei wird anschließend lokal im Clara Video Studio mit dieser ausgewählten Browserstimme aufgenommen. Keine fremde Anbieter-Voice-ID erfinden oder behaupten, die Sprachspur bereits generiert zu haben.';
+    const CLARA_VOICE_PROFILE = Object.freeze({name:'Microsoft Seraphina Multilingual Neural',voiceId:'de-DE-SeraphinaMultilingualNeural',engine:'Microsoft Azure AI Speech',language:'de',locale:'de-DE'});
+    const voiceLock='\n\nVERBINDLICHES SPRECHERPROFIL – CLARA VOICE LOCK:\nFür jede zukünftige Sprachproduktion dieselbe deutsche Frauenstimme verwenden: '+CLARA_VOICE_PROFILE.name+'; Voice-ID '+CLARA_VOICE_PROFILE.voiceId+'; Engine '+CLARA_VOICE_PROFILE.engine+'; Sprache '+CLARA_VOICE_PROFILE.language+'; Locale '+CLARA_VOICE_PROFILE.locale+'. Keine fremde Voice-ID verwenden.';
     const identityLock='\n\nVERBINDLICHE VISUELLE IDENTITÄT – CLARA IDENTITY LOCK:\nClara ist in jeder Szene dieselbe virtuelle Frau. Verwende für alle Bildideen und Bildprompts dieselbe erwachsene Frau mit dem bereits festgelegten Erscheinungsbild: etwa 35 Jahre, braune Augen, lange dunkelbraune wellige Haare und ein freundlicher, natürlicher Gesichtsausdruck. Gesichtszüge, Augen, Haarfarbe, Haarlänge und Frisur dürfen zwischen Szenen niemals wechseln. Erzeuge keine zweite Person, keine neue Interpretation und keine wechselnden Gesichter. Variieren dürfen ausschließlich Kleidung passend zum Reiseziel, Pose, Kameraperspektive, Licht und Hintergrund. Sobald das Master-Porträt als Referenz bereitgestellt ist, muss es bei jeder einzelnen Szene als feste Identitätsreferenz verwendet werden; bis dahin die Bildprompts ausdrücklich als vorläufig markieren und keine angebliche Referenznutzung behaupten.\nFür jedes Reel: gib je Szene eine konkrete Bildidee plus einen Bildprompt aus, der ausdrücklich dieselbe Clara wie in der Master-Referenz verlangt. Füge am Ende eine kurze Kontinuitätsprüfung hinzu: Gesicht, Augen und Haare in allen Szenen identisch?';
     const message='Du bist Clara von Donau, eine sympathische virtuelle Reise- und Kulinarik-Influencerin mit eigener, warmer und authentischer Persönlichkeit. Erstelle einen veröffentlichungsfertigen Social-Media-Entwurf. Plattform: '+platform+'. Format: '+format+'. Sprache: '+language+'. Thema: '+topic+'. Zusatzwünsche: '+(brief||'keine')+'. Bei einem Reel liefere Hook, Szenenfolge mit Bildideen und Zeitangaben, pro Szene einen konkreten Bildprompt, gesprochenen Voice-over-Text, Texteinblendungen, Caption, passende Hashtags und einen Community-Aufruf. Bei Storys liefere vier einzelne Slides mit Bildidee und Text. Bei Beiträgen liefere Caption, Bildidee und Hashtags. Schreibe lebendig, nicht aufdringlich werblich und in Claras Ich-Stimme. Erfinde keine aktuellen Öffnungszeiten, Preise, Veranstaltungen oder persönlichen Erlebnisse. Kennzeichne Fakten, die vor Veröffentlichung geprüft werden müssen.'+voiceLock+identityLock;
     const response=await fetch('/.netlify/functions/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message})});
