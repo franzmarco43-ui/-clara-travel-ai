@@ -232,8 +232,13 @@ function researchFailureMessage(reason, language = "de") {
 }
 exports.handler = async function (event) {
   const requestOrigin = event.headers?.origin || event.headers?.Origin || "";
-  const isTrustedClaraOrigin = requestOrigin === "https://clara-travel-ai.netlify.app" ||
-    /^https:\/\/deploy-preview-\\d+--clara-travel-ai\\.netlify\\.app$/i.test(requestOrigin);
+  const previewPrefix = "https://deploy-preview-";
+  const previewSuffix = "--clara-travel-ai.netlify.app";
+  const previewNumber = requestOrigin.startsWith(previewPrefix) && requestOrigin.endsWith(previewSuffix)
+    ? requestOrigin.slice(previewPrefix.length, -previewSuffix.length)
+    : "";
+  const isTrustedPreviewOrigin = previewNumber.length > 0 && [...previewNumber].every(char => char >= "0" && char <= "9");
+  const isTrustedClaraOrigin = requestOrigin === "https://clara-travel-ai.netlify.app" || isTrustedPreviewOrigin;
   const headers = {
     "Content-Type": "application/json",
     ...(isTrustedClaraOrigin ? { "Access-Control-Allow-Origin": requestOrigin } : {}),
@@ -473,7 +478,7 @@ exports.handler = async function (event) {
     if (researchNeeded) {
       const tavilyKey = process.env.TAVILY_API_KEY;
       if (!tavilyKey) {
-        return { statusCode: 200, headers, body: JSON.stringify({ reply: researchFailureMessage("not_configured"), sources: [], research: {status: "not_configured", provider: "Tavily"} }) };
+        return { statusCode: 200, headers, body: JSON.stringify({ reply: researchFailureMessage("not_configured", responseLanguage), sources: [], research: {status: "not_configured", provider: "Tavily"} }) };
       }
       researchResult = await searchTavily(userMessage, tavilyKey);
       if (!researchResult.ok) {
