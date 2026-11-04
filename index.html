@@ -174,6 +174,22 @@
   .panel{padding:12px}
 }
 
+
+/* Live city information: high-contrast, easy-to-scan display on desktop and mobile */
+.city-live{margin:12px 0 14px;padding:13px 14px;border:1px solid #cbdccf;border-left:4px solid #3f765b;border-radius:13px;background:#f2f7f1;color:#183d36;font-size:14px;line-height:1.45;gap:9px}
+.city-live-row{display:grid;grid-template-columns:minmax(0,1fr);gap:3px;align-items:start;padding:2px 0}
+.city-live-row b{display:block;color:#294d3e;white-space:normal;font-size:12px;font-weight:800;letter-spacing:.01em}
+.city-live-row span{display:block;text-align:left;color:#153b31;font-size:14px;font-weight:750;line-height:1.4;overflow-wrap:anywhere}
+.city-live [data-live-level]{color:#4f6258;font-weight:700}
+.city-live small{display:block;color:#52685d;font-size:11px;line-height:1.4;border-top:1px solid #d7e4d8;padding-top:8px}
+.dest-info p{font-size:13px;line-height:1.5;min-height:0;margin:6px 0 10px;color:#4e6259}
+@media(max-width:700px){
+ .city-live{padding:12px;font-size:14px;gap:8px}
+ .city-live-row{gap:2px}
+ .city-live-row b{font-size:12px}
+ .city-live-row span{font-size:14px}
+ .city-live small{font-size:11px}
+}
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
