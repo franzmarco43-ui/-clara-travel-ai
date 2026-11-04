@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#123c3a">
+<title>Clara spricht – Clara Travel AI</title>
+<style>
+:root{color-scheme:light;--green:#123c3a;--green2:#245c50;--cream:#f7f4ec;--ink:#172b29;--muted:#687773;--gold:#caa86a}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:920px;margin:0 auto;padding:28px 18px 48px}
+header{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:28px}
+.brand{color:var(--green);font-weight:800;text-decoration:none;letter-spacing:-.3px}
+.back{color:var(--green2);text-decoration:none;font-weight:700}
+.hero{background:var(--green);color:white;border-radius:24px;padding:clamp(22px,5vw,42px);text-align:center}
+.eyebrow{color:#e3c88e;text-transform:uppercase;letter-spacing:2px;font-size:11px;font-weight:800}
+h1{font-size:clamp(30px,6vw,48px);line-height:1.1;margin:10px 0}
+.intro{max-width:620px;margin:0 auto 24px;color:#dce9e2}
+.player{max-width:620px;margin:0 auto;background:#0b2926;border-radius:18px;padding:10px;box-shadow:0 14px 35px #081e1b55}
+video{display:block;width:100%;max-height:70vh;aspect-ratio:536/430;object-fit:contain;border-radius:12px;background:#071d1a}
+.note{font-size:13px;color:#dce9e2;margin:16px 0 0}
+footer{text-align:center;color:var(--muted);font-size:12px;margin-top:24px}
+@media(max-width:520px){main{padding:16px 12px 32px}.hero{border-radius:18px}}
+</style>
+</head>
+<body>
+<main>
+<header>
+<a class="brand" href="/">Clara Travel AI</a>
+<a class="back" href="/">← Zur Startseite</a>
+</header>
+<section class="hero">
+<div class="eyebrow">Deine virtuelle Reisebegleiterin</div>
+<h1>Hallo, ich bin Clara!</h1>
+<p class="intro">Schön, dass du da bist. Begleite mich auf Entdeckungsreisen entlang der Donau und durch Europa.</p>
+<div class="player">
+<video controls playsinline preload="metadata" poster="/clara-avatar.jpg">
+<source src="/clara-welcome-hd.mp4" type="video/mp4">
+Dein Browser unterstützt die Videowiedergabe leider nicht.
+</video>
+</div>
+<p class="note">Tipp: Starte das Video über die Wiedergabetaste. Mit dem Vollbildsymbol kannst du Clara groß ansehen.</p>
+</section>
+<footer>© Clara Travel AI</footer>
+</main>
+</body>
+</html>
