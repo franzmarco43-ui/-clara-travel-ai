@@ -190,6 +190,16 @@
  .city-live-row span{font-size:14px}
  .city-live small{font-size:11px}
 }
+
+/* Gemeinsame Sprachwahl für Desktop und Mobile */
+.language-switch{display:flex;align-items:center;gap:7px;color:inherit;font-size:12px;font-weight:750;white-space:nowrap}
+.language-switch select{min-height:40px;max-width:145px;padding:7px 28px 7px 10px;border:1px solid #ffffff55;border-radius:11px;background:#ffffff18;color:inherit;font-weight:700;font-size:12px}
+.language-switch select option{color:#172b29;background:#fff}
+#marketing-home .language-switch{color:#244d3d}
+#marketing-home .language-switch select{background:#f7faf7;border-color:#dce7df;color:#244d3d}
+.top-actions .language-switch{margin-right:2px}
+@media(max-width:850px){.topbar{gap:9px}.top-actions{align-items:center;gap:6px}.app-language .language-label{display:none}.app-language select{max-width:118px;min-height:40px;padding:6px 22px 6px 8px}.landing-language .language-label{display:none}#marketing-home .site-actions{flex-wrap:nowrap}.landing-language select{max-width:112px;min-height:40px;padding:6px 20px 6px 8px}}
+@media(max-width:390px){.app-language select,.landing-language select{max-width:98px;font-size:11px}.top-actions .btn.gold{padding:8px 9px;font-size:11px}}
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -198,7 +208,7 @@
 <header class="site-header">
 <a href="#" class="site-brand">Clara<small>von Donau 〜</small></a>
 <nav class="site-nav"><a href="#marketing-home">Startseite</a><a href="#featured-destinations">Reiseziele</a><a href="#" onclick="openAppPage('planner');return false">Reiseplaner</a><a href="#" onclick="openAppPage('intelligence');return false">Genussreise</a><a href="#" onclick="openAppPage('intelligence');return false">Claras Geschichten</a><a href="#" onclick="openAppPage('clara');return false">Über Clara</a></nav>
-<div class="site-actions"><button class="site-icon" aria-label="Zu den Reisezielen" onclick="document.getElementById('featured-destinations').scrollIntoView({behavior:'smooth'})">⌕</button><button class="site-cta" onclick="openAppPage('clara')">☏ Clara fragen</button><button class="mobile-menu-toggle" aria-label="Menü öffnen" aria-expanded="false" onclick="toggleMobileMenu()">☰</button></div>
+<div class="site-actions"><label class="language-switch landing-language" for="landingLanguage"><span>🌐 <span class="language-label">Sprache</span></span><select id="landingLanguage" aria-label="Sprache wählen" onchange="setClaraLanguage(this.value)"><option value="de">Deutsch</option><option value="en">English</option><option value="nl">Nederlands</option><option value="fr">Français</option><option value="ro">Română</option></select></label><button class="site-icon" aria-label="Zu den Reisezielen" onclick="document.getElementById('featured-destinations').scrollIntoView({behavior:'smooth'})">⌕</button><button class="site-cta" onclick="openAppPage('clara')">☏ Clara fragen</button><button class="mobile-menu-toggle" aria-label="Menü öffnen" aria-expanded="false" onclick="toggleMobileMenu()">☰</button></div>
 </header>
 <nav class="mobile-site-nav" id="mobile-site-nav" aria-label="Mobiles Hauptmenü">
 <a href="#marketing-home" onclick="closeMobileMenu()">Startseite</a><a href="#featured-destinations" onclick="closeMobileMenu()">Reiseziele</a><a href="#" onclick="closeMobileMenu();openAppPage('planner');return false">Reiseplaner</a><a href="#" onclick="closeMobileMenu();openAppPage('intelligence');return false">Genussreise</a><a href="#" onclick="closeMobileMenu();openAppPage('clara');return false">Clara kennenlernen</a>
@@ -217,7 +227,7 @@
 </div>
 
 <div class="app" id="clara-app" style="display:none">
-<header class="topbar"><div class="brand"><div class="logo">✦</div><div>Clara Travel AI<small>DEINE REISE. DEINE GESCHICHTE.</small></div></div><div class="top-actions"><button class="btn light hide-small" onclick="returnToLanding()">⌂ Startseite</button><button class="btn light hide-small" onclick="showPage('planner')">＋ Reise planen</button><button class="btn gold" onclick="showPage('premium')">✧ Premium</button></div></header>
+<header class="topbar"><div class="brand"><div class="logo">✦</div><div>Clara Travel AI<small>DEINE REISE. DEINE GESCHICHTE.</small></div></div><div class="top-actions"><label class="language-switch app-language" for="appLanguage"><span>🌐 <span class="language-label">Sprache</span></span><select id="appLanguage" aria-label="Sprache wählen" onchange="setClaraLanguage(this.value)"><option value="de">Deutsch</option><option value="en">English</option><option value="nl">Nederlands</option><option value="fr">Français</option><option value="ro">Română</option></select></label><button class="btn light hide-small" onclick="returnToLanding()">⌂ Startseite</button><button class="btn light hide-small" onclick="showPage('planner')">＋ Reise planen</button><button class="btn gold" onclick="showPage('premium')">✧ Premium</button></div></header>
 <div class="layout">
 <aside class="sidebar"><div class="navlabel">DEIN REISEBEREICH</div><button class="nav active" data-page="home" onclick="showPage('home')">⌂ &nbsp; Übersicht</button><button class="nav" data-page="planner" onclick="showPage('planner')">▤ &nbsp; Reise planen</button><button class="nav" data-page="map" onclick="showPage('map')">⌖ &nbsp; Donau-Karte</button><button class="nav" data-page="locks" onclick="showPage('locks')">▥ &nbsp; Donau-Schleusen</button><button class="nav" data-page="clara" onclick="showPage('clara')">☏ &nbsp; Mit Clara sprechen</button><button class="nav" data-page="intelligence" onclick="showPage('intelligence')">✦ &nbsp; Donau-Wissen</button><button class="nav" data-page="premium" onclick="showPage('premium')">✧ &nbsp; Premium entdecken</button><button class="nav" data-page="memory" onclick="showPage('memory')">🧠 &nbsp; Mein Clara-Gedächtnis</button><div class="side-note"><b>Deine Reise, dein Tempo.</b><p>Clara ist eine virtuelle KI-Reisebegleiterin. Reiseinformationen bitte vor Ort überprüfen.</p></div></aside>
 <main class="main">
@@ -1053,6 +1063,16 @@ async function saveClaraProfile(){
 }
 async function loadClaraProfile(){if(!claraSupabase||!claraUser){memoryStatus('memoryStatus','Bitte zuerst anmelden.',true);return;}const {data,error}=await claraSupabase.from('clara_profiles').select('*').eq('user_id',claraUser.id).maybeSingle();if(error){memoryStatus('memoryStatus','Laden fehlgeschlagen: '+error.message,true);return;}if(!data){memoryStatus('memoryStatus','Noch kein Profil gespeichert.');return;}document.getElementById('memoryName').value=data.display_name||'';document.getElementById('memoryInterests').value=(data.interests||[]).join(', ');document.getElementById('memoryPace').value=data.travel_pace||'';document.getElementById('memoryBudget').value=data.budget_level||'';document.getElementById('memoryConsent').checked=!!data.consent_memory;memoryStatus('memoryStatus','Deine gespeicherten Angaben wurden geladen.');}
 async function deleteClaraMemory(){if(!claraSupabase||!claraUser){memoryStatus('memoryStatus','Bitte zuerst anmelden.',true);return;}if(!confirm('Möchtest du wirklich dein Clara-Profil und alle gespeicherten Erinnerungen löschen?'))return;const a=await claraSupabase.from('clara_memories').delete().eq('user_id',claraUser.id);if(a.error){memoryStatus('memoryStatus','Löschen fehlgeschlagen: '+a.error.message,true);return;}const b=await claraSupabase.from('clara_feedback').delete().eq('user_id',claraUser.id);if(b.error){memoryStatus('memoryStatus','Erinnerungen gelöscht; Feedback konnte nicht gelöscht werden: '+b.error.message,true);return;}const c=await claraSupabase.from('clara_profiles').delete().eq('user_id',claraUser.id);if(c.error){memoryStatus('memoryStatus','Erinnerungen gelöscht; Profil konnte nicht gelöscht werden: '+c.error.message,true);return;}['memoryName','memoryInterests','memoryPace','memoryBudget'].forEach(id=>document.getElementById(id).value='');document.getElementById('memoryConsent').checked=false;memoryStatus('memoryStatus','Dein Clara-Profil und deine gespeicherten Erinnerungen wurden gelöscht.');}
-window.addEventListener('load',()=>{restoreClaraConnection();const auto=document.getElementById('claraAutoSpeak');if(auto){try{auto.checked=localStorage.getItem('clara.autoSpeak')!=='false';}catch(_){auto.checked=true;}auto.addEventListener('change',()=>{try{localStorage.setItem('clara.autoSpeak',String(auto.checked));}catch(_){}if(!auto.checked)stopClaraSpeech();});}const rate=document.getElementById('claraRate');if(rate){rate.disabled=true;rate.title='Das Tempo wird derzeit durch Azure vorgegeben.';}});
+
+const CLARA_LANGUAGES=Object.freeze({de:{label:'Deutsch',locale:'de-DE'},en:{label:'English',locale:'en-GB'},nl:{label:'Nederlands',locale:'nl-NL'},fr:{label:'Français',locale:'fr-FR'},ro:{label:'Română',locale:'ro-RO'}});
+function setClaraLanguage(code){
+  if(!Object.prototype.hasOwnProperty.call(CLARA_LANGUAGES,code))return;
+  try{localStorage.setItem('clara.language',code);}catch(_){}
+  document.documentElement.lang=code;
+  ['landingLanguage','appLanguage','creatorLanguage'].forEach(id=>{const el=document.getElementById(id);if(el){if(id==='creatorLanguage'){const match=[...el.options].find(o=>o.textContent.trim()===CLARA_LANGUAGES[code].label);if(match)el.value=match.value;}else el.value=code;}});
+  document.querySelectorAll('.language-switch select').forEach(el=>{if(el.value!==code)el.value=code;});
+}
+function restoreClaraLanguage(){let code='de';try{code=localStorage.getItem('clara.language')||'de';}catch(_){}setClaraLanguage(code);}
+window.addEventListener('load',()=>{restoreClaraLanguage();restoreClaraConnection();const auto=document.getElementById('claraAutoSpeak');if(auto){try{auto.checked=localStorage.getItem('clara.autoSpeak')!=='false';}catch(_){auto.checked=true;}auto.addEventListener('change',()=>{try{localStorage.setItem('clara.autoSpeak',String(auto.checked));}catch(_){}if(!auto.checked)stopClaraSpeech();});}const rate=document.getElementById('claraRate');if(rate){rate.disabled=true;rate.title='Das Tempo wird derzeit durch Azure vorgegeben.';}});
 
 </script></body></html>
