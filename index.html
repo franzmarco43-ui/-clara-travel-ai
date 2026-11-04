@@ -802,7 +802,7 @@ async function speakClara(value,force=false){
     const response=await fetch('/.netlify/functions/clara-speech',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({text:text.slice(0,1800)})
+      body:JSON.stringify({text:text.slice(0,1800),language:(localStorage.getItem("clara.language")||"de")})
     });
     if(!response.ok){
       let detail={};try{detail=await response.json();}catch(_){}
