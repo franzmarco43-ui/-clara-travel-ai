@@ -82,23 +82,38 @@ loadButton.addEventListener("click",async()=>{
     if(typeof ttsModule.TtsSession!=="function"){
       throw new Error("Diese Piper-Version stellt TtsSession nicht bereit. Bitte Browser-Konsole prüfen.");
     }
-    ttsSession=await ttsModule.TtsSession.create({
-      voiceId,
-      wasmPaths:{
-        onnxWasm:{
-          mjs:"https://unpkg.com/onnxruntime-web@1.18.0/dist/ort-wasm-simd-threaded.mjs",
-          wasm:"https://unpkg.com/onnxruntime-web@1.18.0/dist/ort-wasm-simd-threaded.wasm"
+    // Piper-tts-web setzt numThreads intern auf navigator.hardwareConcurrency.
+    // Für maximale Browser-Kompatibilität erzwingen wir während der Initialisierung 1 Thread.
+    const originalHardwareConcurrency=navigator.hardwareConcurrency;
+    let hardwareConcurrencyOverridden=false;
+    try{
+      Object.defineProperty(navigator,"hardwareConcurrency",{configurable:true,value:1});
+      hardwareConcurrencyOverridden=true;
+    }catch(overrideError){
+      console.warn("Konnte hardwareConcurrency nicht überschreiben; ONNX kann weiterhin Threads wählen.",overrideError);
+    }
+    try{
+      ttsSession=await ttsModule.TtsSession.create({
+        voiceId,
+        // Diese Bibliotheksversion erwartet hier einen URL-Präfix als String, kein Objekt.
+        wasmPaths:{
+          onnxWasm:"https://unpkg.com/onnxruntime-web@1.18.0/dist/",
+          piperData:"https://cdn.jsdelivr.net/npm/@diffusionstudio/piper-wasm@1.0.0/build/piper_phonemize.data",
+          piperWasm:"https://cdn.jsdelivr.net/npm/@diffusionstudio/piper-wasm@1.0.0/build/piper_phonemize.wasm"
         },
-        piperData:"https://cdn.jsdelivr.net/npm/@diffusionstudio/piper-wasm@1.0.0/build/piper_phonemize.data",
-        piperWasm:"https://cdn.jsdelivr.net/npm/@diffusionstudio/piper-wasm@1.0.0/build/piper_phonemize.wasm"
-      },
-      progress:progress=>{
-        if(progress&&progress.total){
-          status("Lade deutsches Sprachmodell … "+Math.round(progress.loaded*100/progress.total)+" %");
-        }
-      },
-      logger:message=>console.log("[Piper]",message)
-    });
+        progress:progress=>{
+          if(progress&&progress.total){
+            status("Lade deutsches Sprachmodell … "+Math.round(progress.loaded*100/progress.total)+" %");
+          }
+        },
+        logger:message=>console.log("[Piper]",message)
+      });
+    }finally{
+      if(hardwareConcurrencyOverridden){
+        try{Object.defineProperty(navigator,"hardwareConcurrency",{configurable:true,value:originalHardwareConcurrency});}
+        catch(restoreError){console.warn("Hardware-Threadwert konnte nicht zurückgesetzt werden.",restoreError);}
+      }
+    }
     window.claraVoiceId=voiceId;
     tts=true;
     status("Deutsche Stimme ist bereit: "+selected.name+" ("+voiceId+"). Gib einen Text ein und starte die Sprachausgabe.");
