@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#123c3a">
+<title>Clara – Seraphina Sprachtest</title>
+<style>
+:root{color-scheme:light;--green:#123c3a;--mint:#dcebe4;--cream:#f7f4ec;--ink:#172b29;--muted:#687773}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--cream);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;display:grid;place-items:center;padding:20px}
+main{width:min(100%,850px);background:white;border:1px solid #e2e8e3;border-radius:24px;padding:24px;box-shadow:0 14px 40px #183b3012}
+h1{margin:0 0 6px;color:var(--green);font-size:clamp(25px,5vw,36px)}p{color:var(--muted)}
+#avatar{height:min(48vh,390px);min-height:280px;border-radius:18px;background:radial-gradient(ellipse at 50% 40%,#527b68,#123c3a);overflow:hidden;position:relative}
+textarea{width:100%;min-height:120px;resize:vertical;border:1px solid #cbd8d0;border-radius:12px;padding:13px;font:inherit;color:var(--ink);margin-top:15px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+button{border:0;border-radius:12px;padding:12px 17px;background:var(--green);color:white;font-weight:700;cursor:pointer}
+button.secondary{background:var(--mint);color:var(--green)}button:disabled{opacity:.5;cursor:not-allowed}
+#status{padding:12px 14px;border-radius:12px;background:#f2f6f1;color:#43564d;min-height:46px;white-space:pre-wrap}
+.note{font-size:13px;margin-top:14px}
+</style>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js","three/examples/jsm/":"https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/","@interviewflowai/talking-avatar":"https://cdn.jsdelivr.net/npm/@interviewflowai/talking-avatar@0.3.0/dist/index.js"}}
+</script>
+</head>
+<body>
+<main>
+  <h1>Clara – Seraphina Sprachtest</h1>
+  <p>Dieser separate Prototyp nutzt Azure Speech auf dem Server. Der geheime Azure-Schlüssel bleibt in Netlify und wird nicht an den Browser übertragen.</p>
+  <div id="avatar" aria-label="3D-Testavatar"></div>
+  <textarea id="text" maxlength="1800">Hallo und herzlich willkommen! Ich bin Clara. Ich nehme dich mit auf eine Reise entlang der Donau – von Linz und Wien über Budapest bis zum Donaudelta. Schön, dass du da bist!</textarea>
+  <div class="controls">
+    <button id="speak" disabled>Clara sprechen lassen</button>
+    <button id="stop" class="secondary" disabled>Stopp</button>
+  </div>
+  <div id="status" role="status">Lade den 3D-Testavatar …</div>
+  <p class="note">Stimme: de-DE-SeraphinaMultilingualNeural. Beim Klick wird eine WAV-Datei serverseitig erzeugt und direkt an den Avatar übergeben. Die Audioausgabe und Lippenbewegung laufen gemeinsam. Der aktuell verwendete 3D-Avatar ist noch ein technischer Platzhalter und nicht Claras individuelles 3D-Modell.</p>
+</main>
+<script type="module">
+const statusEl = document.getElementById("status");
+const speakButton = document.getElementById("speak");
+const stopButton = document.getElementById("stop");
+const textInput = document.getElementById("text");
+let avatar = null;
+let busy = false;
+
+function status(message) { statusEl.textContent = message; }
+function setBusy(value) {
+  busy = value;
+  speakButton.disabled = value || !avatar;
+  stopButton.disabled = !value;
+}
+
+try {
+  const { TalkingAvatar } = await import("@interviewflowai/talking-avatar");
+  avatar = new TalkingAvatar({
+    container: document.getElementById("avatar"),
+    onError: error => {
+      console.error(error);
+      status("Avatar-Fehler: " + (error?.message || String(error)));
+    }
+  });
+  await avatar.ready;
+  speakButton.disabled = false;
+  status("Avatar bereit. Gib einen Text ein und starte Claras Seraphina-Stimme.");
+} catch (error) {
+  console.error(error);
+  status("Avatar-Ladefehler: " + (error?.message || String(error)));
+}
+
+speakButton.addEventListener("click", async () => {
+  if (!avatar || busy) return;
+  const text = textInput.value.trim();
+  if (!text) {
+    status("Bitte zuerst einen Text eingeben.");
+    return;
+  }
+  setBusy(true);
+  try {
+    status("Erzeuge Claras Sprache mit Azure Seraphina …");
+    const response = await fetch("/.netlify/functions/clara-speech", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text })
+    });
+    if (!response.ok) {
+      let detail = "HTTP " + response.status;
+      try {
+        const payload = await response.json();
+        detail = payload.error || detail;
+        if (payload.azureStatus) detail += " (Azure: " + payload.azureStatus + ")";
+        if (payload.detail) detail += "\\n" + payload.detail;
+      } catch {}
+      throw new Error(detail);
+    }
+    const audioBlob = await response.blob();
+    if (!audioBlob.size) throw new Error("Azure hat eine leere Audiodatei zurückgegeben.");
+    status("Seraphina spricht. Lippenbewegung wird synchronisiert …");
+    await avatar.speak(audioBlob);
+    status("Sprachausgabe beendet.");
+  } catch (error) {
+    console.error(error);
+    status("Sprachfehler: " + (error?.message || String(error)));
+  } finally {
+    setBusy(false);
+  }
+});
+
+stopButton.addEventListener("click", () => {
+  avatar?.stopSpeaking();
+  setBusy(false);
+  status("Wiedergabe gestoppt.");
+});
+
+window.addEventListener("pagehide", () => avatar?.dispose());
+</script>
+</body>
+</html>
