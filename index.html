@@ -1095,6 +1095,14 @@ function translateClaraPage(){
  });
  document.querySelectorAll('select option').forEach(el=>{const key=normalize(el.textContent);const source=reverse.get(key)||key;if(dict[source])el.textContent=dict[source];});
 }
+let claraTranslationObserver;
+function observeClaraDynamicContent(){
+ if(claraTranslationObserver||!document.body||!window.MutationObserver)return;
+ claraTranslationObserver=new MutationObserver(records=>{
+  if(records.some(record=>record.type==='childList'||record.type==='characterData'))translateClaraPage();
+ });
+ claraTranslationObserver.observe(document.body,{subtree:true,childList:true,characterData:true});
+}
 
 const CLARA_LANGUAGES=Object.freeze({de:{label:'Deutsch',locale:'de-DE'},en:{label:'English',locale:'en-GB'},nl:{label:'Nederlands',locale:'nl-NL'},fr:{label:'Français',locale:'fr-FR'},ro:{label:'Română',locale:'ro-RO'}});
 function setClaraLanguage(code){
@@ -1105,6 +1113,7 @@ function setClaraLanguage(code){
   ['landingLanguage','appLanguage','creatorLanguage'].forEach(id=>{const el=document.getElementById(id);if(el){if(id==='creatorLanguage'){const match=[...el.options].find(o=>o.textContent.trim()===CLARA_LANGUAGES[code].label);if(match)el.value=match.value;}else el.value=code;}});
   document.querySelectorAll('.language-switch select').forEach(el=>{if(el.value!==code)el.value=code;});
   translateClaraPage();
+  observeClaraDynamicContent();
 }
 function restoreClaraLanguage(){let code='de';try{code=localStorage.getItem('clara.language')||'de';}catch(_){}setClaraLanguage(code);}
 window.addEventListener('load',()=>{restoreClaraLanguage();restoreClaraConnection();const auto=document.getElementById('claraAutoSpeak');if(auto){try{auto.checked=localStorage.getItem('clara.autoSpeak')!=='false';}catch(_){auto.checked=true;}auto.addEventListener('change',()=>{try{localStorage.setItem('clara.autoSpeak',String(auto.checked));}catch(_){}if(!auto.checked)stopClaraSpeech();});}const rate=document.getElementById('claraRate');if(rate){rate.disabled=true;rate.title='Das Tempo wird derzeit durch Azure vorgegeben.';}});
