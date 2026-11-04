@@ -478,7 +478,7 @@ exports.handler = async function (event) {
       researchResult = await searchTavily(userMessage, tavilyKey);
       if (!researchResult.ok) {
         console.warn("Clara live research unavailable:", researchResult.reason, researchResult.providerStatus || "");
-        return { statusCode: 200, headers, body: JSON.stringify({ reply: researchFailureMessage(researchResult.reason), sources: [], research: {status: researchResult.reason || "unavailable", provider: "Tavily"} }) };
+        return { statusCode: 200, headers, body: JSON.stringify({ reply: researchFailureMessage(researchResult.reason, responseLanguage), sources: [], research: {status: researchResult.reason || "unavailable", provider: "Tavily"} }) };
       }
       researchSources = researchResult.results.map(item => ({ title: item.title, url: item.url, domain: item.domain, publishedDate: item.publishedDate, likelyOfficial: item.likelyOfficial }));
       if (needsAuthoritativeSources(userMessage) && !researchResult.results.some(item => item.likelyOfficial)) {
