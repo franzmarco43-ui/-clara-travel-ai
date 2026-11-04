@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#123c3a">
+<title>Clara – deutscher KI-Stimmtest</title>
+<style>
+:root{color-scheme:light;--green:#123c3a;--mint:#dcebe4;--cream:#f7f4ec;--ink:#172b29;--muted:#687773}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--cream);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;display:grid;place-items:center;padding:20px}
+main{width:min(100%,850px);background:white;border:1px solid #e2e8e3;border-radius:24px;padding:24px;box-shadow:0 14px 40px #183b3012}
+h1{margin:0 0 6px;color:var(--green);font-size:clamp(25px,5vw,36px)}p{color:var(--muted)}
+#avatar{height:min(48vh,390px);min-height:280px;border-radius:18px;background:radial-gradient(ellipse at 50% 40%,#527b68,#123c3a);overflow:hidden;position:relative}
+textarea{width:100%;min-height:110px;resize:vertical;border:1px solid #cbd8d0;border-radius:12px;padding:13px;font:inherit;color:var(--ink);margin-top:15px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+button{border:0;border-radius:12px;padding:12px 17px;background:var(--green);color:white;font-weight:700;cursor:pointer}
+button.secondary{background:var(--mint);color:var(--green)}button:disabled{opacity:.5;cursor:not-allowed}
+#status{padding:12px 14px;border-radius:12px;background:#f2f6f1;color:#43564d;min-height:46px;white-space:pre-wrap}
+.note{font-size:13px;margin-top:14px}
+</style>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js","three/examples/jsm/":"https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/","@interviewflowai/talking-avatar":"https://cdn.jsdelivr.net/npm/@interviewflowai/talking-avatar@0.3.0/dist/index.js"}}
+</script>
+</head>
+<body>
+<main>
+  <h1>Clara – deutscher Stimmtest</h1>
+  <p>Dieser separate Prototyp erzeugt deutsche Sprache direkt im Browser und übergibt die Audiodatei an den 3D-Avatar. Die bestehende Website bleibt unverändert.</p>
+  <div id="avatar" aria-label="3D-Avatar"></div>
+  <textarea id="text">Hallo und herzlich willkommen! Ich bin Clara. Ich nehme dich mit auf eine Reise entlang der Donau – von Linz und Wien über Budapest bis zum Donaudelta. Schön, dass du da bist!</textarea>
+  <div class="controls">
+    <button id="load">Deutsche Stimme laden</button>
+    <button id="speak" disabled>Clara sprechen lassen</button>
+    <button id="stop" class="secondary" disabled>Stopp</button>
+  </div>
+  <div id="status" role="status">Lade den 3D-Avatar …</div>
+  <p class="note">Beim ersten Start werden Sprachmodell und WASM-Dateien geladen (je nach Verbindung mehrere zehn MB) und anschließend im Browser gespeichert. Die Spracherzeugung läuft lokal im Browser; dafür ist kein kostenpflichtiger TTS-API-Schlüssel vorgesehen. Dies ist zunächst eine technische Teststimme, noch kein individuelles Clara-Stimmklon.</p>
+</main>
+<script type="module">
+const statusEl=document.getElementById("status");
+const loadButton=document.getElementById("load");
+const speakButton=document.getElementById("speak");
+const stopButton=document.getElementById("stop");
+const textInput=document.getElementById("text");
+let avatar=null;
+let tts=null;
+let ttsModule=null;
+let busy=false;
+
+function status(message){statusEl.textContent=message;}
+function setBusy(value){busy=value;loadButton.disabled=value||!!tts;speakButton.disabled=value||!tts;stopButton.disabled=!value;}
+
+try{
+  status("Lade 3D-Avatar …");
+  const avatarModule=await import("@interviewflowai/talking-avatar");
+  avatar=new avatarModule.TalkingAvatar({container:document.getElementById("avatar"),onError:error=>{
+    console.error(error);status("Avatar-Fehler: "+(error?.message||String(error)));
+  }});
+  await avatar.ready;
+  status("Avatar bereit. Lade jetzt die kostenlose deutsche Piper-Stimme.");
+}catch(error){
+  console.error(error);status("Avatar-Ladefehler: "+(error?.message||String(error)));
+  loadButton.disabled=true;
+}
+
+loadButton.addEventListener("click",async()=>{
+  if(busy||tts)return;
+  setBusy(true);
+  try{
+    status("Lade Piper-TTS und deutsche Stimme. Beim ersten Mal kann das etwas dauern …");
+    ttsModule=await import("https://esm.sh/@mintplex-labs/piper-tts-web@1.0.5");
+    const voices=await ttsModule.voices();
+    console.log("Verfügbare Piper-Stimmen:",voices);
+    const voiceIds=Object.keys(voices||{});
+    const voiceId=voiceIds.find(id=>id==="de_DE-thorsten-medium")||voiceIds.find(id=>id.toLowerCase().startsWith("de_de"));
+    if(!voiceId){
+      throw new Error("Keine deutsche de_DE-Stimme in der verfügbaren Stimmenliste gefunden. Verfügbare Stimmen: "+voiceIds.join(", "));
+    }
+    status("Deutsche Stimme gefunden: "+voiceId+". Lade das Sprachmodell …");
+    await ttsModule.download(voiceId,progress=>{
+      if(progress&&progress.total){
+        status("Lade deutsche Stimme … "+Math.round(progress.loaded*100/progress.total)+" %");
+      }
+    });
+    window.claraVoiceId=voiceId;
+    tts=true;
+    status("Deutsche Stimme ist bereit ("+voiceId+"). Gib einen Text ein und starte die Sprachausgabe.");
+  }catch(error){
+    console.error(error);
+    status("TTS-Ladefehler: "+(error?.message||String(error))+"\nPrüfe bei Bedarf F12 → Konsole.");
+  }finally{
+    busy=false;loadButton.disabled=!!tts;speakButton.disabled=!tts;stopButton.disabled=true;
+  }
+});
+
+speakButton.addEventListener("click",async()=>{
+  if(!tts||busy||!avatar)return;
+  const text=textInput.value.trim();
+  if(!text){status("Bitte zuerst einen deutschen Text eingeben.");return;}
+  setBusy(true);
+  try{
+    status("Erzeuge deutsche Sprache …");
+    const wav=await ttsModule.predict({text,voiceId:window.claraVoiceId});
+    if(!(wav instanceof Blob))throw new Error("Die Sprachsynthese hat keine Audiodatei (Blob) zurückgegeben.");
+    status("Audio erzeugt. Starte Avatar mit synchronisierter Lippenbewegung …");
+    await avatar.speak(wav);
+    status("Sprachausgabe beendet.");
+  }catch(error){
+    console.error(error);
+    status("Sprach-/Avatarfehler: "+(error?.message||String(error))+"\nPrüfe bei Bedarf F12 → Konsole.");
+  }finally{
+    busy=false;loadButton.disabled=true;speakButton.disabled=false;stopButton.disabled=true;
+  }
+});
+
+stopButton.addEventListener("click",()=>{
+  avatar?.stopSpeaking();busy=false;loadButton.disabled=!!tts;speakButton.disabled=!tts;stopButton.disabled=true;
+  status("Wiedergabe gestoppt.");
+});
+window.addEventListener("pagehide",()=>avatar?.dispose());
+</script>
+</body>
+</html>
