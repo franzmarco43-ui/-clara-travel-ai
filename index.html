@@ -1128,6 +1128,7 @@ function setClaraLanguage(code){
   document.querySelectorAll('.language-switch select').forEach(el=>{if(el.value!==code)el.value=code;});
   translateClaraPage();
   observeClaraDynamicContent();
+  if(typeof loadCityWeather==='function')loadCityWeather();
 }
 function restoreClaraLanguage(){let code='de';try{code=localStorage.getItem('clara.language')||'de';}catch(_){}setClaraLanguage(code);}
 window.addEventListener('load',()=>{restoreClaraLanguage();restoreClaraConnection();const auto=document.getElementById('claraAutoSpeak');if(auto){try{auto.checked=localStorage.getItem('clara.autoSpeak')!=='false';}catch(_){auto.checked=true;}auto.addEventListener('change',()=>{try{localStorage.setItem('clara.autoSpeak',String(auto.checked));}catch(_){}if(!auto.checked)stopClaraSpeech();});}const rate=document.getElementById('claraRate');if(rate){rate.disabled=true;rate.title='Das Tempo wird derzeit durch Azure vorgegeben.';}});
