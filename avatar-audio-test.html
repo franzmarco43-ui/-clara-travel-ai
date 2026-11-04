@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#123c3a">
+<title>Clara – Sprach- und Lippen-Synchronisation</title>
+<style>
+:root{color-scheme:light;--green:#123c3a;--mint:#dcebe4;--cream:#f7f4ec;--ink:#172b29;--muted:#687773}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--cream);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;display:grid;place-items:center;padding:20px}
+main{width:min(100%,820px);background:white;border:1px solid #e2e8e3;border-radius:24px;padding:24px;box-shadow:0 14px 40px #183b3012}
+h1{margin:0 0 6px;color:var(--green);font-size:clamp(25px,5vw,36px)}p{color:var(--muted)}
+#avatar{height:min(58vh,470px);min-height:320px;border-radius:18px;background:radial-gradient(ellipse at 50% 40%,#527b68,#123c3a);overflow:hidden;position:relative}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0;align-items:center}
+button,.filelabel{border:0;border-radius:12px;padding:12px 17px;background:var(--green);color:white;font-weight:700;cursor:pointer}
+.filelabel{display:inline-flex;align-items:center;background:var(--mint);color:var(--green)}
+input[type=file]{max-width:100%;font:inherit}
+button:disabled{opacity:.5;cursor:not-allowed}
+#status{padding:12px 14px;border-radius:12px;background:#f2f6f1;color:#43564d;min-height:46px}
+.note{font-size:13px;margin-top:14px}
+</style>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js","three/examples/jsm/":"https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/","@interviewflowai/talking-avatar":"https://cdn.jsdelivr.net/npm/@interviewflowai/talking-avatar@0.3.0/dist/index.js"}}
+</script>
+</head>
+<body>
+<main>
+  <h1>Clara – Sprachtest mit Lippen-Synchronisation</h1>
+  <p>Dieser separate Test verbindet eine fertige Audiodatei mit dem 3D-Avatar. Die bestehende Clara-Website bleibt unverändert.</p>
+  <div id="avatar" aria-label="3D-Avatar"></div>
+  <div class="controls">
+    <label class="filelabel" for="audioFile">Audiodatei auswählen</label>
+    <input id="audioFile" type="file" accept="audio/*">
+    <button id="speak" disabled>Audio mit Lippenbewegung abspielen</button>
+    <button id="stop" disabled>Stopp</button>
+  </div>
+  <div id="status" role="status">Avatar wird geladen …</div>
+  <p class="note">Geeignet für MP3, WAV oder andere vom Browser unterstützte Audioformate. Der Avatar spielt die Datei selbst ab und synchronisiert die Mundbewegungen. Bitte nicht parallel über einen zweiten Player abspielen.</p>
+</main>
+<script type="module">
+const container=document.getElementById("avatar");
+const fileInput=document.getElementById("audioFile");
+const speakButton=document.getElementById("speak");
+const stopButton=document.getElementById("stop");
+const status=document.getElementById("status");
+let avatar=null;
+let selectedFile=null;
+fileInput.addEventListener("change",()=>{
+  selectedFile=fileInput.files?.[0]||null;
+  speakButton.disabled=!selectedFile||!avatar;
+  status.textContent=selectedFile?"Audiodatei bereit: "+selectedFile.name:"Bitte eine Audiodatei auswählen.";
+});
+try{
+  status.textContent="Lade 3D-Avatar …";
+  const mod=await import("@interviewflowai/talking-avatar");
+  avatar=new mod.TalkingAvatar({container,onError:error=>{
+    console.error(error);
+    status.textContent="Avatar-Fehler: "+(error?.message||String(error));
+  }});
+  await avatar.ready;
+  status.textContent="Avatar bereit. Wähle eine deutsche Sprachaufnahme aus.";
+  speakButton.disabled=!selectedFile;
+}catch(error){
+  console.error(error);
+  status.textContent="Ladefehler: "+(error?.message||String(error));
+}
+speakButton.addEventListener("click",async()=>{
+  if(!avatar||!selectedFile)return;
+  speakButton.disabled=true;stopButton.disabled=false;
+  status.textContent="Spiele Audio mit synchronisierter Mundbewegung …";
+  try{
+    await avatar.speak(selectedFile);
+    status.textContent="Wiedergabe beendet.";
+  }catch(error){
+    console.error(error);
+    status.textContent="Audio konnte nicht abgespielt werden: "+(error?.message||String(error));
+  }finally{
+    speakButton.disabled=!selectedFile;stopButton.disabled=true;
+  }
+});
+stopButton.addEventListener("click",()=>{
+  avatar?.stopSpeaking();
+  stopButton.disabled=true;speakButton.disabled=!selectedFile;
+  status.textContent="Wiedergabe gestoppt.";
+});
+window.addEventListener("pagehide",()=>avatar?.dispose());
+</script>
+</body>
+</html>
