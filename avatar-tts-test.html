@@ -69,7 +69,7 @@ loadButton.addEventListener("click",async()=>{
   setBusy(true);
   try{
     status("Lade Piper-TTS und deutsche Stimme. Beim ersten Mal kann das etwas dauern …");
-    ttsModule=await import("https://esm.sh/@mintplex-labs/piper-tts-web@1.0.5");
+    ttsModule=await import("https://esm.sh/@mintplex-labs/piper-tts-web@1.0.5?deps=onnxruntime-web@1.19.0");
     const voices=await ttsModule.voices();
     console.log("Verfügbare Piper-Stimmen:",voices);
     const germanVoices=Array.isArray(voices)?voices.filter(v=>v&&typeof v.key==="string"&&v.key.toLowerCase().startsWith("de_de")):[];
@@ -97,7 +97,7 @@ loadButton.addEventListener("click",async()=>{
         voiceId,
         // Diese Bibliotheksversion erwartet hier einen URL-Präfix als String, kein Objekt.
         wasmPaths:{
-          onnxWasm:"https://unpkg.com/onnxruntime-web@1.18.0/dist/",
+          onnxWasm:"https://unpkg.com/onnxruntime-web@1.19.0/dist/",
           piperData:"https://cdn.jsdelivr.net/npm/@diffusionstudio/piper-wasm@1.0.0/build/piper_phonemize.data",
           piperWasm:"https://cdn.jsdelivr.net/npm/@diffusionstudio/piper-wasm@1.0.0/build/piper_phonemize.wasm"
         },
