@@ -38,11 +38,77 @@
 @media(max-width:520px){.dest-img{height:112px}.dest-info{padding:11px}.dest-info p{min-height:48px}}
 @media(prefers-reduced-motion:reduce){.destination,.dest-info button{transition:none}}
 
+
+#marketing-home{--sg:#286b55;--sd:#173f35;--sc:#f8f7f1;background:var(--sc);color:#1d302b;font-family:Inter,ui-sans-serif,system-ui,sans-serif;min-height:100vh}
+#marketing-home *{box-sizing:border-box}
+#marketing-home .site-header{height:82px;padding:12px clamp(18px,4vw,64px);display:flex;align-items:center;justify-content:space-between;gap:24px;background:#fff;position:sticky;top:0;z-index:20;border-bottom:1px solid #e7ece7}
+#marketing-home .site-brand{font:italic 34px/.8 Georgia,serif;color:var(--sg);white-space:nowrap;text-decoration:none}
+#marketing-home .site-brand small{display:block;font:italic 13px Georgia,serif;margin-left:17px;color:#567d6a}
+#marketing-home .site-nav{display:flex;align-items:center;gap:clamp(12px,2vw,28px);font-size:13px;font-weight:650}
+#marketing-home .site-nav a{color:#263b34;text-decoration:none}
+#marketing-home .site-actions{display:flex;align-items:center;gap:12px}
+#marketing-home .site-cta{border:0;border-radius:999px;background:var(--sg);color:white;padding:13px 20px;font-weight:750;cursor:pointer}
+#marketing-home .site-icon{border:0;background:transparent;color:#27473c;font-size:21px;cursor:pointer}
+#marketing-home .site-hero{min-height:490px;display:grid;grid-template-columns:1.05fr .95fr;align-items:center;overflow:hidden;background:linear-gradient(90deg,#f7f4ec 0%,#f7f4eced 38%,#f7f4ec24 72%),url("https://commons.wikimedia.org/wiki/Special:FilePath/Panorama%20Dom%20Passau.jpg") center/cover}
+#marketing-home .hero-copy{padding:52px clamp(24px,5vw,76px);max-width:720px}
+#marketing-home .welcome-pill{display:inline-flex;border-radius:999px;background:#fff;padding:9px 14px;font-size:12px;font-weight:700;color:#466b59}
+#marketing-home .site-hero h1{font:700 clamp(38px,5vw,64px)/1.05 Georgia,serif;letter-spacing:-1.8px;color:#183d35;margin:22px 0 17px}
+#marketing-home .site-hero h1 em{font-style:normal;color:#377b60}
+#marketing-home .hero-copy p{max-width:510px;font-size:17px;line-height:1.65;color:#3e5149;margin:0 0 26px}
+#marketing-home .hero-buttons{display:flex;gap:12px;flex-wrap:wrap}
+#marketing-home .hero-button{border-radius:999px;padding:14px 21px;font-size:14px;font-weight:750;cursor:pointer;border:1px solid var(--sg)}
+#marketing-home .hero-button.primary{background:var(--sg);color:white}
+#marketing-home .hero-button.secondary{background:#ffffffd9;color:#244d3d}
+#marketing-home .clara-portrait{align-self:end;justify-self:center;width:min(88%,440px);height:440px;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 16px 28px #1c3c3024)}
+#marketing-home .site-section{padding:54px clamp(18px,4vw,64px)}
+#marketing-home .section-kicker{font:italic 17px Georgia,serif;color:#5b8b70;text-align:center;margin-bottom:4px}
+#marketing-home .section-title{font:700 clamp(28px,3vw,38px) Georgia,serif;text-align:center;color:#1e4037;margin:0 0 28px}
+#marketing-home .featured-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;max-width:1320px;margin:0 auto}
+#marketing-home .featured-card{border-radius:18px;overflow:hidden;position:relative;min-height:270px;background:#dce8df;box-shadow:0 7px 24px #193b3018;display:flex;align-items:end}
+#marketing-home .featured-card:before{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#102b25e8 0%,#102b2500 75%);z-index:1}
+#marketing-home .featured-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#marketing-home .featured-card-content{position:relative;z-index:2;padding:16px;color:#fff;width:100%}
+#marketing-home .featured-card h3{font:700 25px Georgia,serif;margin:0 0 2px}
+#marketing-home .featured-card .country{font-size:12px}
+#marketing-home .featured-card .discover{margin-top:10px;padding:8px 14px;border-radius:999px;background:#fff;color:#234d3d;font-size:12px;font-weight:750;border:0;cursor:pointer}
+#marketing-home .featured-live{margin-top:8px;display:grid;gap:3px;font-size:10px;background:#102b2578;border:1px solid #ffffff35;border-radius:9px;padding:7px}
+#marketing-home .featured-live span{display:flex;justify-content:space-between;gap:6px}
+#marketing-home .map-promo{background:linear-gradient(110deg,#e7f0e9,#dbe9df);display:grid;grid-template-columns:.8fr 1.2fr;gap:30px;align-items:center;border-radius:24px;padding:32px;max-width:1320px;margin:0 auto}
+#marketing-home .map-promo h2{font:700 clamp(28px,3vw,39px) Georgia,serif;color:#1c4036;margin:6px 0 10px}
+#marketing-home .map-promo p{color:#4f665b;line-height:1.6}
+#marketing-home .route-graphic{min-height:190px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:9px;padding:18px;position:relative}
+#marketing-home .route-stop{position:relative;z-index:1;background:#fff;border:2px solid #75a786;border-radius:999px;padding:8px 12px;font-size:12px;font-weight:750;color:#2a5d47;cursor:pointer}
+#marketing-home .route-stop.start,#marketing-home .route-stop.end{background:#286b55;color:white;border-color:#286b55}
+#marketing-home .site-footer{background:#173f35;color:#e5eee8;padding:28px clamp(18px,4vw,64px);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:13px}
+#marketing-home .site-footer strong{font:italic 26px Georgia,serif}
+@media(max-width:900px){#marketing-home .site-nav{display:none}#marketing-home .site-hero{grid-template-columns:1fr .7fr;min-height:430px}#marketing-home .clara-portrait{height:360px}#marketing-home .featured-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#marketing-home .map-promo{grid-template-columns:1fr}}
+@media(max-width:560px){#marketing-home .site-header{height:70px;padding:10px 16px}#marketing-home .site-brand{font-size:29px}#marketing-home .site-cta{padding:10px 13px;font-size:12px}#marketing-home .site-hero{grid-template-columns:1fr;min-height:unset;background:linear-gradient(180deg,#f7f4eced,#f7f4ecbb),url("https://commons.wikimedia.org/wiki/Special:FilePath/Panorama%20Dom%20Passau.jpg") center/cover}#marketing-home .hero-copy{padding:38px 22px 10px}#marketing-home .site-hero h1{font-size:42px}#marketing-home .hero-copy p{font-size:15px}#marketing-home .clara-portrait{height:270px;width:85%;margin-top:-4px}#marketing-home .site-section{padding:38px 16px}#marketing-home .featured-grid{gap:10px}#marketing-home .featured-card{min-height:225px}#marketing-home .featured-card h3{font-size:21px}#marketing-home .featured-card-content{padding:12px}#marketing-home .map-promo{padding:22px 16px}}
+
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-<div class="app">
-<header class="topbar"><div class="brand"><div class="logo">✦</div><div>Clara Travel AI<small>DEINE REISE. DEINE GESCHICHTE.</small></div></div><div class="top-actions"><button class="btn light hide-small" onclick="showPage('planner')">＋ Reise planen</button><button class="btn gold" onclick="showPage('premium')">✧ Premium</button></div></header>
+
+<div id="marketing-home">
+<header class="site-header">
+<a href="#" class="site-brand">Clara<small>von Donau 〜</small></a>
+<nav class="site-nav"><a href="#marketing-home">Startseite</a><a href="#featured-destinations">Reiseziele</a><a href="#" onclick="openAppPage('planner');return false">Reiseplaner</a><a href="#" onclick="openAppPage('intelligence');return false">Genussreise</a><a href="#" onclick="openAppPage('intelligence');return false">Claras Geschichten</a><a href="#" onclick="openAppPage('clara');return false">Über Clara</a></nav>
+<div class="site-actions"><button class="site-icon" onclick="document.getElementById('featured-destinations').scrollIntoView({behavior:'smooth'})">⌕</button><button class="site-cta" onclick="openAppPage('clara')">☏ Clara fragen</button></div>
+</header>
+<section class="site-hero"><div class="hero-copy"><div class="welcome-pill">♥ Willkommen an der Donau</div><h1>Entdecke Europas<br><em>Donau mit Clara</em></h1><p>Reisetipps, kulinarische Highlights und echte Lieblingsorte entlang Europas schönstem Fluss – von Passau bis zum Donaudelta.</p><div class="hero-buttons"><button class="hero-button primary" onclick="openAppPage('map')">Reiseziele entdecken&nbsp; →</button><button class="hero-button secondary" onclick="openAppPage('clara')">▶ Clara kennenlernen</button></div></div><img class="clara-portrait" src="assets/clara-avatar.png.png" alt="Clara von Donau – deine virtuelle Reisebegleiterin"></section>
+<section class="site-section" id="featured-destinations"><div class="section-kicker">Die schönsten Orte</div><h2 class="section-title">Entlang der Donau</h2><div class="featured-grid">
+<article class="featured-card"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Linz_Ars_Electronica_center-5529.jpg" alt="Linz an der Donau" loading="lazy"><div class="featured-card-content"><h3>Linz</h3><div class="country">Österreich</div><div class="featured-live" data-city-live="Linz"><span><b>📅 Ortszeit</b><span data-live-time>Wird geladen …</span></span><span><b>🌤 Wetter</b><span data-live-weather>Wird geladen …</span></span><span><b>🌊 Pegel</b><span data-live-level>Keine geprüfte Messstelle</span></span></div><button class="discover" onclick="openDestination('Linz')">Entdecken →</button></div></article>
+<article class="featured-card"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Wien%20Schoenbrunn.jpg" alt="Wien an der Donau" loading="lazy"><div class="featured-card-content"><h3>Wien</h3><div class="country">Österreich</div><div class="featured-live" data-city-live="Wien"><span><b>📅 Ortszeit</b><span data-live-time>Wird geladen …</span></span><span><b>🌤 Wetter</b><span data-live-weather>Wird geladen …</span></span><span><b>🌊 Pegel</b><span data-live-level>Keine geprüfte Messstelle</span></span></div><button class="discover" onclick="openDestination('Wien')">Entdecken →</button></div></article>
+<article class="featured-card"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Hungarian_Parliament_Budapest.jpg" alt="Budapest an der Donau" loading="lazy"><div class="featured-card-content"><h3>Budapest</h3><div class="country">Ungarn</div><div class="featured-live" data-city-live="Budapest"><span><b>📅 Ortszeit</b><span data-live-time>Wird geladen …</span></span><span><b>🌤 Wetter</b><span data-live-weather>Wird geladen …</span></span><span><b>🌊 Pegel</b><span data-live-level>Keine geprüfte Messstelle</span></span></div><button class="discover" onclick="openDestination('Budapest')">Entdecken →</button></div></article>
+<article class="featured-card"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Church%20of%20Saint%20Sava%20%2813807900093%29.jpg" alt="Belgrad an der Donau" loading="lazy"><div class="featured-card-content"><h3>Belgrad</h3><div class="country">Serbien</div><div class="featured-live" data-city-live="Belgrad"><span><b>📅 Ortszeit</b><span data-live-time>Wird geladen …</span></span><span><b>🌤 Wetter</b><span data-live-weather>Wird geladen …</span></span><span><b>🌊 Pegel</b><span data-live-level>Keine geprüfte Messstelle</span></span></div><button class="discover" onclick="openDestination('Belgrad')">Entdecken →</button></div></article>
+</div></section>
+<section class="site-section" style="padding-top:0"><div class="map-promo"><div><div class="section-kicker" style="text-align:left">Deine Donau entdecken</div><h2>Interaktive Donau-Karte</h2><p>Klicke auf die Stationen und entdecke Highlights, Sehenswürdigkeiten und Claras persönliche Tipps – von Passau bis zum Donaudelta.</p><button class="site-cta" onclick="openAppPage('map')">Karte ansehen →</button></div><div class="route-graphic" aria-label="Reiseroute von Passau bis zum Donaudelta">
+<button class="route-stop start" onclick="openDestination('Passau')">Passau</button><button class="route-stop" onclick="openDestination('Linz')">Linz</button><button class="route-stop" onclick="openDestination('Melk')">Melk</button><button class="route-stop" onclick="openDestination('Wien')">Wien</button><button class="route-stop" onclick="openDestination('Bratislava')">Bratislava</button><button class="route-stop" onclick="openDestination('Budapest')">Budapest</button><button class="route-stop" onclick="openDestination('Novi Sad')">Novi Sad</button><button class="route-stop" onclick="openDestination('Belgrad')">Belgrad</button><button class="route-stop" onclick="openDestination('Russe')">Russe</button><button class="route-stop end" onclick="openDestination('Donaudelta')">Donaudelta</button>
+</div></div></section>
+<footer class="site-footer"><div><strong>Clara von Donau ♡</strong><div>Clara Travel AI · Deine Reise beginnt mit einem Gespräch</div></div><div>Von Passau bis zum Donaudelta · Reiseinspiration entlang Europas Donau</div></footer>
+</div>
+
+<div class="app" id="clara-app" style="display:none">
+<header class="topbar"><div class="brand"><div class="logo">✦</div><div>Clara Travel AI<small>DEINE REISE. DEINE GESCHICHTE.</small></div></div><div class="top-actions"><button class="btn light hide-small" onclick="returnToLanding()">⌂ Startseite</button><button class="btn light hide-small" onclick="showPage('planner')">＋ Reise planen</button><button class="btn gold" onclick="showPage('premium')">✧ Premium</button></div></header>
 <div class="layout">
 <aside class="sidebar"><div class="navlabel">DEIN REISEBEREICH</div><button class="nav active" data-page="home" onclick="showPage('home')">⌂ &nbsp; Übersicht</button><button class="nav" data-page="planner" onclick="showPage('planner')">▤ &nbsp; Reise planen</button><button class="nav" data-page="map" onclick="showPage('map')">⌖ &nbsp; Donau-Karte</button><button class="nav" data-page="locks" onclick="showPage('locks')">▥ &nbsp; Donau-Schleusen</button><button class="nav" data-page="clara" onclick="showPage('clara')">☏ &nbsp; Mit Clara sprechen</button><button class="nav" data-page="intelligence" onclick="showPage('intelligence')">✦ &nbsp; Donau-Wissen</button><button class="nav" data-page="premium" onclick="showPage('premium')">✧ &nbsp; Premium entdecken</button><button class="nav" data-page="memory" onclick="showPage('memory')">🧠 &nbsp; Mein Clara-Gedächtnis</button><div class="side-note"><b>Deine Reise, dein Tempo.</b><p>Clara ist eine virtuelle KI-Reisebegleiterin. Reiseinformationen bitte vor Ort überprüfen.</p></div></aside>
 <main class="main">
@@ -311,6 +377,11 @@ function askClaraAboutLock(index){
     input.focus();
   },100);
 }
+
+
+function openAppPage(page){document.getElementById('marketing-home').style.display='none';document.getElementById('clara-app').style.display='block';showPage(page);}
+function openDestination(name){openAppPage('planner');selectDestination(name);}
+function returnToLanding(){document.getElementById('clara-app').style.display='none';document.getElementById('marketing-home').style.display='block';window.scrollTo({top:0,behavior:'smooth'});}
 
 function showPage(page){document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));document.getElementById('page-'+page).classList.remove('hidden');document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page===page));if(page==='intelligence'&&!document.getElementById('intelligenceDestinations').dataset.rendered){renderClaraIntelligence();document.getElementById('intelligenceDestinations').dataset.rendered='true';}if(page==='map'){initDanubeMap();setTimeout(()=>danubeMapInstance&&danubeMapInstance.invalidateSize(),160)}if(page==='locks'){loadDanubeLocks()}window.scrollTo({top:0,behavior:'smooth'})}
 function selectDestination(name){document.getElementById('destination').value=name;showPage('planner');makePlan()}
