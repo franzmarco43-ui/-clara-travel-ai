@@ -22,10 +22,16 @@ exports.handler = async (event) => {
   const region = (process.env.AZURE_SPEECH_REGION || "").trim().toLowerCase();
 
   if (!speechKey || !region) {
+    const missing = [];
+    if (!speechKey) missing.push("AZURE_SPEECH_KEY");
+    if (!region) missing.push("AZURE_SPEECH_REGION");
     return {
       statusCode: 500,
       headers: { "Content-Type": "application/json; charset=utf-8" },
-      body: JSON.stringify({ error: "Azure Speech ist serverseitig noch nicht vollständig konfiguriert." })
+      body: JSON.stringify({
+        error: "Azure Speech-Konfiguration unvollständig.",
+        missing
+      })
     };
   }
 
