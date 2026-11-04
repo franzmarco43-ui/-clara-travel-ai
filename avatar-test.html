@@ -40,8 +40,6 @@ button.secondary{background:var(--mint);color:var(--green)}button:disabled{opaci
   <p class="note">Für den Test bitte Kopfhörer verwenden. Der Browser fragt nach Mikrofonzugriff. Deine Mikrofon-Audio wird lokal im Browser verarbeitet und vom Avatar wiedergegeben. Die Seite benötigt HTTPS.</p>
 </main>
 <script type="module">
-import { TalkingAvatar } from "@interviewflowai/talking-avatar";
-
 const container = document.getElementById("avatar");
 const startButton = document.getElementById("start");
 const stopButton = document.getElementById("stop");
@@ -50,6 +48,12 @@ let avatar = null;
 let stream = null;
 
 try {
+  status.textContent = "Lade Avatar-Modul …";
+  const module = await import("@interviewflowai/talking-avatar");
+  const TalkingAvatar = module.TalkingAvatar;
+  if (typeof TalkingAvatar !== "function") {
+    throw new Error("Das Modul wurde geladen, aber TalkingAvatar wurde nicht exportiert.");
+  }
   avatar = new TalkingAvatar({
     container,
     onError: (error) => {
@@ -61,7 +65,7 @@ try {
   status.textContent = "Die 3D-Figur ist bereit. Klicke auf „Mikrofon-Test starten“.";
 } catch (error) {
   console.error(error);
-  status.textContent = "Der Avatar konnte nicht geladen werden. Bitte Seite neu laden oder einen aktuellen Chrome-/Edge-Browser verwenden.";
+  status.textContent = "Ladefehler: " + (error?.message || String(error)) + " (Details auch in der Browser-Konsole: F12 → Konsole).";
   startButton.disabled = true;
 }
 
