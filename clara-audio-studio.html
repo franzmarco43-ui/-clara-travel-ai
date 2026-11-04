@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#123c3a">
+<title>Clara – Seraphina Audio Studio</title>
+<style>
+:root{color-scheme:light;--green:#123c3a;--mint:#dcebe4;--cream:#f7f4ec;--ink:#172b29;--muted:#687773}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--cream);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;display:grid;place-items:center;padding:20px}
+main{width:min(100%,760px);background:white;border:1px solid #e2e8e3;border-radius:24px;padding:24px;box-shadow:0 14px 40px #183b3012}
+h1{margin:0 0 6px;color:var(--green);font-size:clamp(25px,5vw,36px)}p{color:var(--muted)}
+.portrait{width:min(100%,320px);margin:18px auto;border-radius:18px;overflow:hidden;box-shadow:0 8px 26px #172b291c}.portrait img{display:block;width:100%;height:auto}
+textarea{width:100%;min-height:150px;resize:vertical;border:1px solid #cbd8d0;border-radius:12px;padding:13px;font:inherit;color:var(--ink);margin-top:12px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+button,.download{display:inline-block;border:0;border-radius:12px;padding:12px 17px;background:var(--green);color:white;font-weight:700;cursor:pointer;text-decoration:none}
+button.secondary{background:var(--mint);color:var(--green)}button:disabled{opacity:.5;cursor:not-allowed}
+#status{padding:12px 14px;border-radius:12px;background:#f2f6f1;color:#43564d;min-height:46px;white-space:pre-wrap}
+audio{display:block;width:100%;margin:14px 0}
+.note{font-size:13px;margin-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <h1>Clara – Seraphina Audio Studio</h1>
+  <p>Hier erzeugst du eine WAV-Datei mit Claras deutscher Seraphina-Stimme. Diese Datei kannst du anschließend zusammen mit dem Portrait in einem Talking-Photo-Dienst testen.</p>
+  <div class="portrait"><img src="/clara-avatar.jpg" alt="Claras freigegebenes Portrait"></div>
+  <label for="text"><strong>Text für Clara</strong></label>
+  <textarea id="text" maxlength="1800">Hallo und herzlich willkommen! Ich bin Clara. Ich nehme dich mit auf eine Reise entlang der Donau – von Linz und Wien über Budapest bis zum Donaudelta. Schön, dass du da bist!</textarea>
+  <div class="controls">
+    <button id="generate">Seraphina-Audio erzeugen</button>
+    <a id="download" class="download" hidden download="clara-seraphina.wav">WAV herunterladen</a>
+  </div>
+  <div id="status" role="status">Bereit. Schreibe oder ändere den Text und erzeuge Claras Audio.</div>
+  <audio id="player" controls hidden></audio>
+  <p class="note">Die WAV-Datei wird über die bestehende Netlify-Funktion und Azure Speech erzeugt. Der Azure-Schlüssel bleibt auf dem Server. Maximal 1.800 Zeichen pro Durchlauf. Diese Seite ist ein separater Prototyp und verändert weder Startseite noch Backend.</p>
+</main>
+<script>
+const textInput=document.getElementById("text"), button=document.getElementById("generate"), status=document.getElementById("status"), download=document.getElementById("download"), player=document.getElementById("player");
+let audioUrl=null;
+button.addEventListener("click",async()=>{
+ const text=textInput.value.trim(); if(!text){status.textContent="Bitte zuerst einen Text eingeben.";return}
+ button.disabled=true;download.hidden=true;player.hidden=true;status.textContent="Erzeuge Claras Seraphina-Stimme …";
+ try{
+  const response=await fetch("/.netlify/functions/clara-speech",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text})});
+  if(!response.ok){let message="HTTP "+response.status;try{const p=await response.json();message=p.error||message;if(p.missing?.length)message+="\nFehlende Netlify-Variable(n): "+p.missing.join(", ");if(p.azureStatus)message+=" (Azure: "+p.azureStatus+")";if(p.detail)message+="\n"+p.detail}catch{}throw new Error(message)}
+  const blob=await response.blob();if(!blob.size)throw new Error("Azure hat eine leere Audiodatei zurückgegeben.");
+  if(audioUrl)URL.revokeObjectURL(audioUrl);audioUrl=URL.createObjectURL(blob);
+  player.src=audioUrl;player.hidden=false;download.href=audioUrl;download.hidden=false;
+  status.textContent="Fertig! Höre dir die Stimme an oder lade die WAV-Datei herunter.";
+ }catch(e){console.error(e);status.textContent="Sprachfehler: "+(e.message||String(e))}
+ finally{button.disabled=false}
+});
+window.addEventListener("pagehide",()=>{if(audioUrl)URL.revokeObjectURL(audioUrl)});
+</script>
+</body>
+</html>
