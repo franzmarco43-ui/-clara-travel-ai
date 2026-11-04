@@ -87,6 +87,9 @@ speakButton.addEventListener("click", async () => {
       try {
         const payload = await response.json();
         detail = payload.error || detail;
+        if (Array.isArray(payload.missing) && payload.missing.length) {
+          detail += "\\nFehlende Netlify-Variable(n): " + payload.missing.join(", ");
+        }
         if (payload.azureStatus) detail += " (Azure: " + payload.azureStatus + ")";
         if (payload.detail) detail += "\\n" + payload.detail;
       } catch {}
