@@ -1088,7 +1088,7 @@ function translateClaraPage(){
  while((node=walker.nextNode())){
   const raw=node.nodeValue, key=normalize(raw);
   const source=reverse.get(key)||key;
-  if(dict[source]) node.nodeValue=raw.replace(key,dict[source]);
+  if(dict[source]){const translated=raw.replace(key,dict[source]);if(translated!==raw)node.nodeValue=translated;}
  }
  document.querySelectorAll('input[placeholder],textarea[placeholder],button[title],[aria-label]').forEach(el=>{
   ['placeholder','title','aria-label'].forEach(attr=>{const value=el.getAttribute(attr);if(!value)return;const key=normalize(value);const source=reverse.get(key)||key;if(dict[source])el.setAttribute(attr,dict[source]);});
