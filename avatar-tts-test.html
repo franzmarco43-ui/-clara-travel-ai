@@ -71,12 +71,13 @@ loadButton.addEventListener("click",async()=>{
     ttsModule=await import("https://esm.sh/@mintplex-labs/piper-tts-web@1.0.5");
     const voices=await ttsModule.voices();
     console.log("Verfügbare Piper-Stimmen:",voices);
-    const voiceIds=Object.keys(voices||{});
-    const voiceId=voiceIds.find(id=>id==="de_DE-thorsten-medium")||voiceIds.find(id=>id.toLowerCase().startsWith("de_de"));
-    if(!voiceId){
-      throw new Error("Keine deutsche de_DE-Stimme in der verfügbaren Stimmenliste gefunden. Verfügbare Stimmen: "+voiceIds.join(", "));
+    const germanVoices=Array.isArray(voices)?voices.filter(v=>v&&typeof v.key==="string"&&v.key.toLowerCase().startsWith("de_de")):[];
+    const selected=germanVoices.find(v=>v.key==="de_DE-thorsten-medium")||germanVoices.find(v=>v.key==="de_DE-thorsten-high")||germanVoices[0];
+    if(!selected){
+      throw new Error("Keine deutsche de_DE-Stimme gefunden. Die Bibliothek lieferte "+(Array.isArray(voices)?voices.length:typeof voices)+" Einträge. Details stehen in F12 → Konsole.");
     }
-    status("Deutsche Stimme gefunden: "+voiceId+". Lade das Sprachmodell …");
+    const voiceId=selected.key;
+    status("Deutsche Stimme gefunden: "+selected.name+" ("+voiceId+"). Lade das Sprachmodell …");
     await ttsModule.download(voiceId,progress=>{
       if(progress&&progress.total){
         status("Lade deutsche Stimme … "+Math.round(progress.loaded*100/progress.total)+" %");
@@ -84,7 +85,7 @@ loadButton.addEventListener("click",async()=>{
     });
     window.claraVoiceId=voiceId;
     tts=true;
-    status("Deutsche Stimme ist bereit ("+voiceId+"). Gib einen Text ein und starte die Sprachausgabe.");
+    status("Deutsche Stimme ist bereit: "+selected.name+" ("+voiceId+"). Gib einen Text ein und starte die Sprachausgabe.");
   }catch(error){
     console.error(error);
     status("TTS-Ladefehler: "+(error?.message||String(error))+"\nPrüfe bei Bedarf F12 → Konsole.");
