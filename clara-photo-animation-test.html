@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#123c3a">
+<title>Clara – kostenloser Foto-Sprachtest</title>
+<style>
+:root{color-scheme:light;--green:#123c3a;--mint:#dcebe4;--cream:#f7f4ec;--ink:#172b29;--muted:#687773}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--cream);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;display:grid;place-items:center;padding:20px}
+main{width:min(100%,760px);background:white;border:1px solid #e2e8e3;border-radius:24px;padding:24px;box-shadow:0 14px 40px #183b3012}
+h1{margin:0 0 6px;color:var(--green);font-size:clamp(25px,5vw,36px)}p{color:var(--muted)}
+#portrait{position:relative;width:min(100%,536px);margin:18px auto 10px;aspect-ratio:536/404;overflow:hidden;border-radius:18px;background:#eee;box-shadow:0 8px 26px #172b291c}
+#portrait img{display:block;width:100%;height:100%;object-fit:cover}
+#mouth{position:absolute;left:42.5%;top:53.5%;width:14%;height:5.3%;border-radius:50% 50% 48% 48%;background:radial-gradient(ellipse at 50% 35%,#54242c 0 22%,#9d4e5b 48%,#b66b75 70%,#d38a8e 100%);transform:scaleY(.08);transform-origin:center;opacity:.0;filter:blur(.35px);box-shadow:0 1px 2px #572c3440;pointer-events:none}
+textarea{width:100%;min-height:115px;resize:vertical;border:1px solid #cbd8d0;border-radius:12px;padding:13px;font:inherit;color:var(--ink);margin-top:12px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+button{border:0;border-radius:12px;padding:12px 17px;background:var(--green);color:white;font-weight:700;cursor:pointer}
+button.secondary{background:var(--mint);color:var(--green)}button:disabled{opacity:.5;cursor:not-allowed}
+#status{padding:12px 14px;border-radius:12px;background:#f2f6f1;color:#43564d;min-height:46px;white-space:pre-wrap}
+.note{font-size:13px;margin-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <h1>Clara – kostenloser Foto-Sprachtest</h1>
+  <p>Dieser separate Prototyp verwendet Claras Portrait und die bereits eingerichtete Azure-Seraphina-Stimme. Die Mundbewegung reagiert auf die Lautstärke der Sprache.</p>
+  <div id="portrait" aria-label="Claras Portrait mit einfacher Sprachanimation">
+    <img src="/clara-avatar.jpg" alt="Clara">
+    <div id="mouth" aria-hidden="true"></div>
+  </div>
+  <textarea id="text" maxlength="1800">Hallo und herzlich willkommen! Ich bin Clara. Ich nehme dich mit auf eine Reise entlang der Donau – von Linz und Wien über Budapest bis zum Donaudelta. Schön, dass du da bist!</textarea>
+  <div class="controls">
+    <button id="speak">Clara sprechen lassen</button>
+    <button id="stop" class="secondary" disabled>Stopp</button>
+  </div>
+  <div id="status" role="status">Bereit. Starte die Sprachausgabe.</div>
+  <p class="note">Hinweis: Dies ist eine kostenlose 2D-Demoversion. Der Mund öffnet und schließt lautstärkeabhängig; es ist noch keine echte phonetische Lippen-Synchronisation und keine vollständige Gesichtsanimation. Der 3D-Sprachtest bleibt unverändert erhalten.</p>
+</main>
+<script>
+const statusEl=document.getElementById("status"), speakButton=document.getElementById("speak"), stopButton=document.getElementById("stop"), textInput=document.getElementById("text"), mouth=document.getElementById("mouth");
+let audio=null, audioContext=null, analyser=null, source=null, raf=0, busy=false;
+function status(s){statusEl.textContent=s}
+function resetMouth(){cancelAnimationFrame(raf);mouth.style.transform="scaleY(.08)";mouth.style.opacity="0"}
+function animateMouth(){
+  if(!analyser)return;
+  const data=new Uint8Array(analyser.fftSize);analyser.getByteTimeDomainData(data);
+  let sum=0;for(let i=0;i<data.length;i++){const v=(data[i]-128)/128;sum+=v*v}
+  const rms=Math.sqrt(sum/data.length);
+  const open=Math.max(0,Math.min(1,(rms-.018)*13));
+  mouth.style.transform="scaleY("+(0.08+open*1.25)+")";
+  mouth.style.opacity=String(Math.min(.92,open*1.5));
+  raf=requestAnimationFrame(animateMouth);
+}
+function stop(){
+  if(audio){audio.pause();audio.currentTime=0;audio.src=""}
+  if(audioContext){audioContext.close().catch(()=>{});audioContext=null}
+  audio=null;analyser=null;source=null;busy=false;speakButton.disabled=false;stopButton.disabled=true;resetMouth();
+}
+speakButton.addEventListener("click",async()=>{
+  if(busy)return;const text=textInput.value.trim();if(!text){status("Bitte zuerst einen Text eingeben.");return}
+  busy=true;speakButton.disabled=true;stopButton.disabled=false;
+  try{
+    status("Erzeuge Claras Sprache mit Azure Seraphina …");
+    const response=await fetch("/.netlify/functions/clara-speech",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text})});
+    if(!response.ok){let detail="HTTP "+response.status;try{const p=await response.json();detail=p.error||detail;if(p.missing?.length)detail+="\nFehlende Variable(n): "+p.missing.join(", ");if(p.azureStatus)detail+=" (Azure: "+p.azureStatus+")";if(p.detail)detail+="\n"+p.detail}catch{}throw new Error(detail)}
+    const blob=await response.blob();if(!blob.size)throw new Error("Leere Audiodatei von Azure.");
+    const url=URL.createObjectURL(blob);audio=new Audio(url);audioContext=new (window.AudioContext||window.webkitAudioContext)();await audioContext.resume();analyser=audioContext.createAnalyser();analyser.fftSize=512;source=audioContext.createMediaElementSource(audio);source.connect(analyser);analyser.connect(audioContext.destination);
+    audio.addEventListener("ended",()=>{URL.revokeObjectURL(url);stop();status("Claras Sprachausgabe ist beendet.")},{once:true});
+    audio.addEventListener("error",()=>{stop();status("Die Audiodatei konnte nicht abgespielt werden.")},{once:true});
+    status("Clara spricht mit Seraphina. Die Mundbewegung reagiert auf ihre Stimme …");await audio.play();animateMouth();
+  }catch(e){console.error(e);stop();status("Sprachfehler: "+(e?.message||String(e)))}
+});
+stopButton.addEventListener("click",()=>{stop();status("Wiedergabe gestoppt.")});
+window.addEventListener("pagehide",stop);
+</script>
+</body>
+</html>
