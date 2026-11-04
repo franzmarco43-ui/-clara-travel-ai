@@ -197,9 +197,14 @@ function researchFailureMessage(reason) {
   return "Ich konnte gerade keine belastbaren Live-Suchergebnisse abrufen. Deshalb möchte ich dir keine möglicherweise veralteten oder vermuteten Angaben als Tatsache nennen.";
 }
 exports.handler = async function (event) {
+  const requestOrigin = event.headers?.origin || event.headers?.Origin || "";
+  const allowedOrigins = new Set([
+    "https://clara-travel-ai.netlify.app",
+    "https://deploy-preview-8--clara-travel-ai.netlify.app"
+  ]);
   const headers = {
     "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "https://clara-travel-ai.netlify.app",
+    ...(allowedOrigins.has(requestOrigin) ? { "Access-Control-Allow-Origin": requestOrigin } : {}),
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Vary": "Origin"
