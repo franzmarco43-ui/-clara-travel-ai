@@ -140,7 +140,7 @@ function filterRelevantResearchResults(message, results) {
       if (inUrl) score += 3;
       if (inContent) score += 1;
     }
-    if (item.likelyOfficial) score += 2;
+    if (item.likelyOfficial) score += 12;
     return {item, matches, score};
   }).filter(entry => entry.matches >= minimumMatches && entry.score > 0)
     .sort((a, b) => b.score - a.score);
@@ -478,7 +478,7 @@ exports.handler = async function (event) {
                 "Budapest-Thermen: Nenne ein konkretes Bad nicht als aktuell geöffnet oder besuchbar, wenn du den aktuellen Betreiberstatus nicht geprüft hast. Das Gellért-Bad ist laut offizieller Betreiberinformation seit 1. Oktober 2025 geschlossen; eine Wiedereröffnung ist derzeit für 2028 geplant. Behandle diesen Status als zeitgebunden und prüfe ihn vor jeder späteren Besuchsempfehlung erneut. " +
                 "Live-Recherche steht nur dann für eine Antwort zur Verfügung, wenn dir unten ein aktueller LIVE-WEBRECHERCHE-Abschnitt mit tatsächlich abgerufenen Quellen übergeben wird. Ohne diesen Abschnitt behaupte niemals, online recherchiert oder eine Quelle aktuell geprüft zu haben. " +
                 "Bei aktuellen, ortsspezifischen oder veränderlichen Angaben nutze die übergebenen Suchquellen. Belege relevante Tatsachen mit den Quellenmarkern [1], [2] usw. Nenne keine Quellen, die nicht im Rechercheabschnitt enthalten sind. " +
-                "Sind Quellen veraltet, widersprüchlich, nicht amtlich genug oder nicht aussagekräftig, sage das klar. Trenne gesicherte Fakten, redaktionelles Ortswissen und offene Punkte. Ergänze keine plausibel klingenden Details. " +
+                "Sind Quellen veraltet, widersprüchlich, nicht amtlich genug oder nicht aussagekräftig, sage das klar. Trenne gesicherte Fakten, redaktionelles Ortswissen und offene Punkte. Ergänze keine plausibel klingenden Details. Gib am Ende nur die Quellen aus, die tatsächlich mindestens eine konkrete Aussage in deiner Antwort stützen. " +
                 "Bei Rollator- oder Mobilitätsfragen niemals konkrete Weg-Eignung, Barrierefreiheit oder Routen behaupten, solange dafür keine verlässliche aktuelle Quelle tatsächlich geprüft wurde. Ohne solche Prüfung ausschließlich den neutralen Hinweis aus der Wissensdatei verwenden. " +
                 "Schreibe Zeitangaben immer vollständig aus: Minuten statt min, Stunden statt h oder Std. Verwende keine abgekürzten Zeiteinheiten. Formuliere zum Beispiel 10 bis 15 Minuten oder 2 Stunden und 30 Minuten. " +
                 memoryText + destinationKnowledge + destinationContext + rollatorContext + lockKnowledge + researchContext
