@@ -569,74 +569,103 @@ let claraAudioObjectUrl=null;
 let claraAudioElement=null;
 let claraAudioContext=null;
 let claraAudioSource=null;
+function splitClaraSpeechChunks(value){
+  const clean=claraSpeechText(value);
+  if(!clean)return [];
+  const sentences=clean.match(/[^.!?]+[.!?]+(?:["'»”)]*)|[^.!?]+$/g)||[clean];
+  const chunks=[];
+  let current='';
+  for(const sentence of sentences){
+    const part=sentence.trim();
+    if(!part)continue;
+    if(current&&(current.length+part.length+1)>260){chunks.push(current);current=part;}
+    else current+=(current?' ':'')+part;
+  }
+  if(current)chunks.push(current);
+  return chunks;
+}
+async function fetchClaraSpeechChunk(text,language){
+  const response=await fetch('/.netlify/functions/clara-speech',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({text,language})
+  });
+  if(!response.ok){
+    let detail={};try{detail=await response.json();}catch(_){}
+    throw new Error(detail.error||('Sprachausgabe fehlgeschlagen ('+response.status+')'));
+  }
+  const blob=await response.blob();
+  if(!blob.size)throw new Error('Azure hat eine leere Audiodatei geliefert.');
+  return blob;
+}
+function playClaraAudioBlob(blob){
+  return new Promise((resolve,reject)=>{
+    const url=URL.createObjectURL(blob);
+    const audio=new Audio(url);
+    claraAudioObjectUrl=url;
+    claraAudioElement=audio;
+    audio.preload='auto';
+    audio.volume=1;
+    audio.onended=()=>{
+      if(claraAudioObjectUrl===url){URL.revokeObjectURL(url);claraAudioObjectUrl=null;}
+      if(claraAudioElement===audio)claraAudioElement=null;
+      resolve();
+    };
+    audio.onerror=()=>{
+      if(claraAudioObjectUrl===url){URL.revokeObjectURL(url);claraAudioObjectUrl=null;}
+      if(claraAudioElement===audio)claraAudioElement=null;
+      reject(new Error('Die Audiodatei konnte nicht abgespielt werden.'));
+    };
+    audio.play().catch(reject);
+  });
+}
 async function speakClara(value,force=false){
   const auto=document.getElementById('claraAutoSpeak');
   if(!force&&auto&&!auto.checked)return;
-  const text=claraSpeechText(value);
-  if(!text)return;
+  const chunks=splitClaraSpeechChunks(value);
+  if(!chunks.length)return;
   stopClaraSpeech();
   const status=document.getElementById('voiceStatus');
   const speechLanguage=(()=>{try{return localStorage.getItem('clara.language')||'de';}catch(_){return 'de';}})();
   const speechVoiceLabels={de:'Katja',en:'Sonia',nl:'Fenna',fr:'Denise',ro:'Alina'};
   const activeVoiceLabel=speechVoiceLabels[speechLanguage]||speechVoiceLabels.de;
+  let cancelled=false;
   try{
-    if(status)status.textContent='Clara bereitet ihre Antwort mit der '+activeVoiceLabel+'-Stimme vor …';
-    const response=await fetch('/.netlify/functions/clara-speech',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({text:text.slice(0,1800),language:(localStorage.getItem("clara.language")||"de")})
-    });
-    if(!response.ok){
-      let detail={};try{detail=await response.json();}catch(_){}
-      throw new Error(detail.error||('Sprachausgabe fehlgeschlagen ('+response.status+')'));
+    if(status)status.textContent='Clara bereitet den ersten Satz mit der '+activeVoiceLabel+'-Stimme vor …';
+    setClaraSpeaking(true);
+    startClaraVideo();
+    let pending=fetchClaraSpeechChunk(chunks[0],speechLanguage);
+    for(let index=0;index<chunks.length;index++){
+      const blob=await pending;
+      if(index+1<chunks.length)pending=fetchClaraSpeechChunk(chunks[index+1],speechLanguage);
+      if(status)status.textContent='Clara spricht · Abschnitt '+(index+1)+' von '+chunks.length;
+      await playClaraAudioBlob(blob);
     }
-    const audioBlob=await response.blob();
-    if(!audioBlob.size)throw new Error('Azure hat eine leere Audiodatei geliefert.');
-    // Use the downloaded WAV directly in an audio element. Avoid decoding the
-    // complete WAV into an AudioBuffer on the main thread before playback.
-    claraAudioObjectUrl=URL.createObjectURL(audioBlob);
-    claraAudioElement=new Audio();
-    claraAudioElement.src=claraAudioObjectUrl;
-    claraAudioElement.preload='auto';
-    claraAudioElement.volume=1;
-    claraAudioElement.onplay=()=>{
-      setClaraSpeaking(true);
-      startClaraVideo();
-      if(status)status.textContent='Clara spricht mit ihrer '+activeVoiceLabel+'-Stimme.';
-    };
-    claraAudioElement.onended=()=>{
-      setClaraSpeaking(false);
-      stopClaraVideo();
-      if(status)status.textContent='Sprachausgabe abgeschlossen.';
-      if(claraAudioObjectUrl){URL.revokeObjectURL(claraAudioObjectUrl);claraAudioObjectUrl=null;}
-      claraAudioElement=null;
-    };
-    claraAudioElement.onerror=()=>{
-      if(status)status.textContent='Die Audiodatei konnte nicht abgespielt werden.';
-    };
-    await claraAudioElement.play();
+    setClaraSpeaking(false);
+    stopClaraVideo();
+    if(status)status.textContent='Sprachausgabe abgeschlossen.';
   }catch(error){
     console.error('Clara Azure Speech:',error);
     const langMap={de:'de-DE',en:'en-GB',nl:'nl-NL',fr:'fr-FR',ro:'ro-RO'};
-    if('speechSynthesis' in window && 'SpeechSynthesisUtterance' in window){
+    if('speechSynthesis'in window && 'SpeechSynthesisUtterance'in window){
       try{
-        window.speechSynthesis.cancel();
-        const utterance=new SpeechSynthesisUtterance(text);
+        stopClaraSpeech();
+        const utterance=new SpeechSynthesisUtterance(chunks.join(' '));
         utterance.lang=langMap[speechLanguage]||'de-DE';
         utterance.rate=0.96;utterance.pitch=1.02;
         const voices=window.speechSynthesis.getVoices();
         const match=voices.find(voice=>voice.lang.toLowerCase().startsWith(utterance.lang.slice(0,2).toLowerCase()));
         if(match)utterance.voice=match;
-        utterance.onstart=()=>{setClaraSpeaking(true);if(status)status.textContent='Clara spricht jetzt mit der verfügbaren Browser-Stimme.';const ws=document.getElementById('claraWelcomeStatus');if(ws)ws.textContent='Clara spricht. (Ausweichstimme des Browsers)';};
+        utterance.onstart=()=>{setClaraSpeaking(true);if(status)status.textContent='Clara spricht jetzt mit der verfügbaren Browser-Stimme.';};
         utterance.onend=()=>{setClaraSpeaking(false);stopClaraVideo();};
-        utterance.onerror=()=>{setClaraSpeaking(false);const ws=document.getElementById('claraWelcomeStatus');if(ws)ws.textContent='Die Browser-Stimme konnte nicht gestartet werden. Bitte prüfe die Audioausgabe deines Geräts.';};
+        utterance.onerror=()=>{setClaraSpeaking(false);stopClaraVideo();};
         window.speechSynthesis.speak(utterance);
-        const welcomeButton=document.getElementById('claraWelcomeSpeak');if(welcomeButton)welcomeButton.hidden=true;
-        const welcomeStatus=document.getElementById('claraWelcomeStatus');if(welcomeStatus)welcomeStatus.textContent='Azure ist gerade nicht erreichbar. Clara verwendet die Browser-Stimme.';
         return;
       }catch(fallbackError){console.warn('Browser-Sprachausgabe fehlgeschlagen:',fallbackError);}
     }
-    const welcomeButton=document.getElementById('claraWelcomeSpeak');const welcomeStatus=document.getElementById('claraWelcomeStatus');if(welcomeButton)welcomeButton.hidden=false;if(welcomeStatus)welcomeStatus.textContent='Clara konnte gerade nicht sprechen: '+(error.message||'Unbekannter Fehler')+'. Bitte prüfe die Verbindung und versuche es erneut.';if(status)status.textContent='Sprachausgabe nicht verfügbar: '+(error.message||'Verbindungsfehler')+'. Bitte später erneut versuchen.';
+    setClaraSpeaking(false);
+    stopClaraVideo();
+    if(status)status.textContent='Sprachausgabe nicht verfügbar: '+(error.message||'Verbindungsfehler');
   }
 }
 function addMsg(text,who,sources=[],research=null){
