@@ -38,24 +38,6 @@ function renderFeaturedDestinations(){
  // Show all 12 Danube stations plus the separate Puszta excursion in route order.
  container.innerHTML=places.map(placeCard).join('');
 }
-function updateFeaturedCarousel(){
- const container=document.getElementById('featured-grid');
- const dots=document.getElementById('featured-dots');
- if(!container||!dots)return;
- const cards=[...container.querySelectorAll('.featured-card')];
- dots.innerHTML=cards.map((_,index)=>`<button type="button" aria-label="${({de:"Reiseziel",en:"Destination",nl:"Bestemming",fr:"Destination",ro:"Destinația"}[claraLang()]||"Reiseziel")} ${index+1} ${({de:"anzeigen",en:"show",nl:"tonen",fr:"afficher",ro:"afișează"}[claraLang()]||"anzeigen")}" class="${index===0?'active':''}" onclick="scrollFeaturedTo(${index})"></button>`).join('');
-}
-function scrollFeaturedTo(index){
- const container=document.getElementById('featured-grid');
- const card=container?.querySelectorAll('.featured-card')[index];
- if(!container||!card)return;
- container.scrollTo({left:card.offsetLeft-container.offsetLeft,behavior:'smooth'});
-}
-function scrollFeaturedCarousel(direction){
- const container=document.getElementById('featured-grid');
- if(!container)return;
- container.scrollBy({left:direction*Math.max(220,container.clientWidth*.82),behavior:'smooth'});
-}
 function renderLandingDanubeMap(){
  const host=document.getElementById('landingDanubeMap');
  if(!host)return;
