@@ -1089,9 +1089,11 @@ let claraTranslationObserver;
 function observeClaraDynamicContent(){
  if(claraTranslationObserver||!document.body||!window.MutationObserver)return;
  claraTranslationObserver=new MutationObserver(records=>{
-  if(records.some(record=>record.type==='childList'||record.type==='characterData'))translateClaraPage();
+  // Re-translate only when nodes are added/removed. Ignoring characterData
+  // prevents the observer from reacting to its own text translations.
+  if(records.some(record=>record.type==='childList'))translateClaraPage();
  });
- claraTranslationObserver.observe(document.body,{subtree:true,childList:true,characterData:true});
+ claraTranslationObserver.observe(document.body,{subtree:true,childList:true});
 }
 
 const CLARA_LANGUAGES=Object.freeze({de:{label:'Deutsch',locale:'de-DE'},en:{label:'English',locale:'en-GB'},nl:{label:'Nederlands',locale:'nl-NL'},fr:{label:'Français',locale:'fr-FR'},ro:{label:'Română',locale:'ro-RO'}});
