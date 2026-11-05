@@ -1079,7 +1079,22 @@ function setClaraLanguage(code,refreshWeather=true){
   updateCityClocks();
   if(refreshWeather&&typeof loadCityWeather==='function')loadCityWeather();
 }
-function restoreClaraLanguage(){let code='de';try{code=claraLang();}catch(_){}setClaraLanguage(code,false);}
+function restoreClaraLanguage(){
+  // Preview 10 previously inherited a stale French preference from an earlier
+  // mixed-language build. Migrate that first load to German exactly once;
+  // afterwards the user's explicit language choice is persisted normally.
+  const preferenceVersion='preview10-language-consistency-1';
+  let version='';
+  try{version=localStorage.getItem('clara.language.preferenceVersion')||'';}catch(_){}
+  if(version!==preferenceVersion){
+    setClaraLanguage('de',false);
+    try{localStorage.setItem('clara.language.preferenceVersion',preferenceVersion);}catch(_){}
+    return;
+  }
+  let code='de';
+  try{code=claraLang();}catch(_){}
+  setClaraLanguage(code,false);
+}
 const CLARA_WELCOME_TEXT=Object.freeze({
  de:'Hallo und herzlich willkommen! Ich bin Clara, deine Reisebegleiterin entlang der Donau. Schön, dass du da bist! Wohin soll unsere gemeinsame Reise gehen?',
  en:'Hello and welcome! I’m Clara, your travel companion along the Danube. It’s lovely to have you here! Where shall our journey begin?',
