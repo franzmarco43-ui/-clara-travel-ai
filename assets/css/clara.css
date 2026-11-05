@@ -196,3 +196,17 @@
 .top-actions .language-switch{margin-right:2px}
 @media(max-width:850px){.topbar{gap:9px}.top-actions{align-items:center;gap:6px}.app-language .language-label{display:none}.app-language select{max-width:118px;min-height:40px;padding:6px 22px 6px 8px}.landing-language .language-label{display:none}#marketing-home .site-actions{flex-wrap:nowrap}.landing-language select{max-width:112px;min-height:40px;padding:6px 20px 6px 8px}}
 @media(max-width:390px){.app-language select,.landing-language select{max-width:98px;font-size:11px}.top-actions .btn.gold{padding:8px 9px;font-size:11px}}
+
+/* Compact homepage destination cards at every viewport size */
+#marketing-home .featured-card{min-height:0;align-items:stretch}
+#marketing-home .featured-card-content{min-height:0}
+@media(max-width:560px){
+ #marketing-home .featured-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ #marketing-home .featured-card{min-height:0;border-radius:13px}
+ #marketing-home .featured-card img{height:100px}
+ #marketing-home .featured-card-content{padding:10px}
+ #marketing-home .featured-card h3{font-size:18px}
+ #marketing-home .featured-card p{font-size:11px;min-height:32px}
+ #marketing-home .featured-card .discover{padding:7px 10px;font-size:11px}
+ #marketing-home .featured-map-link{margin-top:18px}
+}
