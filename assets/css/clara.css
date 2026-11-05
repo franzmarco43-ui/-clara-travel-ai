@@ -1285,3 +1285,97 @@ body{background:#f8f7f1;color:var(--ink)}
   #clara-app .topbar{padding:10px 12px}
   #clara-app .top-actions .btn.gold{padding:9px 12px;font-size:12px}
 }
+
+
+/* Compact refinement: reduce visual bulk while preserving all sections and controls. */
+#marketing-home .site-header{
+  min-height:60px;
+  padding:8px clamp(16px,3vw,34px);
+  gap:14px;
+}
+#marketing-home .site-brand .brand-script{font-size:27px}
+#marketing-home .site-nav{gap:clamp(9px,1.25vw,18px);font-size:11px}
+#marketing-home .site-actions{gap:6px}
+#marketing-home .site-cta{min-height:38px;padding:8px 14px;font-size:12px}
+#marketing-home .clara-welcome-hero{
+  min-height:370px;
+  height:clamp(370px,34vw,455px);
+}
+#marketing-home .clara-welcome-hero .hero-copy{padding:38px clamp(22px,4.5vw,64px)}
+#marketing-home .welcome-pill{padding:6px 11px;font-size:11px}
+#marketing-home .site-hero h1{
+  margin:13px 0 5px;
+  font-size:clamp(34px,4.3vw,54px);
+}
+#marketing-home .clara-welcome-hero .hero-copy p{
+  max-width:450px;
+  margin:0 0 16px;
+  font-size:14px;
+  line-height:1.5;
+}
+#marketing-home .hero-button{min-height:39px;padding:9px 16px;font-size:12px}
+#marketing-home .site-section{padding:30px clamp(16px,3.5vw,44px)}
+#marketing-home .section-title{font-size:clamp(24px,2.7vw,31px)}
+#marketing-home .destination-intro{max-width:760px;margin-bottom:13px}
+#marketing-home .featured-grid{gap:12px}
+#marketing-home .featured-grid .dest-img{height:88px;flex-basis:88px}
+#marketing-home .featured-grid .dest-info{padding:9px 10px}
+#marketing-home .featured-grid .dest-info h3{font-size:16px}
+#marketing-home .featured-grid .dest-info p{font-size:10px;min-height:40px;margin:4px 0 6px}
+#marketing-home .featured-grid .city-live{padding:7px 8px}
+#marketing-home .featured-grid .city-live-row{padding:4px 0}
+#marketing-home .map-promo{padding:19px;gap:18px}
+#marketing-home .landing-map{min-height:235px}
+#marketing-home .site-footer{padding:15px clamp(16px,3.5vw,44px)}
+#clara-app .main{padding:clamp(16px,2.2vw,27px)}
+#clara-app .heading{margin-bottom:16px}
+#clara-app .section-head{margin:20px 0 10px}
+#clara-app .hero{min-height:275px;border-radius:19px}
+#clara-app .hero-copy{padding:24px}
+#clara-app .hero h2{font-size:clamp(25px,2.6vw,34px)}
+#clara-app .avatar-stage{min-height:260px}
+#clara-app .destinations{gap:11px}
+#clara-app .destination{border-radius:14px}
+#clara-app .dest-img{height:96px}
+#clara-app .dest-info{padding:11px}
+#clara-app .panel{padding:16px}
+#clara-app .chatbox{height:245px}
+#clara-app .footer{padding-top:18px;font-size:11px}
+@media(max-width:900px){
+  #marketing-home .site-nav{gap:9px}
+  #marketing-home .site-nav a{font-size:10px}
+  #marketing-home .featured-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:760px){
+  #marketing-home .site-header{min-height:56px}
+  #marketing-home .site-nav{display:none}
+  #marketing-home .clara-welcome-hero{height:560px;min-height:560px}
+  #marketing-home .clara-welcome-hero .hero-copy{padding:24px 19px 235px}
+  #marketing-home .clara-welcome-hero .hero-copy p{font-size:13px}
+  #marketing-home .site-section{padding:25px 15px}
+  #marketing-home .featured-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #marketing-home .map-promo{padding:15px;gap:10px}
+  #marketing-home .landing-map{min-height:215px}
+  #clara-app .main{padding:17px 14px 88px}
+  #clara-app .hero{grid-template-columns:1fr;min-height:0}
+  #clara-app .hero-copy{padding:22px}
+  #clara-app .avatar-stage{min-height:245px}
+}
+@media(max-width:520px){
+  #marketing-home .featured-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  #marketing-home .featured-grid .dest-img{height:78px;flex-basis:78px}
+  #marketing-home .featured-grid .dest-info{padding:8px}
+  #marketing-home .featured-grid .dest-info h3{font-size:14px}
+  #marketing-home .featured-grid .dest-info p{font-size:10px;min-height:48px}
+  #marketing-home .featured-grid .city-live-row{grid-template-columns:1fr;gap:1px}
+  #marketing-home .featured-grid .city-live-row span{text-align:left}
+  #marketing-home .map-promo{padding:13px}
+  #clara-app .main{padding:14px 11px 92px}
+  #clara-app .panel{padding:13px}
+  #clara-app .destinations{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  #clara-app .dest-img{height:78px}
+  #clara-app .dest-info{padding:9px}
+  #clara-app .formgrid{grid-template-columns:1fr}
+  #clara-app .cards{grid-template-columns:1fr}
+  #clara-app .top-actions .hide-small{display:none}
+}
