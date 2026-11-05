@@ -621,7 +621,7 @@ function playClaraAudioBlob(blob){
     audio.play().catch(reject);
   });
 }
-async function speakClara(value,force=false){
+async function speakClara(value,force=false,speechMessage=null){
   const auto=document.getElementById('claraAutoSpeak');
   if(!force&&auto&&!auto.checked)return;
   const chunks=splitClaraSpeechChunks(value);
@@ -640,10 +640,12 @@ async function speakClara(value,force=false){
       if(run!==claraSpeechRun)return;
       if(index+1<chunks.length)pending=fetchClaraSpeechChunk(chunks[index+1],speechLanguage);
       if(index===0){setClaraSpeaking(true);startClaraVideo();}
+      if(speechMessage)highlightClaraSpeechSegment(speechMessage,index);
       if(status)status.textContent='Clara spricht · Abschnitt '+(index+1)+' von '+chunks.length;
       await playClaraAudioBlob(blob);
       if(run!==claraSpeechRun)return;
     }
+    if(speechMessage)highlightClaraSpeechSegment(speechMessage,-1);
     setClaraSpeaking(false);
     stopClaraVideo();
     if(status)status.textContent='Sprachausgabe abgeschlossen.';
@@ -666,6 +668,7 @@ async function speakClara(value,force=false){
         return;
       }catch(fallbackError){console.warn('Browser-Sprachausgabe fehlgeschlagen:',fallbackError);}
     }
+    if(speechMessage)highlightClaraSpeechSegment(speechMessage,-1);
     setClaraSpeaking(false);
     stopClaraVideo();
     if(status)status.textContent='Sprachausgabe nicht verfügbar: '+(error.message||'Verbindungsfehler');
@@ -675,7 +678,12 @@ function addMsg(text,who,sources=[],research=null){
   const box=document.getElementById('chatbox');
   const el=document.createElement('div');
   el.className='msg '+(who==='user'?'user':'');
-  el.textContent=text;
+  if(who==='clara'&&el.classList.contains('clara-speech-message')){
+    // Reserved for explicitly synchronized speech messages.
+    el.textContent=text;
+  }else{
+    el.textContent=text;
+  }
   if(who!=='user'&&Array.isArray(sources)&&sources.length){
     const sourceBox=document.createElement('div');
     sourceBox.style.marginTop='10px';
@@ -716,6 +724,31 @@ function addMsg(text,who,sources=[],research=null){
   }
   box.appendChild(el);
   box.scrollTop=box.scrollHeight;
+  return el;
+}
+function renderClaraSpeechMessage(message,text){
+  const chunks=splitClaraSpeechChunks(text);
+  message.classList.add('clara-speech-message');
+  message.replaceChildren();
+  chunks.forEach((chunk,index)=>{
+    if(index)message.appendChild(document.createTextNode(' '));
+    const span=document.createElement('span');
+    span.className='clara-speech-segment';
+    span.dataset.speechIndex=String(index);
+    span.textContent=chunk;
+    message.appendChild(span);
+  });
+  return message;
+}
+function highlightClaraSpeechSegment(message,index){
+  if(!message)return;
+  message.querySelectorAll('.clara-speech-segment').forEach((segment,i)=>{
+    const active=i===index;
+    segment.classList.toggle('clara-speech-active',active);
+    segment.style.background=active?'rgba(245,190,70,.32)':'';
+    segment.style.borderRadius=active?'4px':'';
+    segment.style.transition='background 120ms ease';
+  });
 }
 
 const claraDestinationKnowledge={
@@ -821,8 +854,8 @@ async function sendChat(e){
       a=claraChatText('Die Verbindung zu Clara ist gerade nicht verfügbar. Bitte prüfe deine Internetverbindung und versuche es erneut.');
     }
   }
-  addMsg(a,'clara',sources,research);
-  speakClara(a);
+  const speechMessage=renderClaraSpeechMessage(addMsg(a,'clara',sources,research),a);
+  speakClara(a,false,speechMessage);
 }
 function quickAsk(q){showPage('clara');document.getElementById('chatInput').value=q;document.querySelector('.chatform').requestSubmit()}
 let toastTimer;function toast(s){let el=document.getElementById('toast');el.textContent=s;el.classList.remove('hidden');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.add('hidden'),2800)}
