@@ -925,3 +925,72 @@ async function deleteClaraMemory(){if(!claraSupabase||!claraUser){memoryStatus('
 window.addEventListener('load',()=>{restoreClaraConnection();const auto=document.getElementById('claraAutoSpeak');if(auto){try{auto.checked=localStorage.getItem('clara.autoSpeak')!=='false';}catch(_){auto.checked=true;}auto.addEventListener('change',()=>{try{localStorage.setItem('clara.autoSpeak',String(auto.checked));}catch(_){}if(!auto.checked)stopClaraSpeech();});}const rate=document.getElementById('claraRate');if(rate){rate.disabled=true;rate.title='Das Tempo wird derzeit durch Azure vorgegeben.';}});
 
 </script></body></html>
+
+
+/* Preview 10 – Layout an die bewährte Seitenstruktur aus Version 9 angleichen */
+.app{
+  width:min(100%,1180px);
+  margin-inline:auto;
+}
+.topbar{
+  min-height:73px;
+  padding:15px 24px;
+}
+.layout{
+  grid-template-columns:220px minmax(0,1fr);
+  align-items:stretch;
+}
+.sidebar{
+  min-width:0;
+  position:relative;
+}
+.main{
+  min-width:0;
+  padding:28px;
+}
+.main > *{
+  min-width:0;
+}
+.heading{
+  align-items:flex-start;
+  margin-bottom:22px;
+}
+.heading h1{
+  max-width:100%;
+}
+.cards,
+.form-grid,
+.planner-grid,
+.map-composition,
+.locks-layout{
+  min-width:0;
+}
+.panel,
+.destination,
+.route-side,
+.locks-sidebar,
+.premium-hero,
+.chatbox,
+.voice-settings{
+  border-radius:18px;
+}
+.field,
+.field input,
+.field select,
+.field textarea,
+.chatform input{
+  min-width:0;
+  max-width:100%;
+}
+@media(max-width:850px){
+  .app{width:100%}
+  .layout{grid-template-columns:1fr}
+  .main{padding:22px}
+}
+@media(max-width:520px){
+  .topbar{padding:12px 15px;min-height:64px}
+  .main{padding:16px}
+  .heading{gap:10px;flex-wrap:wrap}
+  .heading h1{font-size:clamp(24px,7vw,32px)}
+  .cards{grid-template-columns:1fr}
+}
