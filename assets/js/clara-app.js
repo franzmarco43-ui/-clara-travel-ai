@@ -14,6 +14,25 @@ const places=[
 {name:'Donaudelta',country:'Rumänien',emoji:'🛶',image:'https://commons.wikimedia.org/wiki/Special:FilePath/White_pelicans_(Pelecanus_onocrotalus)_Danube_delta.jpg',tag:'Wildnis & Wasserwege',desc:'Kanäle, Vogelwelt und besondere Naturerlebnisse.',lat:45.180,lon:28.800,routeType:'river'},
 {name:'Puszta',country:'Ungarn',emoji:'🐎',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Hortobagy%20puszta.jpg',tag:'Natur & Tradition · Landausflug',desc:'Weite Landschaften und die Kultur der ungarischen Tiefebene – als separater Ausflug ab Budapest.',lat:47.583,lon:21.150,routeType:'excursion'}
 ];
+function renderFeaturedDestinations(){
+ const featuredNames=['Passau','Melk','Budapest','Russe'];
+ const container=document.getElementById('featured-grid');
+ if(!container)return;
+ container.innerHTML=featuredNames.map(name=>{
+  const p=places.find(place=>place.name===name);
+  if(!p)return '';
+  return `<article class="featured-card">
+   <img src="${p.image}" alt="${p.name} an der Donau" loading="lazy">
+   <div class="featured-card-content">
+    <div class="country">${p.country}</div>
+    <h3>${p.name}</h3>
+    <p>${p.desc.replace(/<[^>]*>/g,' ').replace(/\\s+/g,' ').trim()}</p>
+    <button class="discover" type="button" onclick="openDestination('${p.name}')">Entdecken →</button>
+   </div>
+  </article>`;
+ }).join('');
+}
+renderFeaturedDestinations();
 const cityTimeZones={'Passau':'Europe/Berlin','Linz':'Europe/Vienna','Melk':'Europe/Vienna','Weißenkirchen':'Europe/Vienna','Wien':'Europe/Vienna','Bratislava':'Europe/Bratislava','Esztergom':'Europe/Budapest','Budapest':'Europe/Budapest','Puszta':'Europe/Budapest','Novi Sad':'Europe/Belgrade','Belgrad':'Europe/Belgrade','Russe':'Europe/Sofia','Donaudelta':'Europe/Bucharest'};
 const weatherLabels={
  de:{0:'Klar',1:'Überwiegend klar',2:'Teilweise bewölkt',3:'Bewölkt',45:'Nebel',48:'Nebel mit Reif',51:'Leichter Nieselregen',53:'Nieselregen',55:'Starker Nieselregen',61:'Leichter Regen',63:'Regen',65:'Starker Regen',71:'Leichter Schnee',73:'Schneefall',75:'Starker Schneefall',80:'Regenschauer',81:'Regenschauer',82:'Starke Regenschauer',95:'Gewitter',96:'Gewitter mit Hagel',99:'Starkes Gewitter'},
