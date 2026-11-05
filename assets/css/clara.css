@@ -1017,3 +1017,31 @@
  #marketing-home .featured-grid .dest-img{height:180px;flex-basis:180px}
  #marketing-home .featured-grid .dest-info h3{font-size:21px}
 }
+
+/* Compact, consistently ordered destination cards on the homepage. */
+#marketing-home .featured-grid{
+ grid-template-columns:repeat(4,minmax(0,1fr));
+ gap:14px;
+ align-items:stretch;
+}
+#marketing-home .featured-grid .dest-img{
+ height:112px;
+ flex:0 0 112px;
+ border-radius:12px 12px 0 0;
+}
+#marketing-home .featured-grid .dest-info{padding:12px 13px 13px}
+#marketing-home .featured-grid .dest-info h3{font-size:19px;line-height:1.18}
+#marketing-home .featured-grid .dest-info p{font-size:12px;line-height:1.45;min-height:52px;margin:6px 0 8px}
+#marketing-home .featured-grid .city-live{padding:9px 10px;font-size:11px}
+#marketing-home .featured-grid .city-live-row{gap:6px;align-items:flex-start}
+#marketing-home .featured-grid .city-live-row b{font-size:10px}
+#marketing-home .featured-grid .city-live-row span{font-size:10px;text-align:right}
+#marketing-home .featured-grid .city-live small{font-size:9px}
+#marketing-home .featured-grid .dest-info>button{min-height:36px;padding:8px 11px;font-size:12px}
+@media(max-width:1100px){#marketing-home .featured-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:760px){#marketing-home .featured-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}
+@media(max-width:520px){
+ #marketing-home .featured-grid{grid-template-columns:1fr}
+ #marketing-home .featured-grid .dest-img{height:145px;flex-basis:145px}
+ #marketing-home .featured-grid .dest-info h3{font-size:20px}
+}
