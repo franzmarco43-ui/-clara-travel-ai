@@ -576,10 +576,10 @@ async function speakClara(value,force=false){
       if(!decoded||!decoded.length)throw new Error('Die Azure-Audiodatei enthält keine abspielbaren Audiodaten.');
       claraAudioSource=claraAudioContext.createBufferSource();claraAudioSource.buffer=decoded;claraAudioSource.connect(claraAudioContext.destination);
       claraAudioSource.onended=()=>{setClaraSpeaking(false);stopClaraVideo();if(status)status.textContent='Sprachausgabe abgeschlossen.';claraAudioSource=null;};
-      setClaraSpeaking(true);startClaraVideo();const welcomeButton=document.getElementById('claraWelcomeSpeak');if(welcomeButton)welcomeButton.hidden=true;const welcomeStatus=document.getElementById('claraWelcomeStatus');if(welcomeStatus)welcomeStatus.textContent='Clara begrüßt dich persönlich.';if(status)status.textContent='Clara spricht mit ihrer '+activeVoiceLabel+'-Stimme.';claraAudioSource.start(0);
+      setClaraSpeaking(true);const welcomeButton=document.getElementById('claraWelcomeSpeak');if(welcomeButton)welcomeButton.hidden=true;const welcomeStatus=document.getElementById('claraWelcomeStatus');if(welcomeStatus)welcomeStatus.textContent='Clara begrüßt dich persönlich.';if(status)status.textContent='Clara spricht mit ihrer '+activeVoiceLabel+'-Stimme.';claraAudioSource.start(0);
     }else{
       claraAudioObjectUrl=URL.createObjectURL(audioBlob);claraAudioElement=new Audio();claraAudioElement.src=claraAudioObjectUrl;claraAudioElement.preload='auto';claraAudioElement.volume=1;
-      claraAudioElement.onplay=()=>{setClaraSpeaking(true);startClaraVideo();if(status)status.textContent='Clara spricht mit ihrer '+activeVoiceLabel+'-Stimme.';};
+      claraAudioElement.onplay=()=>{setClaraSpeaking(true);if(status)status.textContent='Clara spricht mit ihrer '+activeVoiceLabel+'-Stimme.';};
       claraAudioElement.onended=()=>{setClaraSpeaking(false);stopClaraVideo();if(status)status.textContent='Sprachausgabe abgeschlossen.';URL.revokeObjectURL(claraAudioObjectUrl);claraAudioObjectUrl=null;claraAudioElement=null;};
       await claraAudioElement.play();
     }
