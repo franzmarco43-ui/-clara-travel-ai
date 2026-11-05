@@ -989,3 +989,31 @@
     padding-bottom:260px;
   }
 }
+
+
+/* Homepage: show every Danube destination with its complete live information. */
+#marketing-home .destination-intro{max-width:900px;margin:-6px 0 22px;color:#687773;font-size:14px;line-height:1.65}
+#marketing-home .featured-carousel{max-width:1370px;margin:0 auto}
+#marketing-home .featured-grid{
+ display:grid;
+ grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:18px;
+ max-width:1370px;
+ margin:0 auto;
+ overflow:visible;
+}
+#marketing-home .featured-grid .destination{min-width:0;height:100%;display:flex;flex-direction:column}
+#marketing-home .featured-grid .dest-img{height:165px;flex:0 0 165px;background-size:cover!important;background-position:center!important}
+#marketing-home .featured-grid .dest-info{display:flex;flex:1;flex-direction:column;padding:16px}
+#marketing-home .featured-grid .dest-info h3{font:700 23px/1.2 "Playfair Display",Georgia,serif;color:#183d36}
+#marketing-home .featured-grid .dest-info p{font-size:13px;line-height:1.55;min-height:58px;margin:7px 0 10px}
+#marketing-home .featured-grid .city-live{margin-top:auto}
+#marketing-home .featured-grid .dest-info>button{margin-top:10px;min-height:42px}
+#marketing-home .featured-arrow,#marketing-home .featured-dots{display:none!important}
+@media(max-width:900px){#marketing-home .featured-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}}
+@media(max-width:600px){
+ #marketing-home .destination-intro{font-size:13px}
+ #marketing-home .featured-grid{grid-template-columns:1fr;gap:13px}
+ #marketing-home .featured-grid .dest-img{height:180px;flex-basis:180px}
+ #marketing-home .featured-grid .dest-info h3{font-size:21px}
+}
