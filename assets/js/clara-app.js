@@ -446,7 +446,9 @@ function stopClaraVideo(){
     try{video.currentTime=0;}catch(_){}
   });
 }
+let claraSpeechRun=0;
 function stopClaraSpeech(){
+  claraSpeechRun++;
   stopClaraVideo();
   if(claraAudioSource){try{claraAudioSource.stop();}catch(_){}claraAudioSource=null;}
   if('speechSynthesis'in window)speechSynthesis.cancel();
@@ -629,17 +631,18 @@ async function speakClara(value,force=false){
   const speechLanguage=(()=>{try{return localStorage.getItem('clara.language')||'de';}catch(_){return 'de';}})();
   const speechVoiceLabels={de:'Katja',en:'Sonia',nl:'Fenna',fr:'Denise',ro:'Alina'};
   const activeVoiceLabel=speechVoiceLabels[speechLanguage]||speechVoiceLabels.de;
-  let cancelled=false;
+  const run=claraSpeechRun;
   try{
     if(status)status.textContent='Clara bereitet den ersten Satz mit der '+activeVoiceLabel+'-Stimme vor …';
-    setClaraSpeaking(true);
-    startClaraVideo();
     let pending=fetchClaraSpeechChunk(chunks[0],speechLanguage);
     for(let index=0;index<chunks.length;index++){
       const blob=await pending;
+      if(run!==claraSpeechRun)return;
       if(index+1<chunks.length)pending=fetchClaraSpeechChunk(chunks[index+1],speechLanguage);
+      if(index===0){setClaraSpeaking(true);startClaraVideo();}
       if(status)status.textContent='Clara spricht · Abschnitt '+(index+1)+' von '+chunks.length;
       await playClaraAudioBlob(blob);
+      if(run!==claraSpeechRun)return;
     }
     setClaraSpeaking(false);
     stopClaraVideo();
