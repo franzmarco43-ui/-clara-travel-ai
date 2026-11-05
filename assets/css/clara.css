@@ -883,3 +883,27 @@
     object-position:center bottom;
   }
 }
+
+
+/* Compact Clara hero portrait: keep her fully visible without dominating the text. */
+#marketing-home .clara-welcome-hero .hero-scene-video{
+  width:36%;
+  height:84%;
+  top:8%;
+  right:3%;
+  object-fit:contain;
+  object-position:center center;
+}
+#marketing-home .clara-welcome-hero .hero-copy{width:62%;max-width:690px;}
+@media(max-width:760px){
+  #marketing-home .clara-welcome-hero .hero-scene-video{
+    width:76%;
+    height:43%;
+    top:auto;
+    right:12%;
+    bottom:0;
+    object-fit:contain;
+    object-position:center bottom;
+  }
+  #marketing-home .clara-welcome-hero .hero-copy{width:100%;padding-bottom:260px;}
+}
