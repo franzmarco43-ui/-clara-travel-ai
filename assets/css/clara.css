@@ -1379,3 +1379,10 @@ body{background:#f8f7f1;color:var(--ink)}
   #clara-app .cards{grid-template-columns:1fr}
   #clara-app .top-actions .hide-small{display:none}
 }
+
+/* One destination detail at a time below the interactive Danube map. */
+.map-destination-detail{margin-top:14px;max-width:720px}
+.map-destination-detail .destination{display:grid;grid-template-columns:minmax(180px, .8fr) minmax(0,1.2fr);max-width:100%;box-shadow:none}
+.map-destination-detail .dest-img{height:100%;min-height:220px}
+.map-destination-detail .dest-info{padding:18px}
+@media(max-width:520px){.map-destination-detail .destination{grid-template-columns:1fr}.map-destination-detail .dest-img{min-height:150px}}
