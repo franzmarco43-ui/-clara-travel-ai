@@ -433,12 +433,35 @@
 #marketing-home .hero-button.secondary{background:#ffffffdc;color:#244d3d}
 #marketing-home .hero-pagination{display:none}
 #marketing-home .hero-sound-note{
-  position:absolute;
-  width:1px;height:1px;
-  padding:0;margin:-1px;
-  overflow:hidden;clip:rect(0,0,0,0);
-  white-space:nowrap;border:0;
+  display:block;
+  position:relative;
+  width:auto;height:auto;
+  margin:12px 0 0;
+  padding:8px 12px;
+  overflow:visible;
+  clip:auto;
+  white-space:normal;
+  border:0;
+  color:#315a49;
+  background:rgba(255,255,255,.72);
+  border-radius:10px;
+  font-size:13px;
+  font-weight:600;
 }
+#marketing-home .welcome-speak-button{
+  display:inline-flex;
+  align-items:center;
+  margin-top:10px;
+  padding:10px 15px;
+  border:1px solid #315a49;
+  border-radius:24px;
+  color:#244d3d;
+  background:#fff;
+  cursor:pointer;
+  font:inherit;
+  font-weight:700;
+}
+#marketing-home .welcome-speak-button[hidden]{display:none!important;}
 #marketing-home .site-section{padding:43px clamp(18px,4vw,64px)}
 #marketing-home .featured-section{background:#fbfaf6}
 #marketing-home .section-kicker{
