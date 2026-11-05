@@ -1045,3 +1045,43 @@
  #marketing-home .featured-grid .dest-img{height:145px;flex-basis:145px}
  #marketing-home .featured-grid .dest-info h3{font-size:20px}
 }
+
+/* Readable live information: labels and values never run together. */
+#marketing-home .featured-grid .city-live{
+ display:grid;
+ grid-template-columns:minmax(0,1fr);
+ gap:0;
+ padding:11px 12px;
+ border-radius:10px;
+ background:#f2f5f1;
+}
+#marketing-home .featured-grid .city-live-row{
+ display:grid;
+ grid-template-columns:minmax(105px,42%) minmax(0,1fr);
+ align-items:start;
+ gap:9px;
+ padding:7px 0;
+ border-bottom:1px solid rgba(35,70,56,.12);
+}
+#marketing-home .featured-grid .city-live-row:last-of-type{border-bottom:0}
+#marketing-home .featured-grid .city-live-row b{
+ display:block;
+ font-size:11px;
+ line-height:1.4;
+ white-space:normal;
+}
+#marketing-home .featured-grid .city-live-row span{
+ display:block;
+ min-width:0;
+ font-size:11px;
+ line-height:1.45;
+ text-align:left;
+ overflow-wrap:anywhere;
+}
+#marketing-home .featured-grid .city-live small{
+ display:block;
+ margin-top:7px;
+ font-size:10px;
+ line-height:1.4;
+ color:#65746d;
+}
