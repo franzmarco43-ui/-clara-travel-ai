@@ -1004,7 +1004,7 @@ function translateClaraPage(){
   if(dict[key])el.textContent=dict[key];
  });
  const reverse=new Map();
- Object.keys(CLARA_I18N).forEach(locale=>Object.entries({...CLARA_CHAT_I18N[locale],...CLARA_I18N[locale]}).forEach(([de,value])=>{if(locale===lang)reverse.set(value,de);}));
+ Object.keys(CLARA_I18N).forEach(locale=>Object.entries({...CLARA_CHAT_I18N[locale],...CLARA_I18N[locale]}).forEach(([de,value])=>{if(typeof value==='string'&&value)reverse.set(value,de);}));
  const normalize=v=>String(v||'').replace(/\u00a0/g,' ').replace(/\s+/g,' ').trim();
  const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
  let node;
@@ -1037,9 +1037,8 @@ function observeClaraDynamicContent(){
 const CLARA_LANGUAGES=Object.freeze({de:{label:'Deutsch',locale:'de-DE'},en:{label:'English',locale:'en-GB'},nl:{label:'Nederlands',locale:'nl-NL'},fr:{label:'Français',locale:'fr-FR'},ro:{label:'Română',locale:'ro-RO'}});
 function setClaraLanguage(code,refreshWeather=true){
   if(!Object.prototype.hasOwnProperty.call(CLARA_LANGUAGES,code))return;
-  try{document.documentElement.lang=code;}catch(_){}
-  try{localStorage.setItem('clara.language',code);}catch(_){}
   document.documentElement.lang=code;
+  try{localStorage.setItem('clara.language',code);}catch(_){}
   ['landingLanguage','appLanguage','creatorLanguage'].forEach(id=>{const el=document.getElementById(id);if(el){if(id==='creatorLanguage'){const match=[...el.options].find(o=>o.textContent.trim()===CLARA_LANGUAGES[code].label);if(match)el.value=match.value;}else el.value=code;}});
   document.querySelectorAll('.language-switch select').forEach(el=>{if(el.value!==code)el.value=code;});
   translateClaraPage();
