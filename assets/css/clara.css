@@ -920,3 +920,49 @@
  #marketing-home .landing-route-stop .route-thumb{width:35px;height:35px;}
  #marketing-home .landing-route-stop .route-name{font-size:8px;max-width:75px;}
 }
+
+
+/* Final desktop hero balance: Clara owns the complete right half of the hero. */
+#marketing-home .clara-welcome-hero{
+  position:relative;
+  overflow:hidden;
+}
+#marketing-home .clara-welcome-hero .hero-scene-video{
+  position:absolute;
+  z-index:0;
+  top:0;
+  right:0;
+  bottom:0;
+  left:auto;
+  width:50%;
+  height:100%;
+  max-width:none;
+  object-fit:contain;
+  object-position:center center;
+  background:rgba(232,238,232,.35);
+}
+#marketing-home .clara-welcome-hero .hero-copy{
+  position:relative;
+  z-index:2;
+  width:50%;
+  max-width:760px;
+}
+#marketing-home .clara-welcome-hero .hero-shade{
+  z-index:1;
+  background:linear-gradient(90deg,#f8f7f1 0%,rgba(248,247,241,.98) 43%,rgba(248,247,241,.55) 50%,rgba(248,247,241,0) 57%);
+}
+@media(max-width:760px){
+  #marketing-home .clara-welcome-hero .hero-scene-video{
+    top:auto;
+    right:0;
+    bottom:0;
+    width:100%;
+    height:48%;
+    object-fit:contain;
+    object-position:center bottom;
+  }
+  #marketing-home .clara-welcome-hero .hero-copy{
+    width:100%;
+    padding-bottom:260px;
+  }
+}
