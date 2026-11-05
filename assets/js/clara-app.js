@@ -1080,20 +1080,10 @@ function setClaraLanguage(code,refreshWeather=true){
   if(refreshWeather&&typeof loadCityWeather==='function')loadCityWeather();
 }
 function restoreClaraLanguage(){
-  // Preview 10 previously inherited a stale French preference from an earlier
-  // mixed-language build. Migrate that first load to German exactly once;
-  // afterwards the user's explicit language choice is persisted normally.
-  const preferenceVersion='preview10-language-consistency-1';
-  let version='';
-  try{version=localStorage.getItem('clara.language.preferenceVersion')||'';}catch(_){}
-  if(version!==preferenceVersion){
-    setClaraLanguage('de',false);
-    try{localStorage.setItem('clara.language.preferenceVersion',preferenceVersion);}catch(_){}
-    return;
-  }
-  let code='de';
-  try{code=claraLang();}catch(_){}
-  setClaraLanguage(code,false);
+  // Preview 10 must always open in German. Other languages remain available
+  // during the current visit when the user changes the language selector.
+  // A saved French/English/etc. preference must never override the start language.
+  setClaraLanguage('de',false);
 }
 const CLARA_WELCOME_TEXT=Object.freeze({
  de:'Hallo und herzlich willkommen! Ich bin Clara, deine Reisebegleiterin entlang der Donau. Schön, dass du da bist! Wohin soll unsere gemeinsame Reise gehen?',
