@@ -15,23 +15,10 @@ const places=[
 {name:'Puszta',country:'Ungarn',emoji:'🐎',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Hortobagy%20puszta.jpg',tag:'Natur & Tradition · Landausflug',desc:'Weite Landschaften und die Kultur der ungarischen Tiefebene – als separater Ausflug ab Budapest.',lat:47.583,lon:21.150,routeType:'excursion'}
 ];
 function renderFeaturedDestinations(){
- const featuredNames=['Linz','Wien','Budapest','Belgrad'];
  const container=document.getElementById('featured-grid');
  if(!container)return;
- container.innerHTML=featuredNames.map(name=>{
-  const p=places.find(place=>place.name===name);
-  if(!p)return '';
-  return `<article class="featured-card">
-   <img src="${p.image}" alt="${p.name} an der Donau" loading="lazy">
-   <div class="featured-card-shade" aria-hidden="true"></div>
-   <div class="featured-card-content">
-    <h3>${p.name}</h3>
-    <div class="country">${p.country}</div>
-    <button class="discover" type="button" onclick="openDestination('${p.name}')">Entdecken <span aria-hidden="true">→</span></button>
-   </div>
-  </article>`;
- }).join('');
- updateFeaturedCarousel();
+ // Show every destination at once, with the same live-information panel used on the full destination page.
+ container.innerHTML=places.map(placeCard).join('');
 }
 function updateFeaturedCarousel(){
  const container=document.getElementById('featured-grid');
