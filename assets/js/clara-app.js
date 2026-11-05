@@ -429,7 +429,11 @@ function getClaraSpeakingVideo(){
 }
 function setClaraSpeaking(active){
   document.querySelector('#marketing-home .clara-welcome-hero')?.classList.toggle('clara-is-speaking',active);
+  // The demo avatar's mouth animation is defined on .avatar.speaking,
+  // not on its surrounding .avatar-stage. Toggle both so the mouth
+  // actually animates while Azure audio is playing.
   document.querySelectorAll('#page-home .avatar-stage, #page-clara .avatar-stage').forEach(el=>el.classList.toggle('speaking',active));
+  document.querySelectorAll('#page-home .avatar, #page-clara .avatar').forEach(el=>el.classList.toggle('speaking',active));
 }
 function startClaraVideo(){
   // Keep Clara visibly animated during the separate Azure speech track.
