@@ -577,13 +577,22 @@ exports.handler = async function (event) {
 
   } catch (error) {
     console.error("Clara chat error:", error);
-
+    let errorLanguage = "de";
+    try {
+      const requested = String(JSON.parse(event.body || "{}").language || "de").toLowerCase();
+      if (["de", "en", "nl", "fr", "ro"].includes(requested)) errorLanguage = requested;
+    } catch (_) {}
+    const errorMessages = {
+      de: "Clara konnte die Anfrage gerade nicht verarbeiten. Bitte versuche es erneut.",
+      en: "Clara couldn't process your request just now. Please try again.",
+      nl: "Clara kon je verzoek zojuist niet verwerken. Probeer het opnieuw.",
+      fr: "Clara n’a pas pu traiter votre demande pour le moment. Veuillez réessayer.",
+      ro: "Clara nu a putut procesa solicitarea momentan. Te rog să încerci din nou."
+    };
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({
-        error: "Clara konnte die Anfrage gerade nicht verarbeiten."
-      })
+      body: JSON.stringify({ error: errorMessages[errorLanguage] })
     };
   }
 };
