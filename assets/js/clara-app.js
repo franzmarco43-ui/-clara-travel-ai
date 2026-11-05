@@ -391,19 +391,31 @@ function claraSpeechText(value){
     .replace(/\s+/g,' ')
     .trim();
 }
-function setClaraSpeaking(active){['avatarHome','avatarChat'].forEach(id=>document.getElementById(id)?.classList.toggle('speaking',active));}
+function getClaraSpeakingVideo(){
+  const chatVideo=document.getElementById('claraChatVideo');
+  const homeVideo=document.querySelector('#page-home video.clara-welcome-video');
+  const isVisible=el=>!!el&&el.getClientRects().length>0&&!el.closest('.hidden');
+  if(isVisible(chatVideo))return chatVideo;
+  if(isVisible(homeVideo))return homeVideo;
+  return null;
+}
+function setClaraSpeaking(active){
+  document.querySelectorAll('#page-home .avatar-stage, #page-clara .avatar-stage').forEach(el=>el.classList.toggle('speaking',active));
+}
 function startClaraVideo(){
-  const video=document.getElementById('claraChatVideo');
+  const video=getClaraSpeakingVideo();
   if(!video)return;
   video.muted=true;
+  video.loop=true;
+  video.playsInline=true;
   const playPromise=video.play();
   if(playPromise&&typeof playPromise.catch==='function')playPromise.catch(error=>console.warn('Clara-Video konnte nicht starten:',error));
 }
 function stopClaraVideo(){
-  const video=document.getElementById('claraChatVideo');
-  if(!video)return;
-  video.pause();
-  try{video.currentTime=0;}catch(_){}
+  document.querySelectorAll('#page-home video.clara-welcome-video, #claraChatVideo').forEach(video=>{
+    video.pause();
+    try{video.currentTime=0;}catch(_){}
+  });
 }
 function stopClaraSpeech(){
   stopClaraVideo();
