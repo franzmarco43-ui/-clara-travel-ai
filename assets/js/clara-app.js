@@ -976,6 +976,26 @@ function translateClaraPage(){
  });
  document.querySelectorAll('select option').forEach(el=>{const key=normalize(el.textContent);const source=reverse.get(key)||key;if(dict[source])el.textContent=dict[source];});
 }
+
+Object.assign(CLARA_I18N.fr,{
+"Entdecke Europas":"Découvrez l’Europe","Donau mit Clara":"sur le Danube avec Clara",
+"Reisetipps, kulinarische Highlights und echte Lieblingsorte entlang Europas schönstem Fluss.":"Conseils de voyage, découvertes culinaires et lieux coups de cœur le long du plus beau fleuve d’Europe.",
+"Reiseziele entdecken":"Découvrir les destinations","Clara kennenlernen":"Rencontrer Clara",
+"Clara begrüßen lassen":"Écouter le message de bienvenue de Clara",
+"Klicke auf „Clara kennenlernen“, um ihre Stimme zu hören.":"Cliquez sur « Rencontrer Clara » pour entendre sa voix.",
+"Die schönsten Orte · 12 Donaustationen + 1 Landausflug":"Les plus beaux endroits · 12 étapes sur le Danube + 1 excursion à terre",
+"Entlang der Donau – alle Reiseziele":"Le long du Danube – toutes les destinations",
+"Entdecke jede Station mit Kurzbeschreibung, aktueller Ortszeit und Wetter. Der Donaupegel wird erst angezeigt, wenn eine offizielle Messstation eindeutig zugeordnet ist.":"Découvrez chaque étape avec une courte description, l’heure locale et la météo. Le niveau du Danube ne s’affiche que lorsqu’une station officielle est identifiée avec certitude.",
+"Datum & Ortszeit":"Date et heure locales","Aktuelles Wetter":"Météo actuelle","Donaupegel":"Niveau du Danube",
+"Noch keine verifizierte Messstelle zugeordnet":"Aucune station de mesure vérifiée n’est encore associée",
+"Wetterdaten werden abgerufen …":"Chargement des données météo …","Wird geladen …":"Chargement …",
+"Mit Clara entdecken →":"Découvrir avec Clara →","Karte ansehen":"Voir la carte",
+"Entdecke jede Station mit Kurzbeschreibung, aktueller Ortszeit und Wetter.":"Découvrez chaque étape avec une courte description, l’heure locale et la météo.",
+"Deutschland":"Allemagne","Österreich":"Autriche","Slowakei":"Slovaquie","Ungarn":"Hongrie","Serbien":"Serbie","Bulgarien":"Bulgarie","Rumänien":"Roumanie",
+"Allemagne":"Allemagne","Autriche":"Autriche","Slovaquie":"Slovaquie","Hongrie":"Hongrie","Serbie":"Serbie","Bulgarie":"Bulgarie","Roumanie":"Roumanie",
+"Die interaktive Karte konnte nicht geladen werden. Bitte prüfe deine Internetverbindung; die Stationsliste bleibt verfügbar.":"La carte interactive n’a pas pu être chargée. Vérifiez votre connexion Internet ; la liste des étapes reste disponible."
+});
+
 let claraTranslationObserver;
 let claraTranslationTimer=null;
 function observeClaraDynamicContent(){
