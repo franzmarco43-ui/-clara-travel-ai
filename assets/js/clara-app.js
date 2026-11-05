@@ -975,8 +975,44 @@ function updateClaraWelcome(){
  return greeting;
 }
 function playClaraWelcome(){
- const greeting=updateClaraWelcome();
- speakClara(greeting,true);
+ updateClaraWelcome();
+ const video=document.querySelector('#marketing-home video.hero-scene-video');
+ const status=document.getElementById('claraWelcomeStatus');
+ if(!video){
+  if(status)status.textContent='Das Clara-Begrüßungsvideo wurde auf dieser Seite nicht gefunden.';
+  return;
+ }
+ // The welcome MP4 already contains its synchronized picture and original soundtrack.
+ // Do not generate a second Azure voice track over this video.
+ stopClaraSpeech();
+ video.pause();
+ try{video.currentTime=0;}catch(_){}
+ video.muted=false;
+ video.loop=false;
+ video.playsInline=true;
+ video.controls=true;
+ video.onended=()=>{
+  video.pause();
+  video.controls=false;
+  video.muted=true;
+  try{video.currentTime=0;}catch(_){}
+  if(status)status.textContent='Claras Begrüßung ist zu Ende.';
+ };
+ video.onerror=()=>{
+  video.controls=false;
+  video.muted=true;
+  if(status)status.textContent='Das Begrüßungsvideo konnte nicht geladen werden. Bitte lade die Seite neu.';
+ };
+ if(status)status.textContent='Claras Begrüßung wird mit der originalen Tonspur abgespielt.';
+ const playPromise=video.play();
+ if(playPromise&&typeof playPromise.catch==='function'){
+  playPromise.catch(error=>{
+   video.controls=false;
+   video.muted=true;
+   if(status)status.textContent='Die Videowiedergabe wurde vom Browser blockiert. Bitte erneut auf „Clara kennenlernen“ klicken.';
+   console.warn('Clara-Begrüßung konnte nicht gestartet werden:',error);
+  });
+ }
 }
 document.addEventListener('DOMContentLoaded',()=>{restoreClaraLanguage();restoreClaraConnection();const welcomeButton=document.getElementById('claraWelcomeSpeak');if(welcomeButton)welcomeButton.hidden=false;const welcomeStatus=document.getElementById('claraWelcomeStatus');if(welcomeStatus)welcomeStatus.textContent='Klicke auf „Clara kennenlernen“, um ihre Stimme zu hören.';updateClaraWelcome();const heroVideo=document.querySelector('#marketing-home video.hero-scene-video');if(heroVideo){heroVideo.muted=true;heroVideo.autoplay=false;heroVideo.loop=true;heroVideo.playsInline=true;heroVideo.pause();const holdHeroFrame=()=>{heroVideo.pause();if(heroVideo.currentTime>0.05){try{heroVideo.currentTime=0;}catch(_){}}};heroVideo.addEventListener('loadedmetadata',holdHeroFrame,{once:true});if(heroVideo.readyState>=1)holdHeroFrame();}const auto=document.getElementById('claraAutoSpeak');if(auto){try{auto.checked=localStorage.getItem('clara.autoSpeak')!=='false';}catch(_){auto.checked=true;}auto.addEventListener('change',()=>{try{localStorage.setItem('clara.autoSpeak',String(auto.checked));}catch(_){}if(!auto.checked)stopClaraSpeech();});}const rate=document.getElementById('claraRate');if(rate){rate.disabled=true;rate.title='Das Tempo wird derzeit durch Azure vorgegeben.';}loadClaraVoices();});
 
