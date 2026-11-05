@@ -26,7 +26,7 @@ function renderFeaturedDestinations(){
    <div class="featured-card-content">
     <div class="country">${p.country}</div>
     <h3>${p.name}</h3>
-    <p>${p.desc.replace(/<[^>]*>/g,' ').replace(/\\s+/g,' ').trim()}</p>
+    <p>${p.desc.replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim()}</p>
     <button class="discover" type="button" onclick="openDestination('${p.name}')">Entdecken →</button>
    </div>
   </article>`;
