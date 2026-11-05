@@ -993,6 +993,25 @@ const CLARA_CHAT_I18N={"en":{"Schreib Clara oder nutze das Mikrofon …":"Write 
 function translateClaraPage(){
  const lang=claraLang();
  const dict={...(CLARA_CHAT_I18N[lang]||{}),...(CLARA_I18N[lang]||{})}; if(!CLARA_I18N[lang])return;
+ // Translate the landing-page copy through stable element selectors as well as the
+ // generic text-node walker below. This avoids missed/split text nodes in the hero.
+ const setDirectText=(selector,source)=>{
+  const el=document.querySelector(selector);if(!el)return;
+  const translated=dict[source];if(!translated)return;
+  const node=[...el.childNodes].find(n=>n.nodeType===3&&n.nodeValue.trim());
+  if(node)node.nodeValue=node.nodeValue.replace(node.nodeValue.trim(),translated);
+ };
+ setDirectText('.welcome-pill','Willkommen an der Donau');
+ const heroTitle=document.getElementById('landingHeroTitle');
+ if(heroTitle&&lang!=='de')heroTitle.innerHTML=(dict['Entdecke Europas']||'Entdecke Europas')+'<br>'+(dict['Donau mit Clara']||'Donau mit Clara');
+ setDirectText('.hero-copy > p','Reisetipps, kulinarische Highlights und echte Lieblingsorte entlang Europas schönstem Fluss.');
+ setDirectText('.hero-buttons .hero-button.primary','Reiseziele entdecken');
+ setDirectText('.hero-buttons .hero-button.secondary','Clara kennenlernen');
+ setDirectText('#claraWelcomeStatus','Clara bereitet ihre Begrüßung vor …');
+ setDirectText('.featured-section .section-kicker','Die schönsten Orte · 12 Donaustationen + 1 Landausflug');
+ const featuredTitle=document.getElementById('featuredTitle');
+ if(featuredTitle&&dict['Entlang der Donau – alle Reiseziele'])featuredTitle.textContent=dict['Entlang der Donau – alle Reiseziele'];
+ setDirectText('.destination-intro','Entdecke jede Station mit Kurzbeschreibung, aktueller Ortszeit und Wetter. Der Donaupegel wird erst angezeigt, wenn eine offizielle Messstation eindeutig zugeordnet ist.');
  document.querySelectorAll('[data-clara-i18n]').forEach(el=>{
   const key=el.getAttribute('data-clara-i18n');
   if(dict[key])el.textContent=dict[key];
