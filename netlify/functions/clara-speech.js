@@ -36,9 +36,11 @@ exports.handler = async (event) => {
   }
 
   let text;
+  let language = "de";
   try {
     const payload = JSON.parse(event.body || "{}");
     text = typeof payload.text === "string" ? payload.text.trim() : "";
+    language = typeof payload.language === "string" ? payload.language.toLowerCase() : "de";
   } catch {
     return {
       statusCode: 400,
@@ -69,7 +71,7 @@ exports.handler = async (event) => {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&apos;");
 
-  const language = String(payload.language || "de").toLowerCase();
+  language = String(language || "de").toLowerCase();
   const voices = {
     de: { locale: "de-DE", name: "de-DE-KatjaNeural" },
     en: { locale: "en-GB", name: "en-GB-SoniaNeural" },
