@@ -919,7 +919,7 @@ function updateClaraWelcome(){
 }
 async function playClaraWelcome(){
  const AudioContextClass=window.AudioContext||window.webkitAudioContext;
- if(AudioContextClass){try{if(!claraAudioContext)claraAudioContext=new AudioContextClass();if(claraAudioContext.state==='suspended')claraAudioContext.resume();}catch(error){console.warn('Audio-Freigabe:',error);}}
+ if(AudioContextClass){try{if(!claraAudioContext)claraAudioContext=new AudioContextClass();if(claraAudioContext.state==='suspended')await claraAudioContext.resume();}catch(error){console.warn('Audio-Freigabe:',error);}}
  const button=document.getElementById('claraWelcomeSpeak');
  const status=document.getElementById('claraWelcomeStatus');
  if(button)button.hidden=true;
