@@ -197,13 +197,19 @@ function researchFailureMessage(reason) {
   return "Ich konnte gerade keine belastbaren Live-Suchergebnisse abrufen. Deshalb möchte ich dir keine möglicherweise veralteten oder vermuteten Angaben als Tatsache nennen.";
 }
 exports.handler = async function (event) {
+  const requestOrigin = event.headers?.origin || event.headers?.Origin || "";
+  const isAllowedOrigin =
+    requestOrigin === "https://clara-travel-ai.netlify.app" ||
+    /^https:\/\/deploy-preview-\d+--clara-travel-ai\.netlify\.app$/i.test(requestOrigin);
   const headers = {
     "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "https://clara-travel-ai.netlify.app",
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Vary": "Origin"
   };
+  // Allow the production site and Netlify numbered deploy previews only.
+  // Other origins receive no CORS permission.
+  if (isAllowedOrigin) headers["Access-Control-Allow-Origin"] = requestOrigin;
 
   if (event.httpMethod === "OPTIONS") {
     return { statusCode: 204, headers, body: "" };
