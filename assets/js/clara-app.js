@@ -54,16 +54,17 @@ function scrollFeaturedCarousel(direction){
 function renderLandingDanubeMap(){
  const host=document.getElementById('landingDanubeMap');
  if(!host)return;
- const stops=[
-  {name:'Linz',x:7,y:57},{name:'Melk',x:21,y:27},{name:'Wien',x:35,y:58},
-  {name:'Bratislava',x:48,y:31},{name:'Budapest',x:62,y:68},{name:'Puszta',x:73,y:24},
-  {name:'Belgrad',x:85,y:57},{name:'Donaudelta',x:96,y:31}
- ];
- const points=stops.map(stop=>`${stop.x*10},${stop.y*3}`).join(' ');
+ const routeNames=['Passau','Linz','Melk','Weißenkirchen','Wien','Bratislava','Esztergom','Budapest','Novi Sad','Belgrad','Russe','Donaudelta'];
+ const ys=[62,34,62,34,62,34,62,34,62,34,62,34];
+ const stops=routeNames.map((name,index)=>({name,x:4+index*(92/(routeNames.length-1)),y:ys[index]}));
+ const path=stops.map(stop=>`${stop.x*10},${stop.y*3}`).join(' ');
+ const budapest=stops.find(stop=>stop.name==='Budapest');
+ const puszta=places.find(item=>item.name==='Puszta');
  host.innerHTML=`<div class="landing-route">
   <svg class="landing-route-line" viewBox="0 0 1000 300" preserveAspectRatio="none" aria-hidden="true">
-   <path d="M 35 171 C 105 68, 150 60, 210 81 S 300 236, 350 174 S 430 57, 480 93 S 560 241, 620 204 S 690 43, 735 75 S 820 236, 850 171 S 930 57, 970 93" fill="none" stroke="#79aeb0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-   <path d="M 35 171 C 105 68, 150 60, 210 81 S 300 236, 350 174 S 430 57, 480 93 S 560 241, 620 204 S 690 43, 735 75 S 820 236, 850 171 S 930 57, 970 93" fill="none" stroke="#ffffff" stroke-width="2" stroke-dasharray="3 13" stroke-linecap="round"/>
+   <polyline points="${path}" fill="none" stroke="#79aeb0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+   <polyline points="${path}" fill="none" stroke="#ffffff" stroke-width="2" stroke-dasharray="3 13" stroke-linecap="round"/>
+   <path d="M ${budapest.x*10} ${budapest.y*3} Q ${budapest.x*10+20} 10 ${budapest.x*10+65} 20" fill="none" stroke="#4c8c79" stroke-width="3" stroke-dasharray="5 7"/>
   </svg>
   ${stops.map(stop=>{
    const place=places.find(item=>item.name===stop.name);
@@ -73,6 +74,9 @@ function renderLandingDanubeMap(){
     <span class="route-name">${stop.name}</span>
    </button>`;
   }).join('')}
+  ${puszta?`<button type="button" class="landing-route-stop landing-route-excursion" style="--stop-x:${Math.min(94,budapest.x+7)}%;--stop-y:7%" onclick="openDestination('Puszta')" aria-label="Puszta – Landausflug ab Budapest">
+   <span class="route-thumb" style="background-image:url('${puszta.image}')"></span><span class="route-name">Puszta · Ausflug</span>
+  </button>`:''}
  </div>`;
 }
 renderFeaturedDestinations();
@@ -582,6 +586,25 @@ async function speakClara(value,force=false){
     }
   }catch(error){
     console.error('Clara Azure Speech:',error);
+    const langMap={de:'de-DE',en:'en-GB',nl:'nl-NL',fr:'fr-FR',ro:'ro-RO'};
+    if('speechSynthesis' in window && 'SpeechSynthesisUtterance' in window){
+      try{
+        window.speechSynthesis.cancel();
+        const utterance=new SpeechSynthesisUtterance(text);
+        utterance.lang=langMap[speechLanguage]||'de-DE';
+        utterance.rate=0.96;utterance.pitch=1.02;
+        const voices=window.speechSynthesis.getVoices();
+        const match=voices.find(voice=>voice.lang.toLowerCase().startsWith(utterance.lang.slice(0,2).toLowerCase()));
+        if(match)utterance.voice=match;
+        utterance.onstart=()=>{setClaraSpeaking(true);if(status)status.textContent='Clara spricht jetzt mit der verfügbaren Browser-Stimme.';const ws=document.getElementById('claraWelcomeStatus');if(ws)ws.textContent='Clara spricht. (Ausweichstimme des Browsers)';};
+        utterance.onend=()=>{setClaraSpeaking(false);stopClaraVideo();};
+        utterance.onerror=()=>{setClaraSpeaking(false);const ws=document.getElementById('claraWelcomeStatus');if(ws)ws.textContent='Die Browser-Stimme konnte nicht gestartet werden. Bitte prüfe die Audioausgabe deines Geräts.';};
+        window.speechSynthesis.speak(utterance);
+        const welcomeButton=document.getElementById('claraWelcomeSpeak');if(welcomeButton)welcomeButton.hidden=true;
+        const welcomeStatus=document.getElementById('claraWelcomeStatus');if(welcomeStatus)welcomeStatus.textContent='Azure ist gerade nicht erreichbar. Clara verwendet die Browser-Stimme.';
+        return;
+      }catch(fallbackError){console.warn('Browser-Sprachausgabe fehlgeschlagen:',fallbackError);}
+    }
     const welcomeButton=document.getElementById('claraWelcomeSpeak');const welcomeStatus=document.getElementById('claraWelcomeStatus');if(welcomeButton)welcomeButton.hidden=false;if(welcomeStatus)welcomeStatus.textContent='Clara konnte gerade nicht sprechen: '+(error.message||'Unbekannter Fehler')+'. Bitte prüfe die Verbindung und versuche es erneut.';if(status)status.textContent='Sprachausgabe nicht verfügbar: '+(error.message||'Verbindungsfehler')+'. Bitte später erneut versuchen.';
   }
 }
