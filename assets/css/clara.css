@@ -210,3 +210,24 @@
  #marketing-home .featured-card .discover{padding:7px 10px;font-size:11px}
  #marketing-home .featured-map-link{margin-top:18px}
 }
+
+
+/* Clara-first landing hero */
+#marketing-home .clara-welcome-hero{
+  min-height:520px;
+  grid-template-columns:1.08fr .92fr;
+  background:
+    linear-gradient(90deg,#f7f4ec 0%,#f7f4ecf2 42%,#f7f4ec45 100%),
+    url("https://commons.wikimedia.org/wiki/Special:FilePath/Panorama%20Dom%20Passau.jpg") center/cover;
+}
+#marketing-home .clara-welcome-hero .hero-copy{max-width:760px;padding-top:62px;padding-bottom:62px}
+#marketing-home .clara-welcome-hero h1{font-size:clamp(42px,5.2vw,68px)}
+#marketing-home .clara-welcome-hero .clara-portrait{width:min(96%,500px);height:480px}
+#marketing-home .hero-sound-note{margin-top:15px;color:#60736a;font-size:12px;font-weight:600}
+@media(max-width:760px){
+  #marketing-home .clara-welcome-hero{grid-template-columns:1fr;min-height:0;background:linear-gradient(180deg,#f7f4ec 0%,#f7f4eced 72%,#f7f4ec88 100%),url("https://commons.wikimedia.org/wiki/Special:FilePath/Panorama%20Dom%20Passau.jpg") center/cover}
+  #marketing-home .clara-welcome-hero .hero-copy{padding:38px 22px 12px}
+  #marketing-home .clara-welcome-hero .clara-portrait{width:min(88%,360px);height:320px;align-self:center}
+  #marketing-home .clara-welcome-hero .hero-buttons{gap:9px}
+  #marketing-home .clara-welcome-hero .hero-button{padding:12px 16px}
+}
