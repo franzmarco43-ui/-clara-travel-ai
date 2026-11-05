@@ -894,6 +894,20 @@ Object.assign(CLARA_I18N.en,{
 "Datum & Ortszeit":"Date & local time","Aktuelles Wetter":"Current weather","Donaupegel":"Danube water level",
 "Noch keine verifizierte Messstelle zugeordnet":"No verified gauge station assigned yet",
 "Clara ist eine virtuelle KI-Reisebegleiterin. Reiseinformationen bitte vor Ort überprüfen.":"Clara is a virtual AI travel companion. Please verify travel information locally."
+,
+"📅 Datum & Ortszeit":"📅 Date & local time",
+"🌤 Aktuelles Wetter":"🌤 Current weather",
+"🌊 Donaupegel":"🌊 Danube water level",
+"Mit Clara entdecken →":"Discover with Clara →",
+"Wetterdaten werden abgerufen …":"Loading weather data …",
+"Deutschland":"Germany",
+"Österreich":"Austria",
+"Slowakei":"Slovakia",
+"Ungarn":"Hungary",
+"Serbien":"Serbia",
+"Bulgarien":"Bulgaria",
+"Rumänien":"Romania",
+"Die interaktive Karte konnte nicht geladen werden. Bitte prüfe deine Internetverbindung; die Stationsliste bleibt verfügbar.":"The interactive map could not be loaded. Please check your internet connection; the stop list is still available."
 });
 Object.assign(CLARA_I18N.nl,{
 "Clara Travel AI — Deine persönliche Reisebegleiterin":"Clara Travel AI — Jouw persoonlijke reisgenoot",
@@ -913,6 +927,20 @@ Object.assign(CLARA_I18N.nl,{
 "Datum & Ortszeit":"Lokale datum en tijd","Aktuelles Wetter":"Actueel weer","Donaupegel":"Waterstand van de Donau",
 "Noch keine verifizierte Messstelle zugeordnet":"Nog geen gecontroleerd meetstation gekoppeld",
 "Clara ist eine virtuelle KI-Reisebegleiterin. Reiseinformationen bitte vor Ort überprüfen.":"Clara is een virtuele AI-reisgenoot. Controleer reisinformatie ter plaatse."
+,
+"📅 Datum & Ortszeit":"📅 Lokale datum en tijd",
+"🌤 Aktuelles Wetter":"🌤 Actueel weer",
+"🌊 Donaupegel":"🌊 Waterstand van de Donau",
+"Mit Clara entdecken →":"Ontdek met Clara →",
+"Wetterdaten werden abgerufen …":"Weergegevens worden geladen …",
+"Deutschland":"Duitsland",
+"Österreich":"Oostenrijk",
+"Slowakei":"Slowakije",
+"Ungarn":"Hongarije",
+"Serbien":"Servië",
+"Bulgarien":"Bulgarije",
+"Rumänien":"Roemenië",
+"Die interaktive Karte konnte nicht geladen werden. Bitte prüfe deine Internetverbindung; die Stationsliste bleibt verfügbar.":"De interactieve kaart kon niet worden geladen. Controleer je internetverbinding; de lijst met haltes blijft beschikbaar."
 });
 Object.assign(CLARA_I18N.fr,{
 "Clara Travel AI — Deine persönliche Reisebegleiterin":"Clara Travel AI — Votre compagne de voyage personnelle",
@@ -932,6 +960,12 @@ Object.assign(CLARA_I18N.fr,{
 "Datum & Ortszeit":"Date et heure locales","Aktuelles Wetter":"Météo actuelle","Donaupegel":"Niveau du Danube",
 "Noch keine verifizierte Messstelle zugeordnet":"Aucune station de mesure vérifiée n’est encore associée",
 "Clara ist eine virtuelle KI-Reisebegleiterin. Reiseinformationen bitte vor Ort überprüfen.":"Clara est une compagne de voyage virtuelle basée sur l’IA. Veuillez vérifier les informations sur place."
+,
+"📅 Datum & Ortszeit":"📅 Date et heure locales",
+"🌤 Aktuelles Wetter":"🌤 Météo actuelle",
+"🌊 Donaupegel":"🌊 Niveau du Danube",
+"Mit Clara entdecken →":"Découvrir avec Clara →",
+"Wetterdaten werden abgerufen …":"Chargement des données météo …"
 });
 Object.assign(CLARA_I18N.ro,{
 "Clara Travel AI — Deine persönliche Reisebegleiterin":"Clara Travel AI — Însoțitoarea ta personală de călătorie",
@@ -951,6 +985,20 @@ Object.assign(CLARA_I18N.ro,{
 "Datum & Ortszeit":"Data și ora locală","Aktuelles Wetter":"Vremea actuală","Donaupegel":"Nivelul Dunării",
 "Noch keine verifizierte Messstelle zugeordnet":"Nu este asociată încă nicio stație de măsurare verificată",
 "Clara ist eine virtuelle KI-Reisebegleiterin. Reiseinformationen bitte vor Ort überprüfen.":"Clara este o însoțitoare virtuală de călătorie bazată pe IA. Verifică informațiile de călătorie la fața locului."
+,
+"📅 Datum & Ortszeit":"📅 Data și ora locală",
+"🌤 Aktuelles Wetter":"🌤 Vremea actuală",
+"🌊 Donaupegel":"🌊 Nivelul Dunării",
+"Mit Clara entdecken →":"Descoperă alături de Clara →",
+"Wetterdaten werden abgerufen …":"Se încarcă datele meteo …",
+"Deutschland":"Germania",
+"Österreich":"Austria",
+"Slowakei":"Slovacia",
+"Ungarn":"Ungaria",
+"Serbien":"Serbia",
+"Bulgarien":"Bulgaria",
+"Rumänien":"România",
+"Die interaktive Karte konnte nicht geladen werden. Bitte prüfe deine Internetverbindung; die Stationsliste bleibt verfügbar.":"Harta interactivă nu a putut fi încărcată. Verifică conexiunea la internet; lista opririlor rămâne disponibilă."
 });
 
 function translateClaraPage(){
