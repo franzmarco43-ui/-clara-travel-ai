@@ -552,16 +552,17 @@ async function speakClara(value,force=false){
   if(!force&&auto&&!auto.checked)return;
   const text=claraSpeechText(value);
   if(!text)return;
-  // Create and unlock Web Audio immediately during the user's click/tap, before the network request.
+  // Unlock the audio output directly in the explicit user action and wait for it.
   const AudioContextClass=window.AudioContext||window.webkitAudioContext;
   if(AudioContextClass){
     try{
-      if(!claraAudioContext)claraAudioContext=new AudioContextClass();
-      if(claraAudioContext.state==='suspended'){
-        const unlockPromise=claraAudioContext.resume();
-        if(unlockPromise&&typeof unlockPromise.catch==='function')unlockPromise.catch(error=>console.warn('AudioContext konnte nicht aktiviert werden:',error));
-      }
-    }catch(audioError){console.warn('AudioContext konnte nicht initialisiert werden:',audioError);}
+      if(!claraAudioContext||claraAudioContext.state==='closed')claraAudioContext=new AudioContextClass();
+      if(claraAudioContext.state!=='running')await claraAudioContext.resume();
+      if(claraAudioContext.state!=='running')throw new Error('Der Browser hat die Audioausgabe nicht freigegeben.');
+    }catch(audioError){
+      console.warn('AudioContext konnte nicht aktiviert werden:',audioError);
+      claraAudioContext=null;
+    }
   }
   stopClaraSpeech();
   const status=document.getElementById('voiceStatus');
@@ -583,14 +584,14 @@ async function speakClara(value,force=false){
     if(!audioBlob.size)throw new Error('Azure hat eine leere Audiodatei geliefert.');
     const audioBytes=await audioBlob.arrayBuffer();
     const AudioContextClass=window.AudioContext||window.webkitAudioContext;
-    if(AudioContextClass&&claraAudioContext){
-      if(claraAudioContext.state==='suspended')await claraAudioContext.resume();
+    if(AudioContextClass&&claraAudioContext&&claraAudioContext.state==='running'){
       const decoded=await claraAudioContext.decodeAudioData(audioBytes.slice(0));
+      if(!decoded||!decoded.length)throw new Error('Die Azure-Audiodatei enthält keine abspielbaren Audiodaten.');
       claraAudioSource=claraAudioContext.createBufferSource();claraAudioSource.buffer=decoded;claraAudioSource.connect(claraAudioContext.destination);
       claraAudioSource.onended=()=>{setClaraSpeaking(false);stopClaraVideo();if(status)status.textContent='Sprachausgabe abgeschlossen.';claraAudioSource=null;};
       setClaraSpeaking(true);startClaraVideo();const welcomeButton=document.getElementById('claraWelcomeSpeak');if(welcomeButton)welcomeButton.hidden=true;const welcomeStatus=document.getElementById('claraWelcomeStatus');if(welcomeStatus)welcomeStatus.textContent='Clara begrüßt dich persönlich.';if(status)status.textContent='Clara spricht mit ihrer '+activeVoiceLabel+'-Stimme.';claraAudioSource.start(0);
     }else{
-      claraAudioObjectUrl=URL.createObjectURL(audioBlob);claraAudioElement=new Audio(claraAudioObjectUrl);
+      claraAudioObjectUrl=URL.createObjectURL(audioBlob);claraAudioElement=new Audio();claraAudioElement.src=claraAudioObjectUrl;claraAudioElement.preload='auto';claraAudioElement.volume=1;
       claraAudioElement.onplay=()=>{setClaraSpeaking(true);startClaraVideo();if(status)status.textContent='Clara spricht mit ihrer '+activeVoiceLabel+'-Stimme.';};
       claraAudioElement.onended=()=>{setClaraSpeaking(false);stopClaraVideo();if(status)status.textContent='Sprachausgabe abgeschlossen.';URL.revokeObjectURL(claraAudioObjectUrl);claraAudioObjectUrl=null;claraAudioElement=null;};
       await claraAudioElement.play();
