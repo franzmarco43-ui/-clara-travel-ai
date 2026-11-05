@@ -392,14 +392,17 @@ function claraSpeechText(value){
     .trim();
 }
 function getClaraSpeakingVideo(){
+  const heroVideo=document.querySelector('#marketing-home video.hero-scene-video');
   const chatVideo=document.getElementById('claraChatVideo');
   const homeVideo=document.querySelector('#page-home video.clara-welcome-video');
   const isVisible=el=>!!el&&el.getClientRects().length>0&&!el.closest('.hidden');
+  if(isVisible(heroVideo))return heroVideo;
   if(isVisible(chatVideo))return chatVideo;
   if(isVisible(homeVideo))return homeVideo;
   return null;
 }
 function setClaraSpeaking(active){
+  document.querySelector('#marketing-home .clara-welcome-hero')?.classList.toggle('clara-is-speaking',active);
   document.querySelectorAll('#page-home .avatar-stage, #page-clara .avatar-stage').forEach(el=>el.classList.toggle('speaking',active));
 }
 function startClaraVideo(){
@@ -412,7 +415,7 @@ function startClaraVideo(){
   if(playPromise&&typeof playPromise.catch==='function')playPromise.catch(error=>console.warn('Clara-Video konnte nicht starten:',error));
 }
 function stopClaraVideo(){
-  document.querySelectorAll('#page-home video.clara-welcome-video, #claraChatVideo').forEach(video=>{
+  document.querySelectorAll('#marketing-home video.hero-scene-video, #page-home video.clara-welcome-video, #claraChatVideo').forEach(video=>{
     video.pause();
     try{video.currentTime=0;}catch(_){}
   });
@@ -923,5 +926,5 @@ async function playClaraWelcome(){
  if(status)status.textContent='Clara spricht …';
  await speakClara(updateClaraWelcome(),true);
 }
-document.addEventListener('DOMContentLoaded',()=>{restoreClaraLanguage();restoreClaraConnection();const welcomeButton=document.getElementById('claraWelcomeSpeak');if(welcomeButton)welcomeButton.hidden=false;const welcomeStatus=document.getElementById('claraWelcomeStatus');if(welcomeStatus)welcomeStatus.textContent='Dein Browser benötigt eine erste Berührung oder einen Klick, bevor Clara hörbar sprechen darf. Danach startet ihre Begrüßung.';updateClaraWelcome();let welcomeStarted=false;const startWelcomeAfterGesture=event=>{if(welcomeStarted)return;if(event&&event.target&&event.target.closest&&event.target.closest('#claraWelcomeSpeak'))return;welcomeStarted=true;document.removeEventListener('pointerdown',startWelcomeAfterGesture,true);document.removeEventListener('keydown',startWelcomeAfterGesture,true);playClaraWelcome();};document.addEventListener('pointerdown',startWelcomeAfterGesture,true);document.addEventListener('keydown',startWelcomeAfterGesture,true);const auto=document.getElementById('claraAutoSpeak');if(auto){try{auto.checked=localStorage.getItem('clara.autoSpeak')!=='false';}catch(_){auto.checked=true;}auto.addEventListener('change',()=>{try{localStorage.setItem('clara.autoSpeak',String(auto.checked));}catch(_){}if(!auto.checked)stopClaraSpeech();});}const rate=document.getElementById('claraRate');if(rate){rate.disabled=true;rate.title='Das Tempo wird derzeit durch Azure vorgegeben.';}loadClaraVoices();});
+document.addEventListener('DOMContentLoaded',()=>{restoreClaraLanguage();restoreClaraConnection();const welcomeButton=document.getElementById('claraWelcomeSpeak');if(welcomeButton)welcomeButton.hidden=false;const welcomeStatus=document.getElementById('claraWelcomeStatus');if(welcomeStatus)welcomeStatus.textContent='Dein Browser benötigt eine erste Berührung oder einen Klick, bevor Clara hörbar sprechen darf. Danach startet ihre Begrüßung.';updateClaraWelcome();const heroVideo=document.querySelector('#marketing-home video.hero-scene-video');if(heroVideo){heroVideo.muted=true;const idlePlayback=heroVideo.play();if(idlePlayback&&typeof idlePlayback.catch==='function')idlePlayback.catch(()=>{});}let welcomeStarted=false;const startWelcomeAfterGesture=event=>{if(welcomeStarted)return;if(event&&event.target&&event.target.closest&&event.target.closest('#claraWelcomeSpeak'))return;welcomeStarted=true;document.removeEventListener('pointerdown',startWelcomeAfterGesture,true);document.removeEventListener('keydown',startWelcomeAfterGesture,true);playClaraWelcome();};document.addEventListener('pointerdown',startWelcomeAfterGesture,true);document.addEventListener('keydown',startWelcomeAfterGesture,true);const auto=document.getElementById('claraAutoSpeak');if(auto){try{auto.checked=localStorage.getItem('clara.autoSpeak')!=='false';}catch(_){auto.checked=true;}auto.addEventListener('change',()=>{try{localStorage.setItem('clara.autoSpeak',String(auto.checked));}catch(_){}if(!auto.checked)stopClaraSpeech();});}const rate=document.getElementById('claraRate');if(rate){rate.disabled=true;rate.title='Das Tempo wird derzeit durch Azure vorgegeben.';}loadClaraVoices();});
 
