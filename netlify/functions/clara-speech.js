@@ -35,10 +35,11 @@ exports.handler = async (event) => {
     };
   }
 
-  let text;
+  let text, language;
   try {
     const payload = JSON.parse(event.body || "{}");
     text = typeof payload.text === "string" ? payload.text.trim() : "";
+    language = String(payload.language || "de").toLowerCase();
   } catch {
     return {
       statusCode: 400,
@@ -69,9 +70,17 @@ exports.handler = async (event) => {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&apos;");
 
+  const speechProfiles = {
+    de: { locale: "de-DE", voice: "de-DE-SeraphinaMultilingualNeural" },
+    en: { locale: "en-GB", voice: "en-GB-SoniaNeural" },
+    nl: { locale: "nl-NL", voice: "nl-NL-FennaNeural" },
+    fr: { locale: "fr-FR", voice: "fr-FR-DeniseNeural" },
+    ro: { locale: "ro-RO", voice: "ro-RO-AlinaNeural" }
+  };
+  const profile = speechProfiles[language] || speechProfiles.de;
   const ssml = `<?xml version="1.0" encoding="UTF-8"?>
-<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="de-DE">
-  <voice name="de-DE-SeraphinaMultilingualNeural">
+<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="${profile.locale}">
+  <voice name="${profile.voice}">
     <prosody rate="0%" pitch="0%">${escapeXml(text)}</prosody>
   </voice>
 </speak>`;

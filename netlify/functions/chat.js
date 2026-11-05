@@ -189,17 +189,64 @@ function alignResearchCitations(reply, sources) {
   return { reply: alignedReply, sources: alignedSources };
 }
 
-function researchFailureMessage(reason) {
-  if (reason === "not_configured") return "Diese Frage sollte ich aktuell nachschlagen. Meine Live-Recherche ist in Netlify aber noch nicht eingerichtet, weil der Suchschlüssel fehlt. Ich möchte dir deshalb keine veraltete oder vermutete Antwort geben.";
-  if (reason === "authentication") return "Meine Live-Recherche konnte sich beim Suchdienst nicht anmelden. Bitte prüfe den Tavily-Schlüssel in den Netlify-Umgebungsvariablen. Ich gebe dir bis dahin keine ungeprüfte aktuelle Auskunft.";
-  if (reason === "quota_or_rate_limit") return "Mein Recherchekontingent ist derzeit ausgeschöpft oder der Suchdienst begrenzt die Anfragen. Ich kann diese aktuelle Information deshalb gerade nicht zuverlässig bestätigen.";
-  if (reason === "timeout") return "Die Live-Recherche hat zu lange gedauert und wurde abgebrochen. Ich möchte dir keine unbestätigte Antwort geben. Bitte versuche die Suche später erneut.";
-  return "Ich konnte gerade keine belastbaren Live-Suchergebnisse abrufen. Deshalb möchte ich dir keine möglicherweise veralteten oder vermuteten Angaben als Tatsache nennen.";
+function researchFailureMessage(reason, language = "de") {
+  const messages = {
+    de: {
+      not_configured: "Diese Frage sollte ich aktuell nachschlagen. Meine Live-Recherche ist noch nicht eingerichtet, weil der Suchschlüssel fehlt. Ich möchte dir deshalb keine veraltete oder vermutete Antwort geben.",
+      authentication: "Meine Live-Recherche konnte sich beim Suchdienst nicht anmelden. Bitte prüfe den Tavily-Schlüssel in den Netlify-Umgebungsvariablen. Bis dahin gebe ich dir keine ungeprüfte aktuelle Auskunft.",
+      quota_or_rate_limit: "Mein Recherchekontingent ist ausgeschöpft oder der Suchdienst begrenzt die Anfragen. Ich kann diese aktuelle Information deshalb gerade nicht zuverlässig bestätigen.",
+      timeout: "Die Live-Recherche hat zu lange gedauert und wurde abgebrochen. Ich möchte dir keine unbestätigte Antwort geben. Bitte versuche es später erneut.",
+      insufficient_official_sources: "Ich habe Suchergebnisse gefunden, aber keine ausreichend erkennbare Behörden- oder Betreiberquelle. Bei dieser sicherheits- oder betriebsrelevanten Frage möchte ich daraus keine konkrete Aussage ableiten. Bitte prüfe die zuständige offizielle Stelle.",
+      default: "Ich konnte gerade keine belastbaren Live-Suchergebnisse abrufen. Deshalb möchte ich dir keine möglicherweise veralteten oder vermuteten Angaben als Tatsache nennen."
+    },
+    en: {
+      not_configured: "I should check this information, but live research is not configured because the search-service key is missing. I don't want to give you outdated or guessed information.",
+      authentication: "Live research could not authenticate with the search service. Please check the Tavily key in Netlify environment variables. I won't present unverified current information as fact.",
+      quota_or_rate_limit: "The live-research quota has been used up or the search service is rate-limiting requests. I can't reliably confirm this current information right now.",
+      timeout: "Live research took too long and was stopped. I don't want to give you an unverified answer. Please try again later.",
+      insufficient_official_sources: "I found search results, but none clearly came from an authoritative authority or operator. For this safety- or operations-related question, I can’t draw a reliable conclusion from them. Please check the responsible official source.",
+      default: "I couldn't retrieve reliable live search results just now, so I don't want to present potentially outdated or guessed information as fact."
+    },
+    nl: {
+      not_configured: "Ik zou dit moeten controleren, maar live onderzoek is nog niet ingesteld omdat de sleutel voor de zoekdienst ontbreekt. Ik wil je geen verouderde of gegiste informatie geven.",
+      authentication: "Live onderzoek kon niet aanmelden bij de zoekdienst. Controleer de Tavily-sleutel in de Netlify-omgevingsvariabelen. Ik geef geen ongecontroleerde actuele informatie als feit.",
+      quota_or_rate_limit: "Het quotum voor live onderzoek is bereikt of de zoekdienst beperkt de aanvragen. Ik kan deze actuele informatie nu niet betrouwbaar bevestigen.",
+      timeout: "Het live onderzoek duurde te lang en is afgebroken. Ik wil je geen onbevestigd antwoord geven. Probeer het later opnieuw.",
+      insufficient_official_sources: "Ik heb zoekresultaten gevonden, maar geen duidelijk herkenbare officiële overheids- of exploitantenbron. Voor deze veiligheids- of operationele vraag kan ik daaruit geen betrouwbare conclusie trekken. Controleer de bevoegde officiële instantie.",
+      default: "Ik kon zojuist geen betrouwbare live zoekresultaten ophalen. Daarom wil ik geen mogelijk verouderde of gegiste informatie als feit presenteren."
+    },
+    fr: {
+      not_configured: "Je devrais vérifier cette information, mais la recherche en direct n’est pas configurée, car la clé du service de recherche est manquante. Je ne veux pas vous donner d’informations périmées ou supposées.",
+      authentication: "La recherche en direct n’a pas pu s’authentifier auprès du service. Veuillez vérifier la clé Tavily dans les variables d’environnement Netlify. Je ne présenterai pas d’informations actuelles non vérifiées comme des faits.",
+      quota_or_rate_limit: "Le quota de recherche en direct est épuisé ou le service limite les requêtes. Je ne peux pas confirmer cette information actuelle de manière fiable pour le moment.",
+      timeout: "La recherche en direct a pris trop de temps et a été interrompue. Je ne veux pas vous donner une réponse non vérifiée. Veuillez réessayer plus tard.",
+      insufficient_official_sources: "J’ai trouvé des résultats, mais aucune source clairement issue d’une autorité ou d’un exploitant officiel. Pour cette question liée à la sécurité ou à l’exploitation, je ne peux pas en tirer de conclusion fiable. Veuillez consulter l’organisme officiel compétent.",
+      default: "Je n’ai pas pu obtenir de résultats de recherche en direct fiables. Je ne veux donc pas présenter comme un fait une information potentiellement périmée ou supposée."
+    },
+    ro: {
+      not_configured: "Ar trebui să verific această informație, dar căutarea în timp real nu este configurată deoarece lipsește cheia serviciului de căutare. Nu vreau să îți ofer informații învechite sau presupuse.",
+      authentication: "Căutarea în timp real nu s-a putut autentifica la serviciu. Verifică cheia Tavily din variabilele de mediu Netlify. Nu voi prezenta drept fapt informații actuale neverificate.",
+      quota_or_rate_limit: "Cota de căutare în timp real a fost epuizată sau serviciul limitează solicitările. Momentan nu pot confirma în mod fiabil această informație actuală.",
+      timeout: "Căutarea în timp real a durat prea mult și a fost oprită. Nu vreau să ofer un răspuns neverificat. Te rog să încerci din nou mai târziu.",
+      insufficient_official_sources: "Am găsit rezultate, dar niciuna nu provine în mod clar de la o autoritate sau un operator oficial. Pentru această întrebare legată de siguranță sau exploatare, nu pot formula o concluzie fiabilă. Consultă instituția oficială responsabilă.",
+      default: "Nu am putut obține rezultate fiabile din căutarea în timp real. De aceea, nu vreau să prezint drept fapt informații posibil învechite sau presupuse."
+    }
+  };
+  const locale = messages[language] || messages.de;
+  return locale[reason] || locale.default;
 }
 exports.handler = async function (event) {
+  const requestOrigin = event.headers?.origin || event.headers?.Origin || "";
+  const previewPrefix = "https://deploy-preview-";
+  const previewSuffix = "--clara-travel-ai.netlify.app";
+  const previewNumber = requestOrigin.startsWith(previewPrefix) && requestOrigin.endsWith(previewSuffix)
+    ? requestOrigin.slice(previewPrefix.length, -previewSuffix.length)
+    : "";
+  const isTrustedPreviewOrigin = previewNumber.length > 0 && [...previewNumber].every(char => char >= "0" && char <= "9");
+  const isTrustedClaraOrigin = requestOrigin === "https://clara-travel-ai.netlify.app" || isTrustedPreviewOrigin;
   const headers = {
     "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "https://clara-travel-ai.netlify.app",
+    ...(isTrustedClaraOrigin ? { "Access-Control-Allow-Origin": requestOrigin } : {}),
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Vary": "Origin"
@@ -231,12 +278,16 @@ exports.handler = async function (event) {
 
     const data = JSON.parse(event.body || "{}");
     const userMessage = data.message || data.prompt;
+    const requestedLanguage = String(data.language || "de").toLowerCase();
+    const languageNames = {de:"Deutsch",en:"English",nl:"Nederlands",fr:"Français",ro:"Română"};
+    const responseLanguage = languageNames[requestedLanguage] ? requestedLanguage : "de";
+    const responseLanguageName = languageNames[responseLanguage];
 
     if (typeof userMessage !== "string" || !userMessage.trim()) {
       return {
         statusCode: 400,
         headers,
-        body: JSON.stringify({ error: "Nachricht fehlt." })
+        body: JSON.stringify({ error: responseLanguage === "de" ? "Nachricht fehlt." : responseLanguage === "en" ? "Your message is missing." : responseLanguage === "nl" ? "Je bericht ontbreekt." : responseLanguage === "fr" ? "Votre message est manquant." : "Lipsește mesajul tău." })
       };
     }
 
@@ -432,16 +483,16 @@ exports.handler = async function (event) {
     if (researchNeeded) {
       const tavilyKey = process.env.TAVILY_API_KEY;
       if (!tavilyKey) {
-        return { statusCode: 200, headers, body: JSON.stringify({ reply: researchFailureMessage("not_configured"), sources: [], research: {status: "not_configured", provider: "Tavily"} }) };
+        return { statusCode: 200, headers, body: JSON.stringify({ reply: researchFailureMessage("not_configured", responseLanguage), sources: [], research: {status: "not_configured", provider: "Tavily"} }) };
       }
       researchResult = await searchTavily(userMessage, tavilyKey);
       if (!researchResult.ok) {
         console.warn("Clara live research unavailable:", researchResult.reason, researchResult.providerStatus || "");
-        return { statusCode: 200, headers, body: JSON.stringify({ reply: researchFailureMessage(researchResult.reason), sources: [], research: {status: researchResult.reason || "unavailable", provider: "Tavily"} }) };
+        return { statusCode: 200, headers, body: JSON.stringify({ reply: researchFailureMessage(researchResult.reason, responseLanguage), sources: [], research: {status: researchResult.reason || "unavailable", provider: "Tavily"} }) };
       }
       researchSources = researchResult.results.map(item => ({ title: item.title, url: item.url, domain: item.domain, publishedDate: item.publishedDate, likelyOfficial: item.likelyOfficial }));
       if (needsAuthoritativeSources(userMessage) && !researchResult.results.some(item => item.likelyOfficial)) {
-        return { statusCode: 200, headers, body: JSON.stringify({ reply: "Ich habe zwar Suchergebnisse gefunden, darunter aber keine ausreichend erkennbare Behörden- oder Betreiberquelle. Bei dieser sicherheits- oder betriebsrelevanten Frage möchte ich daraus keine konkrete Aussage ableiten. Bitte prüfe die zuständige offizielle Stelle.", sources: researchSources, research: {status: "insufficient_official_sources", provider: "Tavily", searchedAt: new Date().toISOString()} }) };
+        return { statusCode: 200, headers, body: JSON.stringify({ reply: researchFailureMessage("insufficient_official_sources", responseLanguage), sources: researchSources, research: {status: "insufficient_official_sources", provider: "Tavily", searchedAt: new Date().toISOString()} }) };
       }
       researchContext = buildResearchContext(researchResult);
     }
@@ -460,9 +511,10 @@ exports.handler = async function (event) {
             {
               role: "system",
               content:
-                "Du bist Clara, eine deutschsprachige, freundliche und " +
+                "Du bist Clara, eine freundliche und " +
                 "kompetente Reisebegleiterin für europäische Flüsse. " +
                 "Du hilfst bei Reisezielen, Ausflügen, regionaler Küche, Kultur und Flusskreuzfahrten. " +
+                "ANTWORTSPRACHE: Antworte ausnahmslos in " + responseLanguageName + " (Sprachcode " + responseLanguage + "). Auch Begrüßungen, Fehlermeldungen, Quellenhinweise und Rückfragen müssen in dieser Sprache sein. Ortsnamen und Eigennamen bleiben korrekt. Wechsle nicht aufgrund der Sprache der Nutzerfrage; die ausgewählte App-Sprache ist maßgeblich. " +
                 "Klinge wie eine echte, aufmerksame Reisebegleiterin im persönlichen Gespräch: warm, ruhig, herzlich und natürlich, niemals wie ein Formular oder Reisekatalog. " +
                 "Formuliere in flüssigen, zusammenhängenden Gedanken. Variiere Satzlängen und verbinde passende Informationen mit natürlichen Übergängen. Vermeide abgehackte Kurzsätze, Telegrammstil, starre Aufzählungen und das Aneinanderreihen von Stichworten. " +
                 "Sprich Gäste direkt und freundlich mit Du an. Beginne mit der Antwort, nicht mit einer künstlichen Begrüßungsfloskel oder der Wiederholung der Frage. Sei freundlich, aber nicht überschwänglich; vermeide Werbesprache, leere Begeisterung und wiederholte Floskeln wie gern, natürlich oder selbstverständlich. " +
@@ -501,7 +553,7 @@ exports.handler = async function (event) {
         statusCode: response.status,
         headers,
         body: JSON.stringify({
-          error: result.error?.message || "Groq-Anfrage fehlgeschlagen."
+          error: responseLanguage === "de" ? "Clara konnte gerade keine Antwort erstellen. Bitte versuche es erneut." : responseLanguage === "en" ? "Clara could not generate a reply just now. Please try again." : responseLanguage === "nl" ? "Clara kon zojuist geen antwoord maken. Probeer het opnieuw." : responseLanguage === "fr" ? "Clara n’a pas pu préparer de réponse pour le moment. Veuillez réessayer." : "Clara nu a putut genera un răspuns momentan. Te rog să încerci din nou."
         })
       };
     }
@@ -525,13 +577,22 @@ exports.handler = async function (event) {
 
   } catch (error) {
     console.error("Clara chat error:", error);
-
+    let errorLanguage = "de";
+    try {
+      const requested = String(JSON.parse(event.body || "{}").language || "de").toLowerCase();
+      if (["de", "en", "nl", "fr", "ro"].includes(requested)) errorLanguage = requested;
+    } catch (_) {}
+    const errorMessages = {
+      de: "Clara konnte die Anfrage gerade nicht verarbeiten. Bitte versuche es erneut.",
+      en: "Clara couldn't process your request just now. Please try again.",
+      nl: "Clara kon je verzoek zojuist niet verwerken. Probeer het opnieuw.",
+      fr: "Clara n’a pas pu traiter votre demande pour le moment. Veuillez réessayer.",
+      ro: "Clara nu a putut procesa solicitarea momentan. Te rog să încerci din nou."
+    };
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({
-        error: "Clara konnte die Anfrage gerade nicht verarbeiten."
-      })
+      body: JSON.stringify({ error: errorMessages[errorLanguage] })
     };
   }
 };
