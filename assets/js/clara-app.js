@@ -522,7 +522,7 @@ async function speakClara(value,force=false){
     }
   }catch(error){
     console.error('Clara Azure Speech:',error);
-    const welcomeButton=document.getElementById('claraWelcomeSpeak');const welcomeStatus=document.getElementById('claraWelcomeStatus');if(welcomeButton)welcomeButton.hidden=false;if(welcomeStatus)welcomeStatus.textContent='Der Browser hat die automatische Wiedergabe verhindert oder die Stimme ist gerade nicht erreichbar. Tippe auf „Clara begrüßen lassen“. ';if(status)status.textContent='Sprachausgabe nicht verfügbar: '+(error.message||'Verbindungsfehler')+'. Bitte später erneut versuchen.';
+    const welcomeButton=document.getElementById('claraWelcomeSpeak');const welcomeStatus=document.getElementById('claraWelcomeStatus');if(welcomeButton)welcomeButton.hidden=false;if(welcomeStatus)welcomeStatus.textContent='Clara konnte gerade nicht sprechen: '+(error.message||'Unbekannter Fehler')+'. Bitte prüfe die Verbindung und versuche es erneut.';if(status)status.textContent='Sprachausgabe nicht verfügbar: '+(error.message||'Verbindungsfehler')+'. Bitte später erneut versuchen.';
   }
 }
 function addMsg(text,who,sources=[],research=null){
