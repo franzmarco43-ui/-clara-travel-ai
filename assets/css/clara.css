@@ -838,9 +838,6 @@
   #marketing-home .route-thumb{transition:none}
 }
 
-/* Clara landing hero: retain the original still as a fallback and reveal the existing portrait video while her Azure voice is speaking. */
-#marketing-home .clara-welcome-hero .hero-scene{transition:opacity .25s ease;}
-#marketing-home .clara-welcome-hero .hero-scene-video{position:absolute;z-index:-1;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 38%;opacity:0;pointer-events:none;transition:opacity .25s ease;}
-#marketing-home .clara-welcome-hero.clara-is-speaking .hero-scene-video{opacity:1;}
-#marketing-home .clara-welcome-hero.clara-is-speaking .hero-scene{opacity:0;}
-@media(prefers-reduced-motion:reduce){#marketing-home .clara-welcome-hero .hero-scene-video{transition:none;}}
+/* Clara landing hero: use the real welcome video as the permanent hero visual; no static-image fallback. */
+#marketing-home .clara-welcome-hero .hero-scene-video{position:absolute;z-index:-2;inset:0;display:block;width:100%;height:100%;object-fit:cover;object-position:center 38%;opacity:1;pointer-events:none;}
+@media(max-width:760px){#marketing-home .clara-welcome-hero .hero-scene-video{object-position:58% center;}}
