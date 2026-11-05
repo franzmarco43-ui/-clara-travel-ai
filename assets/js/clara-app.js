@@ -772,12 +772,17 @@ function translateClaraPage(){
  document.querySelectorAll('select option').forEach(el=>{const key=normalize(el.textContent);const source=reverse.get(key)||key;if(dict[source])el.textContent=dict[source];});
 }
 let claraTranslationObserver;
+let claraTranslationTimer=null;
 function observeClaraDynamicContent(){
  if(claraTranslationObserver||!document.body||!window.MutationObserver)return;
  claraTranslationObserver=new MutationObserver(records=>{
-  // Re-translate only when nodes are added/removed. Ignoring characterData
-  // prevents the observer from reacting to its own text translations.
-  if(records.some(record=>record.type==='childList'))translateClaraPage();
+  // Batch DOM updates into one translation pass instead of repeatedly
+  // walking the complete page while components are rendering.
+  if(!records.some(record=>record.type==='childList')||claraTranslationTimer!==null)return;
+  claraTranslationTimer=setTimeout(()=>{
+   claraTranslationTimer=null;
+   translateClaraPage();
+  },120);
  });
  claraTranslationObserver.observe(document.body,{subtree:true,childList:true});
 }
