@@ -17,8 +17,9 @@ const places=[
 function renderFeaturedDestinations(){
  const container=document.getElementById('featured-grid');
  if(!container)return;
- // Show every destination at once, with the same live-information panel used on the full destination page.
- container.innerHTML=places.map(placeCard).join('');
+ // Keep the homepage compact: a small selection links into the central map and destination flow.
+ const featuredPlaceNames=['Passau','Melk','Bratislava','Russe','Puszta'];
+ container.innerHTML=featuredPlaceNames.map(name=>places.find(place=>place.name===name)).filter(Boolean).map(placeCard).join('');
 }
 function updateFeaturedCarousel(){
  const container=document.getElementById('featured-grid');
@@ -90,8 +91,7 @@ async function loadCityWeather(){const cards=[...document.querySelectorAll('[dat
 function placeCard(p){return `<article class="destination"><div class="dest-img" style="background-image:linear-gradient(180deg,#102f2820,#102f2866),url('${p.image}');background-size:cover;background-position:center" role="img" aria-label="Ansicht von ${p.name}"><span>${p.country}</span></div><div class="dest-info"><h3>${p.name}</h3><p>${p.desc}</p><div class="city-live" data-city-live="${p.name}"><div class="city-live-row"><b>📅 Datum & Ortszeit</b><span data-live-time>Wird geladen …</span></div><div class="city-live-row"><b>🌤 Aktuelles Wetter</b><span data-live-weather>Wird geladen …</span></div><div class="city-live-row"><b>🌊 Donaupegel</b><span data-live-level>Noch keine verifizierte Messstelle zugeordnet</span></div><small data-live-updated>Wetterdaten werden abgerufen …</small></div><button onclick="selectDestination('${p.name}')">Mit Clara entdecken →</button></div></article>`}
 const featuredPlaceNames=['Passau','Melk','Bratislava','Russe','Puszta'];
 const displayPlaces=[...places.filter(p=>featuredPlaceNames.includes(p.name)),...places.filter(p=>!featuredPlaceNames.includes(p.name))];
-document.getElementById('destinations').innerHTML=displayPlaces.map(placeCard).join('');
-document.getElementById('mapDestinations').innerHTML=displayPlaces.map(placeCard).join('');
+document.getElementById('destinations').innerHTML=featuredPlaceNames.map(name=>places.find(p=>p.name===name)).filter(Boolean).map(placeCard).join('');
 updateCityClocks();setInterval(updateCityClocks,1000);loadCityWeather();
 document.getElementById('destination').innerHTML=places.map(p=>`<option>${p.name}</option>`).join('');
 const riverRoutePlaces=places.filter(p=>p.routeType==='river');
@@ -128,6 +128,7 @@ function initDanubeMap(){
     const excursionIcon=L.divIcon({className:'route-marker excursion',html:'<span>✦</span>',iconSize:[29,29],iconAnchor:[14,14]});
     const marker=L.marker([puszta.lat,puszta.lon],{icon:excursionIcon}).addTo(danubeMapInstance);
     marker.bindPopup('<strong>Puszta – Landausflug</strong><br><span>Separater Ausflug, keine Donaustation</span>');
+    marker.on('click',()=>renderMapDestination(puszta.name));
     danubeMarkers[puszta.name]=marker;
     L.polyline([[budapest.lat,budapest.lon],[puszta.lat,puszta.lon]],{color:'#4c8c79',weight:2,dashArray:'3 8',opacity:.9}).addTo(danubeMapInstance).bindTooltip('Land-Ausflug ab Budapest');
   }
@@ -135,7 +136,15 @@ function initDanubeMap(){
   danubeMapInstance.fitBounds(L.latLngBounds(allPlaces.map(p=>[p.lat,p.lon])),{padding:[24,24]});
   setTimeout(()=>danubeMapInstance.invalidateSize(),120);
 }
+function renderMapDestination(name){
+  const place=places.find(item=>item.name===name);
+  const host=document.getElementById('mapDestinationDetail');
+  if(!place||!host)return;
+  host.innerHTML=placeCard(place);
+  loadCityWeather();
+}
 function focusDanubeStop(name){
+  renderMapDestination(name);
   const marker=danubeMarkers[name];
   if(!marker||!danubeMapInstance)return;
   danubeMapInstance.setView(marker.getLatLng(),Math.max(danubeMapInstance.getZoom(),8),{animate:true});
