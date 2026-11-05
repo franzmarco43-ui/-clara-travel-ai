@@ -269,7 +269,34 @@ function openAppPage(page){document.getElementById('marketing-home').style.displ
 function openDestination(name){openAppPage('planner');selectDestination(name);}
 function returnToLanding(){document.getElementById('clara-app').style.display='none';document.getElementById('marketing-home').style.display='block';window.scrollTo({top:0,behavior:'smooth'});}
 
-function showPage(page){document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));const activePage=document.getElementById('page-'+page);activePage.classList.remove('hidden');if(typeof loadCityWeather==='function')loadCityWeather();document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page===page));if(page==='intelligence'&&!document.getElementById('intelligenceDestinations').dataset.rendered){renderClaraIntelligence();document.getElementById('intelligenceDestinations').dataset.rendered='true';}if(page==='map'){initDanubeMap();setTimeout(()=>danubeMapInstance&&danubeMapInstance.invalidateSize(),160)}if(page==='locks'){loadDanubeLocks()}window.scrollTo({top:0,behavior:'smooth'})}
+function showPage(page){
+  const activePage=document.getElementById('page-'+page);
+  if(!activePage){
+    console.warn('Clara: unbekannte App-Seite:',page);
+    return;
+  }
+  document.querySelectorAll('.page').forEach(section=>section.classList.toggle('hidden',section!==activePage));
+  document.querySelectorAll('[data-page]').forEach(button=>{
+    const active=button.dataset.page===page;
+    button.classList.toggle('active',active);
+    if(active)button.setAttribute('aria-current','page');
+    else button.removeAttribute('aria-current');
+  });
+  if(typeof loadCityWeather==='function')loadCityWeather();
+  if(page==='intelligence'){
+    const destinationHost=document.getElementById('intelligenceDestinations');
+    if(destinationHost&&!destinationHost.dataset.rendered){
+      renderClaraIntelligence();
+      destinationHost.dataset.rendered='true';
+    }
+  }
+  if(page==='map'){
+    initDanubeMap();
+    setTimeout(()=>danubeMapInstance&&danubeMapInstance.invalidateSize(),160);
+  }
+  if(page==='locks')loadDanubeLocks();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 function selectDestination(name){document.getElementById('destination').value=name;showPage('planner');makePlan()}
 function makePlan(){const name=document.getElementById('destination').value,duration=document.getElementById('duration').value,interest=document.getElementById('interest').value,pace=document.getElementById('pace').value,mobility=document.getElementById('mobility')?.value||'Keine besondere Angabe';const p=places.find(x=>x.name===name);let stops={
 'Linz':[['Vormittag','Altstadt & Hauptplatz','Entdecke die historische Innenstadt und die Plätze am Donauufer.'],['Mittag','Regionale Küche','Plane eine Pause für österreichische Klassiker ein.'],['Nachmittag','Ars Electronica oder Donauufer','Wähle ein Museum oder einen entspannten Spaziergang.']],
