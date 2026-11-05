@@ -1201,3 +1201,87 @@ body{background:#f8f7f1;color:var(--ink)}
  #clara-app .panel{padding:14px}
  #clara-app .heading{margin-bottom:15px}
 }
+
+
+/* Unified Clara design: the landing page and every app section share one header,
+   typography, surface language and navigation treatment. */
+#clara-app .topbar{
+  background:#fbfaf6;
+  color:#173f35;
+  border-bottom:1px solid #e5e9e2;
+  box-shadow:0 3px 16px rgba(24,59,48,.045);
+}
+#clara-app .brand{color:#173f35;letter-spacing:-.35px}
+#clara-app .brand small{color:#668074;opacity:1}
+#clara-app .logo{
+  background:#e5eee6;
+  color:#286b55;
+  border:1px solid #dce7dc;
+  border-radius:12px;
+}
+#clara-app .top-actions{align-items:center;gap:8px}
+#clara-app .top-actions .btn.light{
+  color:#244b3d;
+  background:#f4f7f1;
+  border:1px solid #dfe7de;
+}
+#clara-app .top-actions .btn.light:hover,
+#clara-app .top-actions .btn.outline:hover{
+  background:#e9f1e8;
+  border-color:#cbdacb;
+}
+#clara-app .top-actions .btn.gold{
+  background:#caa86a;
+  color:#25362d;
+  border:1px solid #c19a55;
+}
+#clara-app .sidebar{background:#f4f5ee}
+#clara-app .navlabel{color:#7b8c80}
+#clara-app .nav{font-size:13px;min-height:42px}
+#clara-app .nav.active{font-weight:800;box-shadow:inset 3px 0 0 #caa86a}
+#clara-app .main{background:#f8f7f1}
+#clara-app .heading h1,
+#clara-app .section-head h2,
+#clara-app .map-intro h2,
+#clara-app .panel h2{
+  font-family:"Playfair Display",Georgia,serif;
+  letter-spacing:-.45px;
+}
+#clara-app .heading h1{font-size:clamp(28px,3.2vw,38px);line-height:1.15}
+#clara-app .panel,
+#clara-app .destination,
+#clara-app .route-side,
+#clara-app .locks-sidebar{
+  border-radius:17px;
+  border-color:#e5e9e2;
+  box-shadow:0 5px 18px rgba(25,59,48,.045);
+}
+#clara-app .field label{color:#344d42}
+#clara-app .field select,
+#clara-app .field input,
+#clara-app .chatform input,
+#clara-app textarea{
+  border-radius:11px;
+  border-color:#dfe6de;
+}
+#clara-app .btn{min-height:42px;border-radius:999px}
+#clara-app .btn:not(.light):not(.gold):not(.soft):not(.outline){
+  background:#286b55;
+}
+#clara-app .mobile-nav{
+  background:#fbfaf6;
+  border-top:1px solid #e3e8df;
+  box-shadow:0 -5px 18px rgba(24,59,48,.05);
+}
+#clara-app .mobile-nav button.active{color:#286b55}
+#clara-app .mobile-nav button b{color:inherit}
+@media(max-width:850px){
+  #clara-app .topbar{position:sticky;top:0}
+  #clara-app .top-actions{gap:5px}
+}
+@media(max-width:520px){
+  #clara-app .brand{font-size:14px}
+  #clara-app .brand small{font-size:9px}
+  #clara-app .topbar{padding:10px 12px}
+  #clara-app .top-actions .btn.gold{padding:9px 12px;font-size:12px}
+}
