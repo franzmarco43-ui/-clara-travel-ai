@@ -552,6 +552,17 @@ async function speakClara(value,force=false){
   if(!force&&auto&&!auto.checked)return;
   const text=claraSpeechText(value);
   if(!text)return;
+  // Create and unlock Web Audio immediately during the user's click/tap, before the network request.
+  const AudioContextClass=window.AudioContext||window.webkitAudioContext;
+  if(AudioContextClass){
+    try{
+      if(!claraAudioContext)claraAudioContext=new AudioContextClass();
+      if(claraAudioContext.state==='suspended'){
+        const unlockPromise=claraAudioContext.resume();
+        if(unlockPromise&&typeof unlockPromise.catch==='function')unlockPromise.catch(error=>console.warn('AudioContext konnte nicht aktiviert werden:',error));
+      }
+    }catch(audioError){console.warn('AudioContext konnte nicht initialisiert werden:',audioError);}
+  }
   stopClaraSpeech();
   const status=document.getElementById('voiceStatus');
   const speechLanguage=(()=>{try{return localStorage.getItem('clara.language')||'de';}catch(_){return 'de';}})();
@@ -942,7 +953,7 @@ function updateClaraWelcome(){
 }
 async function playClaraWelcome(){
  const AudioContextClass=window.AudioContext||window.webkitAudioContext;
- if(AudioContextClass){try{if(!claraAudioContext)claraAudioContext=new AudioContextClass();if(claraAudioContext.state==='suspended')await claraAudioContext.resume();}catch(error){console.warn('Audio-Freigabe:',error);}}
+ if(AudioContextClass){try{if(!claraAudioContext)claraAudioContext=new AudioContextClass();if(claraAudioContext.state==='suspended'){const unlockPromise=claraAudioContext.resume();if(unlockPromise&&typeof unlockPromise.catch==='function')unlockPromise.catch(error=>console.warn('Audio-Freigabe:',error));}}catch(error){console.warn('Audio-Freigabe:',error);}}
  const button=document.getElementById('claraWelcomeSpeak');
  const status=document.getElementById('claraWelcomeStatus');
  if(button)button.hidden=true;
