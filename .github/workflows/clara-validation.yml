@@ -1,0 +1,43 @@
+name: Clara validation
+
+on:
+  push:
+    branches:
+      - prototype/did-clara-avatar
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check JavaScript syntax
+        run: |
+          node --check assets/js/clara-app.js
+          node --check netlify/functions/chat.js
+          node --check netlify/functions/clara-speech.js
+      - name: Validate JSON data
+        run: |
+          node -e "for (const f of ['assets/data/danube-locks.json','netlify/functions/data/danube-destinations.json','netlify/functions/data/danube-locks.json','netlify/functions/data/passau.json']) { JSON.parse(require('fs').readFileSync(f,'utf8')); console.log('OK', f); }"
+      - name: Verify app asset references
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const html = fs.readFileSync('index.html', 'utf8');
+          for (const asset of ['/assets/css/clara.css', '/assets/js/clara-app.js']) {
+            if (!html.includes(asset)) throw new Error('Missing app asset reference: ' + asset);
+          }
+          if (!fs.existsSync('assets/css/clara.css')) throw new Error('Missing Clara stylesheet');
+          if (!fs.existsSync('assets/js/clara-app.js')) throw new Error('Missing Clara application script');
+          console.log('OK: HTML references both extracted assets');
+          NODE
