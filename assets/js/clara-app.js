@@ -505,13 +505,13 @@ async function speakClara(value,force=false){
     if(!audioBlob.size)throw new Error('Azure hat eine leere Audiodatei geliefert.');
     claraAudioObjectUrl=URL.createObjectURL(audioBlob);
     claraAudioElement=new Audio(claraAudioObjectUrl);
-    claraAudioElement.onplay=()=>{setClaraSpeaking(true);startClaraVideo();if(status)status.textContent='Clara spricht mit ihrer '+activeVoiceLabel+'-Stimme.';};
+    claraAudioElement.onplay=()=>{setClaraSpeaking(true);startClaraVideo();const welcomeButton=document.getElementById('claraWelcomeSpeak');if(welcomeButton)welcomeButton.hidden=true;const welcomeStatus=document.getElementById('claraWelcomeStatus');if(welcomeStatus)welcomeStatus.textContent='Clara begrüßt dich persönlich.';if(status)status.textContent='Clara spricht mit ihrer '+activeVoiceLabel+'-Stimme.';};
     claraAudioElement.onended=()=>{setClaraSpeaking(false);stopClaraVideo();if(status)status.textContent='Sprachausgabe abgeschlossen.';URL.revokeObjectURL(claraAudioObjectUrl);claraAudioObjectUrl=null;claraAudioElement=null;};
     claraAudioElement.onerror=()=>{setClaraSpeaking(false);stopClaraVideo();if(status)status.textContent='Die Audiodatei konnte nicht abgespielt werden.';};
     await claraAudioElement.play();
   }catch(error){
     console.error('Clara Azure Speech:',error);
-    if(status)status.textContent='Sprachausgabe nicht verfügbar: '+(error.message||'Verbindungsfehler')+'. Bitte später erneut versuchen.';
+    const welcomeButton=document.getElementById('claraWelcomeSpeak');const welcomeStatus=document.getElementById('claraWelcomeStatus');if(welcomeButton)welcomeButton.hidden=false;if(welcomeStatus)welcomeStatus.textContent='Der Browser hat die automatische Wiedergabe verhindert oder die Stimme ist gerade nicht erreichbar. Tippe auf „Clara begrüßen lassen“. ';if(status)status.textContent='Sprachausgabe nicht verfügbar: '+(error.message||'Verbindungsfehler')+'. Bitte später erneut versuchen.';
   }
 }
 function addMsg(text,who,sources=[],research=null){
@@ -831,5 +831,27 @@ function setClaraLanguage(code,refreshWeather=true){
   if(refreshWeather&&typeof loadCityWeather==='function')loadCityWeather();
 }
 function restoreClaraLanguage(){let code='de';try{code=localStorage.getItem('clara.language')||'de';}catch(_){}setClaraLanguage(code,false);}
-document.addEventListener('DOMContentLoaded',()=>{restoreClaraLanguage();restoreClaraConnection();const auto=document.getElementById('claraAutoSpeak');if(auto){try{auto.checked=localStorage.getItem('clara.autoSpeak')!=='false';}catch(_){auto.checked=true;}auto.addEventListener('change',()=>{try{localStorage.setItem('clara.autoSpeak',String(auto.checked));}catch(_){}if(!auto.checked)stopClaraSpeech();});}const rate=document.getElementById('claraRate');if(rate){rate.disabled=true;rate.title='Das Tempo wird derzeit durch Azure vorgegeben.';}loadClaraVoices();});
+const CLARA_WELCOME_TEXT=Object.freeze({
+ de:'Hallo und herzlich willkommen! Ich bin Clara, deine Reisebegleiterin entlang der Donau. Schön, dass du da bist! Wohin soll unsere gemeinsame Reise gehen?',
+ en:'Hello and welcome! I’m Clara, your travel companion along the Danube. It’s lovely to have you here! Where shall our journey begin?',
+ nl:'Hallo en hartelijk welkom! Ik ben Clara, je reisgenoot langs de Donau. Fijn dat je er bent! Waar begint onze reis?',
+ fr:'Bonjour et bienvenue ! Je suis Clara, votre compagne de voyage le long du Danube. Ravie de vous accueillir ! Où commence notre voyage ?',
+ ro:'Bun venit! Sunt Clara, însoțitoarea ta de călătorie de-a lungul Dunării. Mă bucur că ești aici! Unde începe călătoria noastră?'
+});
+function updateClaraWelcome(){
+ const lang=localStorage.getItem('clara.language')||'de';
+ const greeting=CLARA_WELCOME_TEXT[lang]||CLARA_WELCOME_TEXT.de;
+ const text=document.getElementById('claraWelcomeGreeting');
+ if(text)text.textContent=greeting;
+ document.documentElement.lang=lang;
+ return greeting;
+}
+async function playClaraWelcome(){
+ const button=document.getElementById('claraWelcomeSpeak');
+ const status=document.getElementById('claraWelcomeStatus');
+ if(button)button.hidden=true;
+ if(status)status.textContent='Clara spricht …';
+ await speakClara(updateClaraWelcome(),true);
+}
+document.addEventListener('DOMContentLoaded',()=>{restoreClaraLanguage();restoreClaraConnection();const welcomeButton=document.getElementById('claraWelcomeSpeak');if(welcomeButton)welcomeButton.hidden=false;const welcomeStatus=document.getElementById('claraWelcomeStatus');if(welcomeStatus)welcomeStatus.textContent='Wenn dein Browser Ton automatisch zulässt, begrüßt Clara dich jetzt. Andernfalls starte sie mit dem Knopf.';updateClaraWelcome();speakClara(updateClaraWelcome(),true);const auto=document.getElementById('claraAutoSpeak');if(auto){try{auto.checked=localStorage.getItem('clara.autoSpeak')!=='false';}catch(_){auto.checked=true;}auto.addEventListener('change',()=>{try{localStorage.setItem('clara.autoSpeak',String(auto.checked));}catch(_){}if(!auto.checked)stopClaraSpeech();});}const rate=document.getElementById('claraRate');if(rate){rate.disabled=true;rate.title='Das Tempo wird derzeit durch Azure vorgegeben.';}loadClaraVoices();});
 
