@@ -15,7 +15,7 @@ const places=[
 {name:'Puszta',country:'Ungarn',emoji:'🐎',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Hortobagy%20puszta.jpg',tag:'Natur & Tradition · Landausflug',desc:'Weite Landschaften und die Kultur der ungarischen Tiefebene – als separater Ausflug ab Budapest.',lat:47.583,lon:21.150,routeType:'excursion'}
 ];
 function renderFeaturedDestinations(){
- const featuredNames=['Passau','Melk','Budapest','Russe'];
+ const featuredNames=['Linz','Wien','Budapest','Belgrad'];
  const container=document.getElementById('featured-grid');
  if(!container)return;
  container.innerHTML=featuredNames.map(name=>{
@@ -23,16 +23,61 @@ function renderFeaturedDestinations(){
   if(!p)return '';
   return `<article class="featured-card">
    <img src="${p.image}" alt="${p.name} an der Donau" loading="lazy">
+   <div class="featured-card-shade" aria-hidden="true"></div>
    <div class="featured-card-content">
-    <div class="country">${p.country}</div>
     <h3>${p.name}</h3>
-    <p>${p.desc.replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim()}</p>
-    <button class="discover" type="button" onclick="openDestination('${p.name}')">Entdecken →</button>
+    <div class="country">${p.country}</div>
+    <button class="discover" type="button" onclick="openDestination('${p.name}')">Entdecken <span aria-hidden="true">→</span></button>
    </div>
   </article>`;
  }).join('');
+ updateFeaturedCarousel();
+}
+function updateFeaturedCarousel(){
+ const container=document.getElementById('featured-grid');
+ const dots=document.getElementById('featured-dots');
+ if(!container||!dots)return;
+ const cards=[...container.querySelectorAll('.featured-card')];
+ dots.innerHTML=cards.map((_,index)=>`<button type="button" aria-label="Reiseziel ${index+1} anzeigen" class="${index===0?'active':''}" onclick="scrollFeaturedTo(${index})"></button>`).join('');
+}
+function scrollFeaturedTo(index){
+ const container=document.getElementById('featured-grid');
+ const card=container?.querySelectorAll('.featured-card')[index];
+ if(!container||!card)return;
+ container.scrollTo({left:card.offsetLeft-container.offsetLeft,behavior:'smooth'});
+}
+function scrollFeaturedCarousel(direction){
+ const container=document.getElementById('featured-grid');
+ if(!container)return;
+ container.scrollBy({left:direction*Math.max(220,container.clientWidth*.82),behavior:'smooth'});
+}
+function renderLandingDanubeMap(){
+ const host=document.getElementById('landingDanubeMap');
+ if(!host)return;
+ const stops=[
+  {name:'Linz',x:7,y:57},{name:'Melk',x:21,y:27},{name:'Wien',x:35,y:58},
+  {name:'Bratislava',x:48,y:31},{name:'Budapest',x:62,y:68},{name:'Puszta',x:73,y:24},
+  {name:'Belgrad',x:85,y:57},{name:'Donaudelta',x:96,y:31}
+ ];
+ const points=stops.map(stop=>`${stop.x*10},${stop.y*3}`).join(' ');
+ host.innerHTML=`<div class="landing-route">
+  <svg class="landing-route-line" viewBox="0 0 1000 300" preserveAspectRatio="none" aria-hidden="true">
+   <path d="M 35 171 C 105 68, 150 60, 210 81 S 300 236, 350 174 S 430 57, 480 93 S 560 241, 620 204 S 690 43, 735 75 S 820 236, 850 171 S 930 57, 970 93" fill="none" stroke="#79aeb0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+   <path d="M 35 171 C 105 68, 150 60, 210 81 S 300 236, 350 174 S 430 57, 480 93 S 560 241, 620 204 S 690 43, 735 75 S 820 236, 850 171 S 930 57, 970 93" fill="none" stroke="#ffffff" stroke-width="2" stroke-dasharray="3 13" stroke-linecap="round"/>
+  </svg>
+  ${stops.map(stop=>{
+   const place=places.find(item=>item.name===stop.name);
+   if(!place)return '';
+   return `<button type="button" class="landing-route-stop" style="--stop-x:${stop.x}%;--stop-y:${stop.y}%" onclick="openDestination('${stop.name}')" aria-label="${stop.name} entdecken">
+    <span class="route-thumb" style="background-image:url('${place.image}')"></span>
+    <span class="route-name">${stop.name}</span>
+   </button>`;
+  }).join('')}
+ </div>`;
 }
 renderFeaturedDestinations();
+renderLandingDanubeMap();
+window.addEventListener('resize',updateFeaturedCarousel);
 const cityTimeZones={'Passau':'Europe/Berlin','Linz':'Europe/Vienna','Melk':'Europe/Vienna','Weißenkirchen':'Europe/Vienna','Wien':'Europe/Vienna','Bratislava':'Europe/Bratislava','Esztergom':'Europe/Budapest','Budapest':'Europe/Budapest','Puszta':'Europe/Budapest','Novi Sad':'Europe/Belgrade','Belgrad':'Europe/Belgrade','Russe':'Europe/Sofia','Donaudelta':'Europe/Bucharest'};
 const weatherLabels={
  de:{0:'Klar',1:'Überwiegend klar',2:'Teilweise bewölkt',3:'Bewölkt',45:'Nebel',48:'Nebel mit Reif',51:'Leichter Nieselregen',53:'Nieselregen',55:'Starker Nieselregen',61:'Leichter Regen',63:'Regen',65:'Starker Regen',71:'Leichter Schnee',73:'Schneefall',75:'Starker Schneefall',80:'Regenschauer',81:'Regenschauer',82:'Starke Regenschauer',95:'Gewitter',96:'Gewitter mit Hagel',99:'Starkes Gewitter'},
