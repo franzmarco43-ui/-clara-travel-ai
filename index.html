@@ -729,7 +729,9 @@ function startClaraListening(){
   const input=document.getElementById('chatInput');
   const recognition=new Recognition();
   claraRecognition=recognition;
-  recognition.lang='de-DE';
+  const selectedLanguage=(()=>{try{return localStorage.getItem('clara.language')||'de';}catch(_){return 'de';}})();
+  const recognitionLocales={de:'de-DE',en:'en-GB',nl:'nl-NL',fr:'fr-FR',ro:'ro-RO'};
+  recognition.lang=recognitionLocales[selectedLanguage]||'de-DE';
   recognition.interimResults=false;
   recognition.maxAlternatives=1;
   recognition.onstart=()=>{
@@ -761,7 +763,7 @@ function startClaraListening(){
       'audio-capture':'Kein Mikrofon gefunden. Prüfe die Mikrofonverbindung.',
       'network':'Die Online-Spracherkennung ist nicht erreichbar. Prüfe deine Internetverbindung.',
       'aborted':'Sprachaufnahme abgebrochen.',
-      'language-not-supported':'Deutsch wird von diesem Spracherkennungsdienst nicht unterstützt.'
+      'language-not-supported':'Die ausgewählte Sprache wird von diesem Spracherkennungsdienst nicht unterstützt. Du kannst deine Frage stattdessen eintippen.'
     };
     setClaraMicStatus(messages[event.error]||('Spracherkennung: '+String(event.error||'unbekannter Fehler')));
   };
