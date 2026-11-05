@@ -69,10 +69,19 @@ exports.handler = async (event) => {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&apos;");
 
+  const language = String(payload.language || "de").toLowerCase();
+  const voices = {
+    de: { locale: "de-DE", name: "de-DE-KatjaNeural" },
+    en: { locale: "en-GB", name: "en-GB-SoniaNeural" },
+    nl: { locale: "nl-NL", name: "nl-NL-FennaNeural" },
+    fr: { locale: "fr-FR", name: "fr-FR-DeniseNeural" },
+    ro: { locale: "ro-RO", name: "ro-RO-AlinaNeural" }
+  };
+  const selectedVoice = voices[language] || voices.de;
   const ssml = `<?xml version="1.0" encoding="UTF-8"?>
-<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="de-DE">
-  <voice name="de-DE-SeraphinaMultilingualNeural">
-    <prosody rate="0%" pitch="0%">${escapeXml(text)}</prosody>
+<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="${selectedVoice.locale}">
+  <voice name="${selectedVoice.name}">
+    <prosody rate="-4%" pitch="+1%"><break time="120ms"/>${escapeXml(text)}</prosody>
   </voice>
 </speak>`;
 
