@@ -17,9 +17,8 @@ const places=[
 function renderFeaturedDestinations(){
  const container=document.getElementById('featured-grid');
  if(!container)return;
- // Keep the homepage compact: a small selection links into the central map and destination flow.
- const featuredPlaceNames=['Passau','Melk','Bratislava','Russe','Puszta'];
- container.innerHTML=featuredPlaceNames.map(name=>places.find(place=>place.name===name)).filter(Boolean).map(placeCard).join('');
+ // Show all 12 Danube stations plus the separate Puszta excursion in route order.
+ container.innerHTML=places.map(placeCard).join('');
 }
 function updateFeaturedCarousel(){
  const container=document.getElementById('featured-grid');
