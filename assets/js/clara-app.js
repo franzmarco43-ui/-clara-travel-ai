@@ -998,17 +998,25 @@ function translateClaraPage(){
  const setDirectText=(selector,source)=>{
   const el=document.querySelector(selector);if(!el)return;
   const translated=dict[source];if(!translated)return;
-  const node=[...el.childNodes].find(n=>n.nodeType===3&&n.nodeValue.trim());
-  if(node)node.nodeValue=node.nodeValue.replace(node.nodeValue.trim(),translated);
+  const walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);
+  let node;
+  while((node=walker.nextNode()))if(node.nodeValue.trim()){node.nodeValue=node.nodeValue.replace(node.nodeValue.trim(),translated);return;}
+ };
+ const setPlainText=(selector,source)=>{
+  const el=document.querySelector(selector);if(el&&dict[source])el.textContent=dict[source];
  };
  setDirectText('.site-nav a[href="#marketing-home"]','Startseite');
  setDirectText('.site-nav a[href="#featured-destinations"]','Reiseziele');
  const navActions=[...document.querySelectorAll('.site-nav a[onclick]')];
  ['Reiseplaner','Genussreise','Claras Geschichten','Über Clara'].forEach((key,index)=>{
   const el=navActions[index];if(!el||!dict[key])return;
-  const node=[...el.childNodes].find(n=>n.nodeType===3&&n.nodeValue.trim());if(node)node.nodeValue=node.nodeValue.replace(node.nodeValue.trim(),dict[key]);
+  el.textContent=dict[key];
  });
- setDirectText('.site-header .site-cta','Clara fragen');
+ const mobileLinks=[...document.querySelectorAll('.mobile-site-nav a')];
+ ['Startseite','Reiseziele','Reiseplaner','Genussreise','Claras Geschichten','Über Clara'].forEach((key,index)=>{
+  const el=mobileLinks[index];if(el&&dict[key])el.textContent=dict[key];
+ });
+ setPlainText('.desktop-cta-label','Clara fragen');
  setDirectText('.welcome-pill','Willkommen an der Donau');
  const heroTitle=document.getElementById('landingHeroTitle');
  if(heroTitle&&lang!=='de')heroTitle.innerHTML=(dict['Entdecke Europas']||'Entdecke Europas')+'<br>'+(dict['Donau mit Clara']||'Donau mit Clara');
@@ -1017,8 +1025,7 @@ function translateClaraPage(){
  setDirectText('.hero-buttons .hero-button.secondary','Clara kennenlernen');
  setDirectText('#claraWelcomeStatus','Clara bereitet ihre Begrüßung vor …');
  setDirectText('.featured-section .section-kicker','Die schönsten Orte · 12 Donaustationen + 1 Landausflug');
- const featuredTitle=document.getElementById('featuredTitle');
- if(featuredTitle&&dict['Entlang der Donau – alle Reiseziele'])featuredTitle.textContent=dict['Entlang der Donau – alle Reiseziele'];
+ setPlainText('#featuredTitle','Entlang der Donau – alle Reiseziele');
  setDirectText('.destination-intro','Entdecke jede Station mit Kurzbeschreibung, aktueller Ortszeit und Wetter. Der Donaupegel wird erst angezeigt, wenn eine offizielle Messstation eindeutig zugeordnet ist.');
  document.querySelectorAll('[data-clara-i18n]').forEach(el=>{
   const key=el.getAttribute('data-clara-i18n');
