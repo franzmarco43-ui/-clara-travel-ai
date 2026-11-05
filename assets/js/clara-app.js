@@ -432,11 +432,16 @@ function setClaraSpeaking(active){
   document.querySelectorAll('#page-home .avatar-stage, #page-clara .avatar-stage').forEach(el=>el.classList.toggle('speaking',active));
 }
 function startClaraVideo(){
-  // A prerecorded MP4 has its own fixed mouth movements and cannot follow
-  // Azure's separately generated speech. Never loop it underneath TTS:
-  // keep the avatar stage in its speaking state instead. The welcome video
-  // is still played with its original soundtrack by playClaraWelcome().
-  stopClaraVideo();
+  // Keep Clara visibly animated during the separate Azure speech track.
+  // This restores the existing talking-video behavior; exact phoneme/viseme
+  // synchronization still requires timestamped Azure viseme events.
+  const video=getClaraSpeakingVideo();
+  if(!video)return;
+  video.muted=true;
+  video.loop=true;
+  video.playsInline=true;
+  const playPromise=video.play();
+  if(playPromise&&typeof playPromise.catch==='function')playPromise.catch(error=>console.warn('Clara-Video konnte nicht starten:',error));
 }
 function stopClaraVideo(){
   document.querySelectorAll('#marketing-home video.hero-scene-video, #page-home video.clara-welcome-video, #claraChatVideo').forEach(video=>{
