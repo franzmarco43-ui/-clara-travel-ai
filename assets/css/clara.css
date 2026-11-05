@@ -1574,3 +1574,112 @@ button,input,select,textarea{font-family:inherit}
 @media(prefers-reduced-motion:reduce){
  *,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
 }
+
+
+/* Preview 11 · focused responsive pass for phones and tablets */
+#clara-app{width:100%;max-width:100%;overflow-x:clip}
+#clara-app .layout,#clara-app .main,#clara-app .page{min-width:0}
+#clara-app img,#clara-app video,#marketing-home img,#marketing-home video{max-width:100%}
+#clara-app .mobile-nav{display:none}
+@media(max-width:1000px){
+ #clara-app .layout{display:block;min-height:calc(100vh - 70px)}
+ #clara-app .sidebar{display:none!important}
+ #clara-app .main{width:100%;min-width:0}
+ #clara-app .mobile-nav{
+  display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;
+  justify-content:flex-start;gap:5px;overflow-x:auto;overflow-y:hidden;
+  padding:7px 10px calc(7px + env(safe-area-inset-bottom));
+  background:rgba(249,252,251,.97);border-top:1px solid #dce7e7;
+  box-shadow:0 -8px 24px rgba(18,59,59,.09);backdrop-filter:blur(16px);
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain
+ }
+ #clara-app .mobile-nav::-webkit-scrollbar{display:none}
+ #clara-app .mobile-nav button{
+  flex:0 0 72px;min-width:72px;min-height:54px;padding:5px 4px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  border:0;border-radius:11px;background:transparent;color:#61777a;
+  font-size:10px;font-weight:700;white-space:nowrap
+ }
+ #clara-app .mobile-nav button b{font-size:18px;line-height:1.15}
+ #clara-app .mobile-nav button.active{background:#e5f1ee;color:#14645f}
+}
+@media(max-width:760px){
+ html{scroll-padding-top:72px}
+ body{overflow-x:hidden}
+ #marketing-home .site-header{height:auto;min-height:60px;flex-wrap:wrap;gap:8px;padding:9px 14px}
+ #marketing-home .site-nav{order:3;width:100%;overflow-x:auto;justify-content:flex-start;gap:18px;padding:7px 1px 3px;white-space:nowrap;scrollbar-width:none}
+ #marketing-home .site-nav::-webkit-scrollbar{display:none}
+ #marketing-home .site-actions{margin-left:auto;gap:7px}
+ #marketing-home .language-label{display:none}
+ #marketing-home .site-cta{padding:10px 13px;font-size:12px}
+ #marketing-home .clara-welcome-hero{min-height:530px}
+ #marketing-home .clara-welcome-hero .hero-copy{padding:30px 20px 220px}
+ #marketing-home .site-section{padding:34px 16px}
+ #marketing-home .featured-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ #marketing-home .featured-grid .destination{min-width:0}
+ #clara-app .topbar{position:sticky;top:0;z-index:45;gap:8px;padding:9px 13px;min-height:60px}
+ #clara-app .brand{min-width:0;gap:8px}
+ #clara-app .top-actions{gap:6px;flex-wrap:nowrap}
+ #clara-app .top-actions .btn{padding:9px 10px;white-space:nowrap;font-size:12px}
+ #clara-app .heading{flex-wrap:wrap;gap:8px}
+ #clara-app .heading h1{font-size:clamp(25px,6vw,34px)}
+ #clara-app .hero{grid-template-columns:minmax(0,1fr);min-height:0}
+ #clara-app .hero-copy{padding:22px}
+ #clara-app .avatar-stage{min-height:230px}
+ #clara-app .cards,#clara-app .destinations{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+ #clara-app .panel{min-width:0}
+ #clara-app .locks-layout{grid-template-columns:minmax(0,1fr)}
+ #clara-app .route-layout,#clara-app .map-layout{grid-template-columns:minmax(0,1fr)}
+ #clara-app .route-side,#clara-app .locks-sidebar{max-height:none;min-width:0}
+ #clara-app .danube-map{height: min(58vh,440px);min-height:310px}
+ #clara-app .locks-map{height:min(48vh,360px);min-height:270px}
+ #clara-app .chatbox{height:min(48vh,420px);min-height:260px}
+ #clara-app .chatform{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px}
+ #clara-app .chatform input{min-width:0;width:100%}
+ #clara-app .formgrid{grid-template-columns:minmax(0,1fr)}
+ #clara-app .city-live-row{gap:6px}
+ #clara-app .city-live-row b{white-space:normal}
+ #clara-app .city-live-row span{overflow-wrap:anywhere}
+ #clara-app .main{padding:19px 15px 105px}
+ #clara-app .section-head{align-items:flex-start;flex-wrap:wrap}
+}
+@media(max-width:480px){
+ #marketing-home .site-nav{font-size:12px;gap:15px}
+ #marketing-home .site-brand{font-size:29px}
+ #marketing-home .featured-grid{gap:9px}
+ #marketing-home .featured-grid .dest-img{height:92px;flex-basis:92px}
+ #marketing-home .featured-grid .dest-info{padding:10px}
+ #marketing-home .featured-grid .dest-info h3{font-size:13px;overflow-wrap:anywhere}
+ #marketing-home .featured-grid .dest-info p{font-size:11px;min-height:0}
+ #marketing-home .featured-grid .city-live{padding:8px;font-size:10px}
+ #clara-app .topbar{padding:8px 10px}
+ #clara-app .logo{width:34px;height:34px;flex:0 0 34px}
+ #clara-app .brand{font-size:12px;letter-spacing:-.3px}
+ #clara-app .brand small{font-size:9px;letter-spacing:0}
+ #clara-app .top-actions .btn.gold{padding:8px 9px;font-size:10px}
+ #clara-app .top-actions .btn.light{padding:8px 9px;font-size:10px}
+ #clara-app .main{padding:16px 11px 102px}
+ #clara-app .cards,#clara-app .destinations{gap:8px}
+ #clara-app .dest-img{height:88px}
+ #clara-app .dest-info{padding:9px}
+ #clara-app .dest-info h3{font-size:13px}
+ #clara-app .dest-info p{font-size:11px;min-height:0}
+ #clara-app .panel{padding:12px;border-radius:14px}
+ #clara-app .btn{min-height:42px;padding:10px 12px}
+ #clara-app .chatbox{height:44vh;min-height:245px}
+ #clara-app .danube-map{height:390px;min-height:300px}
+ #clara-app .locks-map{height:300px;min-height:250px}
+ #clara-app .mobile-nav button{flex-basis:66px;min-width:66px}
+}
+@media(max-width:360px){
+ #clara-app .brand small{display:none}
+ #clara-app .top-actions .btn.light{display:none}
+ #clara-app .destinations,#clara-app .cards{grid-template-columns:minmax(0,1fr)}
+ #marketing-home .featured-grid{grid-template-columns:minmax(0,1fr)}
+}
+@media(orientation:landscape) and (max-height:520px){
+ #clara-app .mobile-nav{padding-top:4px;padding-bottom:calc(4px + env(safe-area-inset-bottom))}
+ #clara-app .mobile-nav button{min-height:44px;flex-direction:row;gap:6px}
+ #clara-app .hero{grid-template-columns:1fr  .8fr}
+ #clara-app .avatar-stage{min-height:190px}
+}
