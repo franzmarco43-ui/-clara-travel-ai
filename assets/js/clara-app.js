@@ -27,7 +27,19 @@ const CLARA_PLACE_TEXT={
  fr:{Passau:['Allemagne','Ville aux trois rivières','Vieille ville historique au confluent du Danube, de l’Inn et de l’Ilz.'],Linz:['Autriche','Art & berges du Danube','Culture, art moderne et promenades au bord du Danube.'],Melk:['Autriche','Abbaye & Wachau','Découvrez l’abbaye baroque et la vallée de la Wachau.'],Weißenkirchen:['Autriche','Wachau & vignobles','Villages viticoles, abricots et promenades dans la Wachau.'],Wien:['Autriche','Culture impériale','Cafés viennois, musées et histoire impériale.'],Bratislava:['Slovaquie','Vieille ville & château','Ruelles de la vieille ville et vues depuis le château.'],Esztergom:['Hongrie','Basilique & coude du Danube','Basilique monumentale, quartier du château et panoramas sur le Danube.'],Budapest:['Hongrie','Thermes & gastronomie','Panoramas sur le Danube, bains thermaux et cuisine hongroise.'],Puszta:['Hongrie','Nature & traditions · excursion','Grands espaces et culture de la plaine hongroise.'],'Novi Sad':['Serbie','Culture au bord du Danube','Places animées et forteresse de Petrovaradin.'],Belgrad:['Serbie','Ville au confluent','Kalemegdan, vues sur les fleuves et spécialités serbes.'],Russe:['Bulgarie','Petite Vienne du Danube','Architecture, rives du Danube et forteresse romaine.'],Donaudelta:['Roumanie','Nature sauvage & canaux','Canaux, oiseaux et expériences naturelles remarquables.']},
  ro:{Passau:['Germania','Orașul celor trei râuri','Centrul istoric de la confluența Dunării cu Inn și Ilz.'],Linz:['Austria','Artă & promenada Dunării','Cultură, artă modernă și plimbări pe malul Dunării.'],Melk:['Austria','Abație & Valea Wachau','Descoperă abația barocă și Valea Wachau.'],Weißenkirchen:['Austria','Wachau & vin','Sate viticole, caise și plimbări prin peisajele Wachau.'],Wien:['Austria','Cultură imperială','Cafenele vieneze, muzee și istorie imperială.'],Bratislava:['Slovacia','Centrul vechi & castel','Străduțele centrului vechi și priveliștile de la castel.'],Esztergom:['Ungaria','Basilică & Cotul Dunării','Basilică monumentală, cartierul castelului și priveliști asupra Dunării.'],Budapest:['Ungaria','Băi termale & gastronomie','Panorame asupra Dunării, băi termale și bucătărie maghiară.'],Puszta:['Ungaria','Natură & tradiție · excursie','Peisaje întinse și cultura câmpiei maghiare.'],'Novi Sad':['Serbia','Cultură pe Dunăre','Piețe animate și fortăreața Petrovaradin.'],Belgrad:['Serbia','Oraș la confluență','Kalemegdan, priveliști spre râuri și specialități sârbești.'],Russe:['Bulgaria','Mica Vienă de pe Dunăre','Arhitectură, faleza Dunării și fortăreața romană Sexaginta Prista.'],Donaudelta:['România','Sălbăticie & canale','Canale, păsări și experiențe deosebite în natură.']}
 };
-function claraLang(){try{return localStorage.getItem('clara.language')||'de';}catch(_){return 'de';}}
+function claraLang(){
+ let lang='de';
+ try{
+  const saved=localStorage.getItem('clara.language');
+  if(saved&&['de','en','nl','fr','ro'].includes(saved))lang=saved;
+ }catch(_){}
+ // Keep the visible selectors and the rendered destination cards on one source of truth.
+ if(typeof document!=='undefined'){
+  document.querySelectorAll('.language-switch select').forEach(el=>{if(el.value!==lang)el.value=lang;});
+  if(document.documentElement&&document.documentElement.lang!==lang)document.documentElement.lang=lang;
+ }
+ return lang;
+}
 function claraCardText(key){const lang=claraLang();return (CLARA_CARD_TEXT[lang]||CLARA_CARD_TEXT.en)[key]||CLARA_CARD_TEXT.en[key];}
 function claraPlace(p){const lang=claraLang(),v=(CLARA_PLACE_TEXT[lang]||{})[p.name];return v?{country:v[0],tag:v[1],desc:v[2]}:p;}
 
