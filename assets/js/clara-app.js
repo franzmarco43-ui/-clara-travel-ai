@@ -857,9 +857,19 @@ async function sendChat(e){
     a=memoryAnswer(ctx);
   }else{
     try{
+      const requestHeaders={'Content-Type':'application/json'};
+      // Forward the signed-in user's access token so the backend can load
+      // consented Clara Memory data under the user's own Supabase identity.
+      try{
+        if(claraSupabase?.auth?.getSession){
+          const sessionResult=await claraSupabase.auth.getSession();
+          const accessToken=sessionResult?.data?.session?.access_token;
+          if(accessToken)requestHeaders.Authorization='Bearer '+accessToken;
+        }
+      }catch(authError){console.warn('Clara Memory-Sitzung konnte nicht gelesen werden:',authError);}
       const response=await fetch('/.netlify/functions/chat',{
         method:'POST',
-        headers:{'Content-Type':'application/json'},
+        headers:requestHeaders,
         body:JSON.stringify({message:q,language:(claraLang())})
       });
       let data={};
