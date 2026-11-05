@@ -589,7 +589,7 @@ async function speakClara(value,force=false){
   stopClaraSpeech();
   const status=document.getElementById('voiceStatus');
   const speechLanguage=(()=>{try{return localStorage.getItem('clara.language')||'de';}catch(_){return 'de';}})();
-  const speechVoiceLabels={de:'Seraphina',en:'Sonia',nl:'Fenna',fr:'Denise',ro:'Alina'};
+  const speechVoiceLabels={de:'Katja',en:'Sonia',nl:'Fenna',fr:'Denise',ro:'Alina'};
   const activeVoiceLabel=speechVoiceLabels[speechLanguage]||speechVoiceLabels.de;
   try{
     if(status)status.textContent='Clara bereitet ihre Antwort mit der '+activeVoiceLabel+'-Stimme vor …';
@@ -975,46 +975,8 @@ function updateClaraWelcome(){
  return greeting;
 }
 function playClaraWelcome(){
- const button=document.getElementById('claraWelcomeSpeak');
- const status=document.getElementById('claraWelcomeStatus');
  const greeting=updateClaraWelcome();
- const language=(localStorage.getItem('clara.language')||'de').toLowerCase();
- const localeMap={de:'de-DE',en:'en-GB',nl:'nl-NL',fr:'fr-FR',ro:'ro-RO'};
- if(!('speechSynthesis'in window)||!('SpeechSynthesisUtterance'in window)){
-   if(status)status.textContent='Dieser Browser unterstützt leider keine Sprachwiedergabe.';
-   if(button)button.hidden=false;
-   return;
- }
- try{
-   // Do not start speech from a global pointer handler: the hero CTA itself is the single user gesture.
-   if(window.speechSynthesis.speaking||window.speechSynthesis.pending)window.speechSynthesis.cancel();
-   const utterance=new SpeechSynthesisUtterance(greeting);
-   utterance.lang=localeMap[language]||'de-DE';
-   utterance.rate=0.96;
-   utterance.pitch=1.02;
-   utterance.volume=1;
-   const voices=window.speechSynthesis.getVoices();
-   const voice=voices.find(item=>item.lang&&item.lang.toLowerCase().startsWith(utterance.lang.slice(0,2)));
-   if(voice)utterance.voice=voice;
-   utterance.onstart=()=>{
-     if(button)button.hidden=true;
-     if(status)status.textContent='Clara spricht jetzt. (Gerätestimme)';
-   };
-   utterance.onend=()=>{
-     if(status)status.textContent='Claras Begrüßung ist beendet.';
-     if(button)button.hidden=false;
-   };
-   utterance.onerror=(event)=>{
-     if(status)status.textContent='Sprachwiedergabe fehlgeschlagen: '+(event.error||'Unbekannter Browserfehler')+'. Bitte Lautstärke und Audioausgabe prüfen.';
-     if(button)button.hidden=false;
-   };
-   // Important: call speak synchronously in the click handler, before any await/network request.
-   window.speechSynthesis.speak(utterance);
-   if(status)status.textContent='Clara startet ihre Begrüßung …';
- }catch(error){
-   if(status)status.textContent='Clara konnte nicht sprechen: '+(error.message||'Sprachfunktion nicht verfügbar');
-   if(button)button.hidden=false;
- }
+ speakClara(greeting,true);
 }
 document.addEventListener('DOMContentLoaded',()=>{restoreClaraLanguage();restoreClaraConnection();const welcomeButton=document.getElementById('claraWelcomeSpeak');if(welcomeButton)welcomeButton.hidden=false;const welcomeStatus=document.getElementById('claraWelcomeStatus');if(welcomeStatus)welcomeStatus.textContent='Klicke auf „Clara kennenlernen“, um ihre Stimme zu hören.';updateClaraWelcome();const heroVideo=document.querySelector('#marketing-home video.hero-scene-video');if(heroVideo){heroVideo.muted=true;heroVideo.autoplay=false;heroVideo.loop=true;heroVideo.playsInline=true;heroVideo.pause();const holdHeroFrame=()=>{heroVideo.pause();if(heroVideo.currentTime>0.05){try{heroVideo.currentTime=0;}catch(_){}}};heroVideo.addEventListener('loadedmetadata',holdHeroFrame,{once:true});if(heroVideo.readyState>=1)holdHeroFrame();}const auto=document.getElementById('claraAutoSpeak');if(auto){try{auto.checked=localStorage.getItem('clara.autoSpeak')!=='false';}catch(_){auto.checked=true;}auto.addEventListener('change',()=>{try{localStorage.setItem('clara.autoSpeak',String(auto.checked));}catch(_){}if(!auto.checked)stopClaraSpeech();});}const rate=document.getElementById('claraRate');if(rate){rate.disabled=true;rate.title='Das Tempo wird derzeit durch Azure vorgegeben.';}loadClaraVoices();});
 
