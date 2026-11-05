@@ -783,6 +783,10 @@ const CLARA_CHAT_I18N={"en":{"Schreib Clara oder nutze das Mikrofon …":"Write 
 function translateClaraPage(){
  const lang=localStorage.getItem('clara.language')||'de';
  const dict={...(CLARA_CHAT_I18N[lang]||{}),...(CLARA_I18N[lang]||{})}; if(!CLARA_I18N[lang])return;
+ document.querySelectorAll('[data-clara-i18n]').forEach(el=>{
+  const key=el.getAttribute('data-clara-i18n');
+  if(dict[key])el.textContent=dict[key];
+ });
  const reverse=new Map();
  Object.keys(CLARA_I18N).forEach(locale=>Object.entries({...CLARA_CHAT_I18N[locale],...CLARA_I18N[locale]}).forEach(([de,value])=>{if(locale===lang)reverse.set(value,de);}));
  const normalize=v=>String(v||'').replace(/\u00a0/g,' ').replace(/\s+/g,' ').trim();
