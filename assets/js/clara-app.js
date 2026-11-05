@@ -604,20 +604,29 @@ async function speakClara(value,force=false){
     }
     const audioBlob=await response.blob();
     if(!audioBlob.size)throw new Error('Azure hat eine leere Audiodatei geliefert.');
-    const audioBytes=await audioBlob.arrayBuffer();
-    const AudioContextClass=window.AudioContext||window.webkitAudioContext;
-    if(AudioContextClass&&claraAudioContext&&claraAudioContext.state==='running'){
-      const decoded=await claraAudioContext.decodeAudioData(audioBytes.slice(0));
-      if(!decoded||!decoded.length)throw new Error('Die Azure-Audiodatei enthält keine abspielbaren Audiodaten.');
-      claraAudioSource=claraAudioContext.createBufferSource();claraAudioSource.buffer=decoded;claraAudioSource.connect(claraAudioContext.destination);
-      claraAudioSource.onended=()=>{setClaraSpeaking(false);stopClaraVideo();if(status)status.textContent='Sprachausgabe abgeschlossen.';claraAudioSource=null;};
-      setClaraSpeaking(true);startClaraVideo();const welcomeButton=document.getElementById('claraWelcomeSpeak');if(welcomeButton)welcomeButton.hidden=true;const welcomeStatus=document.getElementById('claraWelcomeStatus');if(welcomeStatus)welcomeStatus.textContent='Clara begrüßt dich persönlich.';if(status)status.textContent='Clara spricht mit ihrer '+activeVoiceLabel+'-Stimme.';claraAudioSource.start(0);
-    }else{
-      claraAudioObjectUrl=URL.createObjectURL(audioBlob);claraAudioElement=new Audio();claraAudioElement.src=claraAudioObjectUrl;claraAudioElement.preload='auto';claraAudioElement.volume=1;
-      claraAudioElement.onplay=()=>{setClaraSpeaking(true);startClaraVideo();if(status)status.textContent='Clara spricht mit ihrer '+activeVoiceLabel+'-Stimme.';};
-      claraAudioElement.onended=()=>{setClaraSpeaking(false);stopClaraVideo();if(status)status.textContent='Sprachausgabe abgeschlossen.';URL.revokeObjectURL(claraAudioObjectUrl);claraAudioObjectUrl=null;claraAudioElement=null;};
-      await claraAudioElement.play();
-    }
+    // Use the downloaded WAV directly in an audio element. Avoid decoding the
+    // complete WAV into an AudioBuffer on the main thread before playback.
+    claraAudioObjectUrl=URL.createObjectURL(audioBlob);
+    claraAudioElement=new Audio();
+    claraAudioElement.src=claraAudioObjectUrl;
+    claraAudioElement.preload='auto';
+    claraAudioElement.volume=1;
+    claraAudioElement.onplay=()=>{
+      setClaraSpeaking(true);
+      startClaraVideo();
+      if(status)status.textContent='Clara spricht mit ihrer '+activeVoiceLabel+'-Stimme.';
+    };
+    claraAudioElement.onended=()=>{
+      setClaraSpeaking(false);
+      stopClaraVideo();
+      if(status)status.textContent='Sprachausgabe abgeschlossen.';
+      if(claraAudioObjectUrl){URL.revokeObjectURL(claraAudioObjectUrl);claraAudioObjectUrl=null;}
+      claraAudioElement=null;
+    };
+    claraAudioElement.onerror=()=>{
+      if(status)status.textContent='Die Audiodatei konnte nicht abgespielt werden.';
+    };
+    await claraAudioElement.play();
   }catch(error){
     console.error('Clara Azure Speech:',error);
     const langMap={de:'de-DE',en:'en-GB',nl:'nl-NL',fr:'fr-FR',ro:'ro-RO'};
