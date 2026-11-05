@@ -1141,3 +1141,63 @@
  #marketing-home .featured-grid .city-live-row{grid-template-columns:1fr;gap:2px}
  #marketing-home .featured-grid .city-live-row span{text-align:left}
 }
+
+
+/* Shared visual system for every in-app follow-up page. Match the landing page palette. */
+:root{
+ --cream:#f8f7f1;
+ --line:#e5e9e2;
+ --mint:#e5eee6;
+ --green:#173f35;
+ --green2:#286b55;
+ --gold:#caa86a;
+ --ink:#1d302b;
+ --muted:#687773;
+}
+body{background:#f8f7f1;color:var(--ink)}
+#clara-app.app{max-width:1320px;background:#f8f7f1;box-shadow:none}
+#clara-app .topbar{background:#173f35;padding:12px clamp(16px,2.5vw,30px);min-height:68px}
+#clara-app .layout{grid-template-columns:214px minmax(0,1fr);background:#f8f7f1}
+#clara-app .sidebar{background:#f1f3ec;border-right:1px solid #e3e8df;padding:20px 13px}
+#clara-app .nav{border-radius:11px;padding:10px 11px;color:#52645b}
+#clara-app .nav.active,#clara-app .nav:hover{background:#e2ece3;color:#173f35}
+#clara-app .side-note{background:#e8eee5;border:1px solid #dfe7dc;border-radius:14px}
+#clara-app .main{padding:clamp(18px,2.8vw,34px);background:#f8f7f1}
+#clara-app .heading{align-items:center;margin-bottom:20px}
+#clara-app .heading h1{font-size:clamp(27px,3.2vw,36px);color:#173f35}
+#clara-app .eyebrow{color:#286b55}
+#clara-app .panel,#clara-app .destination,#clara-app .route-side,#clara-app .locks-sidebar{
+ background:#fff;border:1px solid #e5e9e2;border-radius:16px;
+ box-shadow:0 4px 16px rgba(25,59,48,.045)
+}
+#clara-app .panel{padding:18px}
+#clara-app .section-head{margin:24px 0 12px}
+#clara-app .section-head h2,#clara-app .map-intro h2{color:#173f35}
+#clara-app .btn{border-radius:11px}
+#clara-app .btn:not(.light):not(.gold):not(.soft):not(.outline){background:#286b55}
+#clara-app .btn.soft{background:#e5eee6;color:#173f35}
+#clara-app .btn.outline{border-color:#d8e2d9;color:#244b3d;background:#fff}
+#clara-app .field select,#clara-app .field input,#clara-app .chatform input{
+ border-color:#dfe6de;border-radius:10px;background:#fff
+}
+#clara-app .chatbox{background:#f3f6f0;border-color:#e1e8df;border-radius:13px}
+#clara-app .msg{border-color:#e2e9e1;border-radius:13px}
+#clara-app .msg.user{background:#e5eee6;border-color:#d7e5d9}
+#clara-app .voice-settings{background:#f7f8f3;border-color:#e3e9e1}
+#clara-app .danube-map,#clara-app .locks-map{border-color:#dfe7df;background:#e8eee8;border-radius:15px}
+#clara-app .route-point,#clara-app .lock-row{background:#f7f8f4;border-color:#e7ece5;border-radius:10px}
+#clara-app .route-point:hover,#clara-app .lock-row.active,#clara-app .lock-row:hover{background:#eaf1e9;border-color:#b8cbbb}
+#clara-app .excursion-panel,#clara-app .lock-note{background:#edf3eb;border-color:#dfe8dc;border-radius:13px}
+#clara-app .lock-stat,#clara-app .lock-definitions>div{background:#f5f7f1;border-color:#e6ebe2}
+#clara-app .premium-hero{background:linear-gradient(115deg,#173f35,#286b55);border-radius:18px}
+#clara-app .footer{color:#75827a}
+@media(max-width:850px){
+ #clara-app .layout{grid-template-columns:1fr}
+ #clara-app .main{padding:20px 16px 88px}
+ #clara-app .topbar{min-height:58px}
+}
+@media(max-width:520px){
+ #clara-app .main{padding:15px 12px 94px}
+ #clara-app .panel{padding:14px}
+ #clara-app .heading{margin-bottom:15px}
+}
