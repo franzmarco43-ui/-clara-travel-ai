@@ -574,18 +574,6 @@ async function speakClara(value,force=false){
   if(!force&&auto&&!auto.checked)return;
   const text=claraSpeechText(value);
   if(!text)return;
-  // Unlock the audio output directly in the explicit user action and wait for it.
-  const AudioContextClass=window.AudioContext||window.webkitAudioContext;
-  if(AudioContextClass){
-    try{
-      if(!claraAudioContext||claraAudioContext.state==='closed')claraAudioContext=new AudioContextClass();
-      if(claraAudioContext.state!=='running')await claraAudioContext.resume();
-      if(claraAudioContext.state!=='running')throw new Error('Der Browser hat die Audioausgabe nicht freigegeben.');
-    }catch(audioError){
-      console.warn('AudioContext konnte nicht aktiviert werden:',audioError);
-      claraAudioContext=null;
-    }
-  }
   stopClaraSpeech();
   const status=document.getElementById('voiceStatus');
   const speechLanguage=(()=>{try{return localStorage.getItem('clara.language')||'de';}catch(_){return 'de';}})();
