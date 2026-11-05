@@ -841,3 +841,27 @@
 /* Clara landing hero: use the real welcome video as the permanent hero visual; no static-image fallback. */
 #marketing-home .clara-welcome-hero .hero-scene-video{position:absolute;z-index:-2;inset:0;display:block;width:100%;height:100%;object-fit:cover;object-position:center 38%;opacity:1;pointer-events:none;}
 @media(max-width:760px){#marketing-home .clara-welcome-hero .hero-scene-video{object-position:58% center;}}
+
+
+/* Clara is the foreground presenter: copy left, portrait video clearly in front on the right. */
+#marketing-home .clara-welcome-hero{background:#e8eee8;}
+#marketing-home .clara-welcome-hero .hero-scene-video{
+  z-index:0;top:0;right:0;left:auto;width:52%;height:100%;
+  object-fit:cover;object-position:center 30%;opacity:1;
+}
+#marketing-home .clara-welcome-hero .hero-shade{
+  z-index:1;
+  background:linear-gradient(90deg,#f8f7f1 0%,rgba(248,247,241,.98) 34%,rgba(248,247,241,.84) 48%,rgba(248,247,241,.16) 68%,rgba(248,247,241,0) 100%);
+}
+#marketing-home .clara-welcome-hero .hero-copy{z-index:2;width:58%;max-width:760px;}
+@media(max-width:760px){
+  #marketing-home .clara-welcome-hero{height:auto;min-height:680px;}
+  #marketing-home .clara-welcome-hero .hero-scene-video{
+    top:auto;bottom:0;right:0;left:auto;width:100%;height:54%;
+    object-fit:contain;object-position:center bottom;
+  }
+  #marketing-home .clara-welcome-hero .hero-shade{
+    background:linear-gradient(180deg,#f8f7f1 0%,rgba(248,247,241,.98) 40%,rgba(248,247,241,.72) 60%,rgba(248,247,241,.05) 100%);
+  }
+  #marketing-home .clara-welcome-hero .hero-copy{width:100%;max-width:none;min-height:0;padding:34px 22px 300px;}
+}
