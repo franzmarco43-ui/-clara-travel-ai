@@ -1001,6 +1001,14 @@ function translateClaraPage(){
   const node=[...el.childNodes].find(n=>n.nodeType===3&&n.nodeValue.trim());
   if(node)node.nodeValue=node.nodeValue.replace(node.nodeValue.trim(),translated);
  };
+ setDirectText('.site-nav a[href="#marketing-home"]','Startseite');
+ setDirectText('.site-nav a[href="#featured-destinations"]','Reiseziele');
+ const navActions=[...document.querySelectorAll('.site-nav a[onclick]')];
+ ['Reiseplaner','Genussreise','Claras Geschichten','Über Clara'].forEach((key,index)=>{
+  const el=navActions[index];if(!el||!dict[key])return;
+  const node=[...el.childNodes].find(n=>n.nodeType===3&&n.nodeValue.trim());if(node)node.nodeValue=node.nodeValue.replace(node.nodeValue.trim(),dict[key]);
+ });
+ setDirectText('.site-header .site-cta','Clara fragen');
  setDirectText('.welcome-pill','Willkommen an der Donau');
  const heroTitle=document.getElementById('landingHeroTitle');
  if(heroTitle&&lang!=='de')heroTitle.innerHTML=(dict['Entdecke Europas']||'Entdecke Europas')+'<br>'+(dict['Donau mit Clara']||'Donau mit Clara');
