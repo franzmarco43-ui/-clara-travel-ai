@@ -907,3 +907,16 @@
   }
   #marketing-home .clara-welcome-hero .hero-copy{width:100%;padding-bottom:260px;}
 }
+
+/* Landing route now includes all river destinations; keep labels readable at compact spacing. */
+#marketing-home .landing-map{height:285px;}
+#marketing-home .landing-route-stop{min-width:0;transform:translate(-50%,-50%);}
+#marketing-home .landing-route-stop .route-thumb{width:39px;height:39px;}
+#marketing-home .landing-route-stop .route-name{max-width:88px;font-size:9px;}
+#marketing-home .landing-route-excursion .route-thumb{border-style:dashed;border-color:#4c8c79;}
+@media(max-width:760px){
+ #marketing-home .landing-map{height:320px;overflow-x:auto;}
+ #marketing-home .landing-route{min-width:850px;}
+ #marketing-home .landing-route-stop .route-thumb{width:35px;height:35px;}
+ #marketing-home .landing-route-stop .route-name{font-size:8px;max-width:75px;}
+}
