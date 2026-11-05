@@ -362,6 +362,7 @@ function stopClaraVideo(){
 }
 function stopClaraSpeech(){
   stopClaraVideo();
+  if(claraAudioSource){try{claraAudioSource.stop();}catch(_){}claraAudioSource=null;}
   if('speechSynthesis'in window)speechSynthesis.cancel();
   if(claraAudioElement){claraAudioElement.pause();claraAudioElement.currentTime=0;claraAudioElement=null;}
   if(claraAudioObjectUrl){URL.revokeObjectURL(claraAudioObjectUrl);claraAudioObjectUrl=null;}
@@ -480,6 +481,8 @@ function preferredGermanVoice(voices){
 }
 let claraAudioObjectUrl=null;
 let claraAudioElement=null;
+let claraAudioContext=null;
+let claraAudioSource=null;
 async function speakClara(value,force=false){
   const auto=document.getElementById('claraAutoSpeak');
   if(!force&&auto&&!auto.checked)return;
@@ -503,12 +506,20 @@ async function speakClara(value,force=false){
     }
     const audioBlob=await response.blob();
     if(!audioBlob.size)throw new Error('Azure hat eine leere Audiodatei geliefert.');
-    claraAudioObjectUrl=URL.createObjectURL(audioBlob);
-    claraAudioElement=new Audio(claraAudioObjectUrl);
-    claraAudioElement.onplay=()=>{setClaraSpeaking(true);startClaraVideo();const welcomeButton=document.getElementById('claraWelcomeSpeak');if(welcomeButton)welcomeButton.hidden=true;const welcomeStatus=document.getElementById('claraWelcomeStatus');if(welcomeStatus)welcomeStatus.textContent='Clara begrüßt dich persönlich.';if(status)status.textContent='Clara spricht mit ihrer '+activeVoiceLabel+'-Stimme.';};
-    claraAudioElement.onended=()=>{setClaraSpeaking(false);stopClaraVideo();if(status)status.textContent='Sprachausgabe abgeschlossen.';URL.revokeObjectURL(claraAudioObjectUrl);claraAudioObjectUrl=null;claraAudioElement=null;};
-    claraAudioElement.onerror=()=>{setClaraSpeaking(false);stopClaraVideo();if(status)status.textContent='Die Audiodatei konnte nicht abgespielt werden.';};
-    await claraAudioElement.play();
+    const audioBytes=await audioBlob.arrayBuffer();
+    const AudioContextClass=window.AudioContext||window.webkitAudioContext;
+    if(AudioContextClass&&claraAudioContext){
+      if(claraAudioContext.state==='suspended')await claraAudioContext.resume();
+      const decoded=await claraAudioContext.decodeAudioData(audioBytes.slice(0));
+      claraAudioSource=claraAudioContext.createBufferSource();claraAudioSource.buffer=decoded;claraAudioSource.connect(claraAudioContext.destination);
+      claraAudioSource.onended=()=>{setClaraSpeaking(false);stopClaraVideo();if(status)status.textContent='Sprachausgabe abgeschlossen.';claraAudioSource=null;};
+      setClaraSpeaking(true);startClaraVideo();const welcomeButton=document.getElementById('claraWelcomeSpeak');if(welcomeButton)welcomeButton.hidden=true;const welcomeStatus=document.getElementById('claraWelcomeStatus');if(welcomeStatus)welcomeStatus.textContent='Clara begrüßt dich persönlich.';if(status)status.textContent='Clara spricht mit ihrer '+activeVoiceLabel+'-Stimme.';claraAudioSource.start(0);
+    }else{
+      claraAudioObjectUrl=URL.createObjectURL(audioBlob);claraAudioElement=new Audio(claraAudioObjectUrl);
+      claraAudioElement.onplay=()=>{setClaraSpeaking(true);startClaraVideo();if(status)status.textContent='Clara spricht mit ihrer '+activeVoiceLabel+'-Stimme.';};
+      claraAudioElement.onended=()=>{setClaraSpeaking(false);stopClaraVideo();if(status)status.textContent='Sprachausgabe abgeschlossen.';URL.revokeObjectURL(claraAudioObjectUrl);claraAudioObjectUrl=null;claraAudioElement=null;};
+      await claraAudioElement.play();
+    }
   }catch(error){
     console.error('Clara Azure Speech:',error);
     const welcomeButton=document.getElementById('claraWelcomeSpeak');const welcomeStatus=document.getElementById('claraWelcomeStatus');if(welcomeButton)welcomeButton.hidden=false;if(welcomeStatus)welcomeStatus.textContent='Der Browser hat die automatische Wiedergabe verhindert oder die Stimme ist gerade nicht erreichbar. Tippe auf „Clara begrüßen lassen“. ';if(status)status.textContent='Sprachausgabe nicht verfügbar: '+(error.message||'Verbindungsfehler')+'. Bitte später erneut versuchen.';
@@ -847,6 +858,8 @@ function updateClaraWelcome(){
  return greeting;
 }
 async function playClaraWelcome(){
+ const AudioContextClass=window.AudioContext||window.webkitAudioContext;
+ if(AudioContextClass){try{if(!claraAudioContext)claraAudioContext=new AudioContextClass();if(claraAudioContext.state==='suspended')claraAudioContext.resume();}catch(error){console.warn('Audio-Freigabe:',error);}}
  const button=document.getElementById('claraWelcomeSpeak');
  const status=document.getElementById('claraWelcomeStatus');
  if(button)button.hidden=true;
