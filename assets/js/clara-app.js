@@ -1,5 +1,7 @@
 // Store the key on window: no top-level lexical binding can enter a temporal dead zone.
 window.CLARA_CONFIG_KEY = 'clara.travel.supabase.public.v1';
+// Initialize the auth user state before any early chat/memory callbacks can read it.
+let claraUser = null;
 const CLARA_DEFAULT_SUPABASE_URL = 'https://ufsglnhebhbmadwzftau.supabase.co';
 const CLARA_DEFAULT_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_5B9FYMgDQ0SJjCYEeJgPgA_4DD4o3rN'; // Public publishable key only; RLS remains the authorization boundary.
 
@@ -1066,7 +1068,6 @@ let toastTimer;function toast(s){let el=document.getElementById('toast');el.text
 
 // Clara Memory 1.0 – Supabase integration. Uses only the public anon/publishable key with RLS.
 window.claraSupabase = window.claraSupabase || null;
-let claraUser = null;
 let claraRecoveryTokenHash = null;
 let claraRecoveryCode = null;
 // Public browser configuration only. Never place a Supabase Secret/service_role key here.
