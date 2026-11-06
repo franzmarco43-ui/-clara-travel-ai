@@ -474,8 +474,33 @@ async function saveClaraTripPlan(){
    const profile=await window.claraSupabase.from('clara_profiles').select('consent_memory').eq('user_id',claraUser.id).maybeSingle();
    if(profile.error)throw profile.error;
    if(profile.data?.consent_memory===true){
-    const result=await window.claraSupabase.from('clara_memories').insert({user_id:claraUser.id,memory_type:'saved_trip_plan',content:plan});
-    if(result.error)throw result.error;cloudSaved=true;
+    // Einen bereits gespeicherten Plan mit gleichem Ziel und gleicher Dauer
+    // aktualisieren, statt bei jedem erneuten Speichern einen Duplikat-Eintrag anzulegen.
+    const existing=await window.claraSupabase.from('clara_memories')
+     .select('id,content')
+     .eq('user_id',claraUser.id)
+     .eq('memory_type','saved_trip_plan')
+     .order('created_at',{ascending:false})
+     .limit(50);
+    if(existing.error)throw existing.error;
+    const match=(existing.data||[]).find(row=>
+     row.content&&row.content.destination===plan.destination&&row.content.duration===plan.duration
+    );
+    if(match){
+     const result=await window.claraSupabase.from('clara_memories')
+      .update({content:plan})
+      .eq('id',match.id)
+      .eq('user_id',claraUser.id)
+      .eq('memory_type','saved_trip_plan')
+      .select('id');
+     if(result.error)throw result.error;
+     if(!result.data?.length)throw new Error('Der vorhandene Kontoreiseplan wurde nicht aktualisiert.');
+    }else{
+     const result=await window.claraSupabase.from('clara_memories')
+      .insert({user_id:claraUser.id,memory_type:'saved_trip_plan',content:plan});
+     if(result.error)throw result.error;
+    }
+    cloudSaved=true;
    }
   }catch(error){console.warn('Cloud-Speicherung Reiseplan:',error);}
  }
@@ -1490,10 +1515,14 @@ function setClaraLanguage(code,refreshWeather=true){
   if(refreshWeather&&typeof loadCityWeather==='function')loadCityWeather();
 }
 function restoreClaraLanguage(){
-  // Preview 10 must always open in German. Other languages remain available
-  // during the current visit when the user changes the language selector.
-  // A saved French/English/etc. preference must never override the start language.
-  setClaraLanguage('de',true);
+  // Deutsch ist die Standardsprache für neue Besucher. Eine bewusst gewählte
+  // Sprache bleibt erhalten und wird nach dem Neuladen wiederhergestellt.
+  let language='de';
+  try{
+    const saved=localStorage.getItem('clara.language');
+    if(Object.prototype.hasOwnProperty.call(CLARA_LANGUAGES,saved))language=saved;
+  }catch(_){}
+  setClaraLanguage(language,true);
 }
 const CLARA_WELCOME_TEXT=Object.freeze({
  de:'Hallo und herzlich willkommen! Ich bin Clara, deine Reisebegleiterin entlang der Donau. Schön, dass du da bist! Wohin soll unsere gemeinsame Reise gehen?',
