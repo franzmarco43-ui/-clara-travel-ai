@@ -13,7 +13,16 @@ const manifest = JSON.parse(read('manifest.webmanifest'));
 const destinations = JSON.parse(read('netlify/functions/data/danube-destinations.json'));
 const locks = JSON.parse(read('netlify/functions/data/danube-locks.json'));
 
-for (const path of ['assets/js/clara-app.js', 'sw.js']) execFileSync(process.execPath, ['--check', path], { stdio: 'pipe' });
+for (const path of [
+  'assets/js/clara-app.js',
+  'sw.js',
+  'netlify/functions/clara-speech.js',
+  'netlify/functions/clara-speech-visemes.js',
+  'netlify/functions/chat.js'
+]) {
+  execFileSync(process.execPath, ['--check', path], { stdio: 'pipe' });
+}
+
 for (const [index, part] of html.split('<script').slice(1).entries()) {
   const openingEnd = part.indexOf('>');
   if (openingEnd < 0 || part.slice(0, openingEnd).includes('src=')) continue;
@@ -43,34 +52,53 @@ assert.deepEqual(
   'App cards and the destination knowledge base must describe the same 13 places'
 );
 
-const timezoneMatch = app.match(/const cityTimeZones\s*=\s*\{([\s\S]*?)\};/);
+const timezoneMatch = app.match(/const cityTimeZones\\s*=\\s*\\{([\\s\\S]*?)\\};/);
 assert.ok(timezoneMatch, 'Every destination must have a local time-zone map');
-const timezoneNames = [...timezoneMatch[1].matchAll(/'([^']+)'\s*:/g)].map(match => match[1]);
-assert.equal(timezoneNames.length, 13, 'All 13 destinations need a time-zone entry');
-assert.equal(new Set(timezoneNames).size, 13, 'Time-zone entries must be unique');
-assert.ok(appPlaces.every(name => timezoneNames.includes(name)), 'Every destination must have a local time zone');
-assert.ok(app.includes('api.open-meteo.com/v1/forecast'), 'Live Open-Meteo weather integration must be present');
-assert.ok(/function updateCityClocks\s*\(/.test(app), 'Local clocks must be updated by the app');
-assert.ok(/async function loadCityWeather\s*\(/.test(app), 'Current weather must be loaded asynchronously');
+const cityTimeZones = vm.runInNewContext('({' + timezoneMatch[1] + '})');
+const timezoneEntries = Object.entries(cityTimeZones);
+assert.equal(timezoneEntries.length, 13, 'All 13 destinations need a time-zone entry');
+assert.equal(new Set(timezoneEntries.map(([city]) => city)).size, 13, 'Time-zone city keys must be unique');
+assert.ok(appPlaces.every(name => Object.hasOwn(cityTimeZones, name)), 'Every destination must have a local time zone');
+for (const [city, timeZone] of timezoneEntries) {
+  assert.ok(appPlaces.includes(city), 'Unexpected time-zone entry: ' + city);
+  assert.doesNotThrow(
+    () => new Intl.DateTimeFormat('de-DE', { timeZone }).format(new Date('2026-01-01T12:00:00Z')),
+    'Invalid IANA time zone for ' + city + ': ' + timeZone
+  );
+}
+
+assert.ok(app.includes('api.open-meteo.com/v1/forecast'), 'Open-Meteo integration must be present');
+assert.ok(app.includes("cache:'no-store'"), 'Weather requests must bypass stale browser cache');
+assert.ok(app.includes('15*60*1000'), 'Weather must have a periodic refresh interval');
+assert.ok(app.includes("document.addEventListener('visibilitychange'"), 'Weather must refresh when the tab becomes visible');
+assert.ok(/function showPage\\(page\\)/.test(app) && app.includes("if(typeof loadCityWeather==='function')loadCityWeather();"), 'Opening an app page must refresh its visible weather cards');
+assert.ok(/function updateCityClocks\\s*\\(/.test(app), 'Local clocks must be updated by the app');
+assert.ok(/async function loadCityWeather\\s*\\(/.test(app), 'Current weather must be loaded asynchronously');
 
 assert.match(html, /<html lang="de">/, 'German must be the initial document language');
 assert.ok(app.includes('clara.language-default-de'), 'The app must migrate first-visit language to German');
 assert.ok(html.includes('assets/clara-welcome.mp4'), 'The welcome video source must be wired into the homepage');
 assert.ok(existsSync('assets/clara-welcome.mp4'), 'The configured welcome video file must exist');
+assert.doesNotMatch(html + app, /SUPABASE_SERVICE_ROLE_KEY|service_role/i, 'Browser code must never contain a Supabase service-role credential');
+assert.doesNotMatch(html + app, /AZURE_SPEECH_KEY|AZURE_SPEECH_REGION/i, 'Azure Speech credentials and server configuration must stay out of browser code');
+
+const expectedWelcomeVideoBlobSha = '742d5da95c9945449866d30438e0b8b215010449';
+const welcomeVideoBlobSha = execFileSync('git', ['hash-object', 'assets/clara-welcome.mp4'], { encoding: 'utf8' }).trim();
+const optimizedWelcomeVideoIntegrated = welcomeVideoBlobSha === expectedWelcomeVideoBlobSha;
 
 assert.match(mobile, /<meta[^>]+name="viewport"/i, 'Mobile preview must declare a device viewport');
-assert.match(mobile, /<iframe[^>]+src="\.\/index\.html"/i, 'Mobile preview must load the shared app');
+assert.match(mobile, /<iframe[^>]+src="\\.\\/index\\.html"/i, 'Mobile preview must load the shared app');
 assert.ok(
   mobile.includes("setOrientation('portrait')") && mobile.includes("setOrientation('landscape')"),
   'Mobile preview must expose portrait and landscape controls'
 );
-const mobileScripts = [...mobile.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
+const mobileScripts = [...mobile.matchAll(/<script\\b[^>]*>([\\s\\S]*?)<\\/script>/gi)];
 assert.ok(mobileScripts.length > 0, 'Mobile preview must contain its orientation controller');
 mobileScripts.forEach((match, index) => {
   new vm.Script(match[1], { filename: 'mobile-preview.html:inline-' + index });
 });
-assert.ok(/@media\s*\(\s*max-width:\s*760px\s*\)/.test(css), 'The shared app styles must include a phone breakpoint');
-assert.ok(/@media\s*\(\s*max-width:\s*520px\s*\)/.test(css), 'The shared app styles must include a narrow-phone breakpoint');
+assert.ok(/@media\\s*\\(\\s*max-width:\\s*760px\\s*\\)/.test(css), 'The shared app styles must include a phone breakpoint');
+assert.ok(/@media\\s*\\(\\s*max-width:\\s*520px\\s*\\)/.test(css), 'The shared app styles must include a narrow-phone breakpoint');
 
 assert.equal(manifest.display, 'standalone', 'PWA must support standalone app display');
 assert.equal(manifest.scope, '/', 'PWA scope must cover the site');
@@ -82,4 +110,9 @@ assert.ok(html.includes('id="pwaInstallButton"'), 'Install action must be presen
 assert.ok(sw.includes("url.pathname.startsWith('/.netlify/functions/')"), 'Dynamic Netlify functions must be excluded from offline caching');
 assert.ok(sw.includes("request.mode === 'navigate'"), 'Offline navigation fallback must be present');
 
-console.log('Clara Preview 10 smoke checks passed: 13 destinations and time zones, live-weather integration, 18 locks, German default, mobile preview syntax/layout, welcome-video wiring, JavaScript syntax, PWA manifest, install action, and safe service-worker exclusions.');
+console.log('Clara Preview 10 smoke checks passed: 13 destinations and valid IANA time zones, Open-Meteo integration/refresh wiring (no live API call), 18 locks, German default, mobile preview syntax/layout, video presence, credential boundary, JavaScript syntax, and PWA shell.');
+if (optimizedWelcomeVideoIntegrated) {
+  console.log('Verified optimized welcome video is integrated (Git blob ' + welcomeVideoBlobSha + ').');
+} else {
+  console.warn('Welcome video exists but is not the verified optimized file. Expected Git blob ' + expectedWelcomeVideoBlobSha + ', found ' + welcomeVideoBlobSha + '.');
+}
