@@ -1912,3 +1912,21 @@ body{background:#f3f5f1;color:var(--ink);letter-spacing:-.01em}
 @media(prefers-reduced-motion:reduce){
  #marketing-home .featured-grid .destination:hover{transform:none}
 }
+
+
+/* Azure Speech SDK viseme timing overlay for Clara's chat portrait */
+.clara-video-frame{position:relative;display:block;width:min(100%,300px);height:320px;overflow:hidden;border-radius:18px;background:#0b2926}
+.clara-video-frame .clara-welcome-video{display:block;width:100%;height:100%;object-fit:contain;border-radius:18px;box-shadow:none}
+.clara-viseme-mouth{position:absolute;z-index:4;left:50%;top:62.3%;width:8%;min-width:18px;max-width:24px;height:2px;transform:translate(-50%,-50%);background:#783b42;border:1px solid #a65b61;border-radius:50%;box-shadow:0 1px 2px #29151a55;opacity:0;pointer-events:none;transition:height .045s linear,width .045s linear,border-radius .045s linear,opacity .045s linear}
+.clara-viseme-mouth:before{content:"";position:absolute;left:16%;right:16%;top:1px;height:2px;background:#f5e8dc;border-radius:0 0 3px 3px;opacity:0}
+.clara-video-frame.viseme-active .clara-viseme-mouth{opacity:.96}
+.clara-video-frame[data-viseme="0"] .clara-viseme-mouth,.clara-video-frame[data-viseme="21"] .clara-viseme-mouth{height:2px;width:8%;border-radius:50%;background:#a45a60}
+.clara-video-frame[data-viseme="1"] .clara-viseme-mouth,.clara-video-frame[data-viseme="4"] .clara-viseme-mouth,.clara-video-frame[data-viseme="5"] .clara-viseme-mouth,.clara-video-frame[data-viseme="6"] .clara-viseme-mouth,.clara-video-frame[data-viseme="12"] .clara-viseme-mouth,.clara-video-frame[data-viseme="13"] .clara-viseme-mouth,.clara-video-frame[data-viseme="14"] .clara-viseme-mouth{height:7px;width:11%}
+.clara-video-frame[data-viseme="2"] .clara-viseme-mouth,.clara-video-frame[data-viseme="3"] .clara-viseme-mouth,.clara-video-frame[data-viseme="9"] .clara-viseme-mouth,.clara-video-frame[data-viseme="10"] .clara-viseme-mouth,.clara-video-frame[data-viseme="11"] .clara-viseme-mouth{height:13px;width:13%;border-radius:48% 48% 55% 55%}
+.clara-video-frame[data-viseme="7"] .clara-viseme-mouth,.clara-video-frame[data-viseme="8"] .clara-viseme-mouth{height:10px;width:7%;border-radius:50%}
+.clara-video-frame[data-viseme="15"] .clara-viseme-mouth,.clara-video-frame[data-viseme="16"] .clara-viseme-mouth,.clara-video-frame[data-viseme="17"] .clara-viseme-mouth,.clara-video-frame[data-viseme="18"] .clara-viseme-mouth,.clara-video-frame[data-viseme="19"] .clara-viseme-mouth,.clara-video-frame[data-viseme="20"] .clara-viseme-mouth{height:4px;width:11%;border-radius:50%}
+.clara-video-frame[data-viseme="1"] .clara-viseme-mouth:before,.clara-video-frame[data-viseme="2"] .clara-viseme-mouth:before,.clara-video-frame[data-viseme="3"] .clara-viseme-mouth:before,.clara-video-frame[data-viseme="4"] .clara-viseme-mouth:before,.clara-video-frame[data-viseme="5"] .clara-viseme-mouth:before,.clara-video-frame[data-viseme="6"] .clara-viseme-mouth:before,.clara-video-frame[data-viseme="9"] .clara-viseme-mouth:before,.clara-video-frame[data-viseme="10"] .clara-viseme-mouth:before,.clara-video-frame[data-viseme="11"] .clara-viseme-mouth:before{opacity:.9}
+.clara-video-frame.fallback-speaking .clara-viseme-mouth{opacity:.9;animation:claraFallbackMouth .22s ease-in-out infinite alternate}
+@keyframes claraFallbackMouth{from{height:3px}to{height:10px}}
+@media(max-width:760px){.clara-video-frame{width:min(100%,240px);height:300px}}
+@media(prefers-reduced-motion:reduce){.clara-viseme-mouth{transition:none}.clara-video-frame.fallback-speaking .clara-viseme-mouth{animation:none}}
