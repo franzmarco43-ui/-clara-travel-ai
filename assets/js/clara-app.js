@@ -1,4 +1,7 @@
 // Clara Memory configuration is initialized before any page handlers can run.
+const CLARA_CONFIG_KEY = 'clara.travel.supabase.public.v1';
+const CLARA_DEFAULT_SUPABASE_URL = 'https://ufsglnhebhbmadwzftau.supabase.co';
+const CLARA_DEFAULT_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_5B9FYMgDQ0SJjCYEeJgPgA_4DD4o3rN'; // Public publishable key only; RLS remains the authorization boundary.
 
 
 const places=[
