@@ -14,17 +14,35 @@ exports.handler = async (event) => {
     };
   }
 
-  if (event.httpMethod !== "POST") {
-    return { statusCode: 405, headers: { "Allow": "POST" }, body: "Method not allowed" };
+  const speechKey = process.env.AZURE_SPEECH_KEY;
+  // The existing Azure Speech resource is hosted in Germany West Central.
+  // Keep that known-good region as a safe fallback if the Netlify variable
+  // was accidentally removed; an explicitly configured region always wins.
+  const configuredRegion = (process.env.AZURE_SPEECH_REGION || "").trim().toLowerCase();
+  const region = configuredRegion || "germanywestcentral";
+
+  // Safe diagnostic endpoint: confirms configuration without exposing secrets.
+  if (event.httpMethod === "GET") {
+    return {
+      statusCode: 200,
+      headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" },
+      body: JSON.stringify({
+        service: "clara-speech",
+        ready: Boolean(speechKey && region),
+        keyConfigured: Boolean(speechKey),
+        regionConfigured: Boolean(configuredRegion),
+        regionFallbackActive: !configuredRegion
+      })
+    };
   }
 
-  const speechKey = process.env.AZURE_SPEECH_KEY;
-  const region = (process.env.AZURE_SPEECH_REGION || "").trim().toLowerCase();
+  if (event.httpMethod !== "POST") {
+    return { statusCode: 405, headers: { "Allow": "GET, POST, OPTIONS" }, body: "Method not allowed" };
+  }
 
   if (!speechKey || !region) {
     const missing = [];
     if (!speechKey) missing.push("AZURE_SPEECH_KEY");
-    if (!region) missing.push("AZURE_SPEECH_REGION");
     return {
       statusCode: 500,
       headers: { "Content-Type": "application/json; charset=utf-8" },
@@ -90,8 +108,13 @@ exports.handler = async (event) => {
   const azureUrl = `https://${region}.tts.speech.microsoft.com/cognitiveservices/v1`;
 
   try {
-    const azureResponse = await fetch(azureUrl, {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 12000);
+    let azureResponse;
+    try {
+      azureResponse = await fetch(azureUrl, {
       method: "POST",
+      signal: controller.signal,
       headers: {
         "Ocp-Apim-Subscription-Key": speechKey,
         "Content-Type": "application/ssml+xml",
@@ -99,7 +122,10 @@ exports.handler = async (event) => {
         "User-Agent": "ClaraTravelAI"
       },
       body: ssml
-    });
+      });
+    } finally {
+      clearTimeout(timeout);
+    }
 
     if (!azureResponse.ok) {
       const detail = await azureResponse.text();
@@ -131,7 +157,11 @@ exports.handler = async (event) => {
     return {
       statusCode: 502,
       headers: { "Content-Type": "application/json; charset=utf-8" },
-      body: JSON.stringify({ error: "Verbindung zu Azure Speech fehlgeschlagen." })
+      body: JSON.stringify({
+        error: error && error.name === "AbortError"
+          ? "Azure Speech hat nach 12 Sekunden nicht geantwortet."
+          : "Verbindung zu Azure Speech fehlgeschlagen."
+      })
     };
   }
 };
