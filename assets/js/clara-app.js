@@ -37,6 +37,13 @@ const CLARA_PLACE_TEXT={
 function claraLang(){
  let lang='de';
  try{
+  // One-time migration: old preview sessions that remained stuck in French
+  // return to German once; later explicit language choices remain persistent.
+  const defaultLanguageMigration='clara.language-default-de-v1';
+  if(localStorage.getItem(defaultLanguageMigration)!=='1'){
+    if(localStorage.getItem('clara.language')==='fr')localStorage.setItem('clara.language','de');
+    localStorage.setItem(defaultLanguageMigration,'1');
+  }
   const saved=localStorage.getItem('clara.language');
   if(saved&&['de','en','nl','fr','ro'].includes(saved))lang=saved;
  }catch(_){}
