@@ -8,7 +8,7 @@ exports.handler = async (event) => {
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Headers": "Content-Type",
-        "Access-Control-Allow-Methods": "POST, OPTIONS"
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS"
       },
       body: ""
     };
@@ -18,7 +18,8 @@ exports.handler = async (event) => {
   // The existing Azure Speech resource is hosted in Germany West Central.
   // Keep that known-good region as a safe fallback if the Netlify variable
   // was accidentally removed; an explicitly configured region always wins.
-  const configuredRegion = (process.env.AZURE_SPEECH_REGION || "").trim().toLowerCase();
+  const rawRegion = (process.env.AZURE_SPEECH_REGION || "").trim().toLowerCase();
+  const configuredRegion = rawRegion.replace(/[\\s_-]/g, "");
   const region = configuredRegion || "germanywestcentral";
 
   // Safe diagnostic endpoint: confirms configuration without exposing secrets.
