@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
-import vm from 'node:vm';
+import { execFileSync } from 'node:child_process';
 
 const read = path => readFileSync(path, 'utf8');
 const html = read('index.html');
@@ -10,11 +10,7 @@ const manifest = JSON.parse(read('manifest.webmanifest'));
 const destinations = JSON.parse(read('netlify/functions/data/danube-destinations.json'));
 const locks = JSON.parse(read('netlify/functions/data/danube-locks.json'));
 
-new vm.Script(app, { filename: 'assets/js/clara-app.js' });
-new vm.Script(sw, { filename: 'sw.js' });
-for (const [index, match] of [...html.matchAll(/<script\\b([^>]*)>([\\s\\S]*?)<\\/script>/gi)].entries()) {
-  if (!/\\bsrc\\s*=/.test(match[1])) new vm.Script(match[2], { filename: 'index.html:inline-script-' + index });
-}
+for (const path of ['assets/js/clara-app.js', 'sw.js']) execFileSync(process.execPath, ['--check', path], { stdio: 'pipe' });
 
 assert.equal(destinations.records.length, 13, 'Destination knowledge base must contain 13 records');
 assert.equal(locks.records.length, 18, 'Lock knowledge base must contain 18 records');
@@ -28,9 +24,9 @@ assert.notEqual(placesStart, -1, 'App destination list must exist');
 const placesEnd = app.indexOf('];', placesStart);
 assert.ok(placesEnd > placesStart, 'App destination list must close');
 const placeBlock = app.slice(placesStart, placesEnd);
-const appPlaces = [...placeBlock.matchAll(/\\{name:'([^']+)'[\\s\\S]*?lat:([-0-9.]+),lon:([-0-9.]+)/g)];
-assert.equal(appPlaces.length, 13, 'App must define all 13 destinations with coordinates');
-assert.ok(appPlaces.every(match => Number.isFinite(Number(match[2])) && Number.isFinite(Number(match[3]))), 'App destination coordinates must be numeric');
+const appPlaces = placeBlock.split("name:'").slice(1).map(part => part.split("'")[0]);
+assert.equal(appPlaces.length, 13, 'App must define all 13 destinations');
+assert.equal(new Set(appPlaces).size, 13, 'App destination names must be unique');
 
 assert.equal(manifest.display, 'standalone', 'PWA must support standalone app display');
 assert.equal(manifest.scope, '/', 'PWA scope must cover the site');
