@@ -1,8 +1,8 @@
-const CACHE_NAME = 'clara-shell-v4';
+const CACHE_NAME = 'clara-shell-v5';
 const APP_SHELL = [
   '/index.html',
   '/assets/css/clara.css?v=preview10-viseme-aspect-4',
-  '/assets/js/clara-app.js?v=preview10-language-persist-v2-8',
+  '/assets/js/clara-app.js?v=preview10-language-persist-v2-9',
   '/assets/clara-app-icon.svg'
 ];
 
