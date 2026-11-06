@@ -225,8 +225,8 @@ exports.handler = async function (event) {
 
   try {
     const apiKey = process.env.GROQ_API_KEY;
-   const supabaseUrl = process.env.SUPABASE_PROJECT_URL;
-    const supabaseKey = process.env.SUPABASE_ANON_KEY;
+   const supabaseUrl = process.env.SUPABASE_PROJECT_URL || "https://ufsglnhebhbmadwzftau.supabase.co";
+    const supabaseKey = process.env.SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY || "sb_publishable_5B9FYMgDQ0SJjCYEeJgPgA_4DD4o3rN";
     const passauKnowledge = require("./data/passau.json");
     const danubeLocksKnowledge = require("./data/danube-locks.json");
     const danubeDestinationsKnowledge = require("./data/danube-destinations.json");
