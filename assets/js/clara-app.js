@@ -1,3 +1,5 @@
+// Clara Memory configuration is initialized before any page handlers can run.
+
 
 const places=[
 {name:'Passau',country:'Deutschland',emoji:'⛪',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Panorama%20Dom%20Passau.jpg',tag:'Drei-Flüsse-Stadt',desc:'Historische Altstadt am Zusammenfluss von Donau, Inn und Ilz.',lat:48.574,lon:13.461,routeType:'river'},
