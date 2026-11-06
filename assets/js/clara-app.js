@@ -113,11 +113,19 @@ function initDanubeMap(){
   const host=document.getElementById('danubeMap');
   if(!host)return;
   if(!window.L){
-    host.innerHTML='<div style="padding:22px;color:#53645d">Die interaktive Karte konnte nicht geladen werden. Bitte prüfe deine Internetverbindung; die Stationsliste bleibt verfügbar.</div>';
+    host.innerHTML='<div style="padding:22px;color:#53645d">Die Kartenbibliothek ist noch nicht verfügbar. Bitte lade die Seite erneut; die Stationsliste bleibt verfügbar.</div>';
     return;
   }
-  if(danubeMapInstance){setTimeout(()=>danubeMapInstance.invalidateSize(),120);return;}
-  danubeMapInstance=L.map(host,{scrollWheelZoom:false}).setView([46.9,20.0],5);
+  if(danubeMapInstance){
+    requestAnimationFrame(()=>danubeMapInstance&&danubeMapInstance.invalidateSize());
+    return;
+  }
+  if(host.clientWidth===0||host.clientHeight===0){
+    setTimeout(initDanubeMap,120);
+    return;
+  }
+  try{
+  danubeMapInstance=window.L.map(host,{scrollWheelZoom:false}).setView([46.9,20.0],5);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
     maxZoom:18,
     attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
@@ -146,7 +154,12 @@ function initDanubeMap(){
   }
   const allPlaces=places;
   danubeMapInstance.fitBounds(L.latLngBounds(allPlaces.map(p=>[p.lat,p.lon])),{padding:[24,24]});
-  setTimeout(()=>danubeMapInstance.invalidateSize(),120);
+  requestAnimationFrame(()=>danubeMapInstance&&danubeMapInstance.invalidateSize());
+  }catch(error){
+    console.error('Clara: Donaukarte konnte nicht initialisiert werden',error);
+    if(danubeMapInstance){try{danubeMapInstance.remove();}catch(_){}danubeMapInstance=null;}
+    host.innerHTML='<div style="padding:22px;color:#53645d">Die Karte konnte nicht gestartet werden. Bitte prüfe die Internetverbindung und lade die Seite erneut.</div>';
+  }
 }
 function renderMapDestination(name){
   const place=places.find(item=>item.name===name);
@@ -278,9 +291,45 @@ function askClaraAboutLock(index){
 
 function toggleMobileMenu(){const menu=document.getElementById('mobile-site-nav');const button=document.querySelector('.mobile-menu-toggle');if(!menu||!button)return;const open=menu.classList.toggle('open');button.setAttribute('aria-expanded',String(open));button.setAttribute('aria-label',open?'Menü schließen':'Menü öffnen');button.textContent=open?'×':'☰';}
 function closeMobileMenu(){const menu=document.getElementById('mobile-site-nav');const button=document.querySelector('.mobile-menu-toggle');if(menu)menu.classList.remove('open');if(button){button.setAttribute('aria-expanded','false');button.setAttribute('aria-label','Menü öffnen');button.textContent='☰';}}
-function openAppPage(page){document.getElementById('marketing-home').style.display='none';document.getElementById('clara-app').style.display='block';showPage(page);}
+let claraHistoryRestore=false;
+function claraSetRoute(route,replace=false){
+  if(claraHistoryRestore)return;
+  const state={claraTravelAI:true,view:route.view,page:route.page||'home'};
+  try{
+    if(replace)history.replaceState(state,'',window.location.href);
+    else history.pushState(state,'',window.location.href);
+  }catch(error){console.warn('Clara: Browserverlauf konnte nicht aktualisiert werden.',error);}
+}
+function restoreClaraRoute(state){
+  claraHistoryRestore=true;
+  const route=state&&state.claraTravelAI?state:{view:'landing',page:'home'};
+  const landing=document.getElementById('marketing-home');
+  const app=document.getElementById('clara-app');
+  if(route.view==='app'){
+    landing.style.display='none';
+    app.style.display='block';
+    showPage(route.page||'home');
+  }else{
+    app.style.display='none';
+    landing.style.display='block';
+    window.scrollTo({top:0,behavior:'auto'});
+  }
+  claraHistoryRestore=false;
+}
+window.addEventListener('popstate',event=>restoreClaraRoute(event.state));
+function openAppPage(page){
+  document.getElementById('marketing-home').style.display='none';
+  document.getElementById('clara-app').style.display='block';
+  claraSetRoute({view:'app',page});
+  showPage(page);
+}
 function openDestination(name){openAppPage('planner');selectDestination(name);}
-function returnToLanding(){document.getElementById('clara-app').style.display='none';document.getElementById('marketing-home').style.display='block';window.scrollTo({top:0,behavior:'smooth'});}
+function returnToLanding(){
+  claraSetRoute({view:'landing',page:'home'});
+  document.getElementById('clara-app').style.display='none';
+  document.getElementById('marketing-home').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 
 function showPage(page){
   const activePage=document.getElementById('page-'+page);
@@ -304,11 +353,11 @@ function showPage(page){
     }
   }
   if(page==='map'){
-    initDanubeMap();
-    setTimeout(()=>danubeMapInstance&&danubeMapInstance.invalidateSize(),160);
+    requestAnimationFrame(()=>setTimeout(initDanubeMap,80));
   }
   if(page==='locks')loadDanubeLocks();
-  window.scrollTo({top:0,behavior:'smooth'});
+  if(!claraHistoryRestore)claraSetRoute({view:'app',page});
+  window.scrollTo({top:0,behavior:claraHistoryRestore?'auto':'smooth'});
 }
 function selectDestination(name){document.getElementById('destination').value=name;showPage('planner');makePlan()}
 function makePlan(){const name=document.getElementById('destination').value,duration=document.getElementById('duration').value,interest=document.getElementById('interest').value,pace=document.getElementById('pace').value,mobility=document.getElementById('mobility')?.value||'Keine besondere Angabe';const p=places.find(x=>x.name===name);let stops={
@@ -1176,5 +1225,5 @@ function playClaraWelcome(){
   });
  }
 }
-document.addEventListener('DOMContentLoaded',()=>{restoreClaraLanguage();restoreClaraConnection();const welcomeButton=document.getElementById('claraWelcomeSpeak');if(welcomeButton)welcomeButton.hidden=false;const welcomeStatus=document.getElementById('claraWelcomeStatus');if(welcomeStatus)welcomeStatus.textContent='Klicke auf „Clara kennenlernen“, um ihre Stimme zu hören.';updateClaraWelcome();const heroVideo=document.querySelector('#marketing-home video.hero-scene-video');if(heroVideo){heroVideo.muted=true;heroVideo.autoplay=false;heroVideo.loop=true;heroVideo.playsInline=true;heroVideo.pause();const holdHeroFrame=()=>{heroVideo.pause();if(heroVideo.currentTime>0.05){try{heroVideo.currentTime=0;}catch(_){}}};heroVideo.addEventListener('loadedmetadata',holdHeroFrame,{once:true});if(heroVideo.readyState>=1)holdHeroFrame();}const auto=document.getElementById('claraAutoSpeak');if(auto){try{auto.checked=localStorage.getItem('clara.autoSpeak')!=='false';}catch(_){auto.checked=true;}auto.addEventListener('change',()=>{try{localStorage.setItem('clara.autoSpeak',String(auto.checked));}catch(_){}if(!auto.checked)stopClaraSpeech();});}const rate=document.getElementById('claraRate');if(rate){rate.disabled=true;rate.title='Das Tempo wird derzeit durch Azure vorgegeben.';}loadClaraVoices();});
+document.addEventListener('DOMContentLoaded',()=>{try{history.replaceState({claraTravelAI:true,view:'landing',page:'home'},'',window.location.href);}catch(_){}restoreClaraLanguage();restoreClaraConnection();const welcomeButton=document.getElementById('claraWelcomeSpeak');if(welcomeButton)welcomeButton.hidden=false;const welcomeStatus=document.getElementById('claraWelcomeStatus');if(welcomeStatus)welcomeStatus.textContent='Klicke auf „Clara kennenlernen“, um ihre Stimme zu hören.';updateClaraWelcome();const heroVideo=document.querySelector('#marketing-home video.hero-scene-video');if(heroVideo){heroVideo.muted=true;heroVideo.autoplay=false;heroVideo.loop=true;heroVideo.playsInline=true;heroVideo.pause();const holdHeroFrame=()=>{heroVideo.pause();if(heroVideo.currentTime>0.05){try{heroVideo.currentTime=0;}catch(_){}}};heroVideo.addEventListener('loadedmetadata',holdHeroFrame,{once:true});if(heroVideo.readyState>=1)holdHeroFrame();}const auto=document.getElementById('claraAutoSpeak');if(auto){try{auto.checked=localStorage.getItem('clara.autoSpeak')!=='false';}catch(_){auto.checked=true;}auto.addEventListener('change',()=>{try{localStorage.setItem('clara.autoSpeak',String(auto.checked));}catch(_){}if(!auto.checked)stopClaraSpeech();});}const rate=document.getElementById('claraRate');if(rate){rate.disabled=true;rate.title='Das Tempo wird derzeit durch Azure vorgegeben.';}loadClaraVoices();});
 
