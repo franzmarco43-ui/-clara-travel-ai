@@ -138,10 +138,20 @@ function initDanubeMap(){
   }
   try{
     danubeMapInstance=window.L.map(host,{scrollWheelZoom:false}).setView([46.9,20.0],5);
-    window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    const danubeTiles=window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
       maxZoom:18,
       attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
     }).addTo(danubeMapInstance);
+    let danubeTileErrors=0;
+    danubeTiles.on('tileerror',()=>{
+      danubeTileErrors++;
+      if(danubeTileErrors>=6&&danubeMapInstance){
+        console.warn('Clara: Kartenkacheln nicht erreichbar – wechsle zur schematischen Donaukarte.');
+        try{danubeMapInstance.remove();}catch(_){}
+        danubeMapInstance=null;
+        renderDanubeMapFallback();
+      }
+    });
     const riverStops=riverRoutePlaces;
     const routeLine=window.L.polyline(riverStops.map(p=>[p.lat,p.lon]),{
       color:'#c79b53',weight:3,opacity:.85,dashArray:'7 8',lineCap:'round'
@@ -251,7 +261,17 @@ function initDanubeLocksMap(){
   if(danubeLocksMap){setTimeout(()=>danubeLocksMap&&danubeLocksMap.invalidateSize(),120);return;}
   try{
     danubeLocksMap=window.L.map(host,{scrollWheelZoom:false}).setView([48.2,15.5],5);
-    window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}).addTo(danubeLocksMap);
+    const lockTiles=window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}).addTo(danubeLocksMap);
+    let lockTileErrors=0;
+    lockTiles.on('tileerror',()=>{
+      lockTileErrors++;
+      if(lockTileErrors>=6&&danubeLocksMap){
+        console.warn('Clara: Schleusenkarten-Kacheln nicht erreichbar – wechsle zur schematischen Übersicht.');
+        try{danubeLocksMap.remove();}catch(_){}
+        danubeLocksMap=null;
+        renderDanubeLocksFallback();
+      }
+    });
     danubeLockRecords.forEach((lock,index)=>{
       if(!Number.isFinite(lock.latitude)||!Number.isFinite(lock.longitude))return;
       const icon=window.L.divIcon({className:'lock-map-marker',html:'<span>'+(index+1)+'</span>',iconSize:[25,25],iconAnchor:[12,12]});
@@ -352,7 +372,7 @@ function openAppPage(page){
   document.getElementById('clara-app').style.display='block';
   showPage(page);
 }
-function openDestination(name){openAppPage('planner');selectDestination(name);}
+function openDestination(name){openAppPage('planner');const destination=document.getElementById('destination');if(destination)destination.value=name;makePlan();}
 function returnToLanding(){
   claraSetRoute({view:'landing',page:'home'});
   document.getElementById('clara-app').style.display='none';
