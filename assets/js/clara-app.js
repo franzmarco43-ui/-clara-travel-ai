@@ -143,15 +143,23 @@ function initDanubeMap(){
       attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
     }).addTo(danubeMapInstance);
     let danubeTileErrors=0;
+    let danubeFallbackShown=false;
+    const showDanubeFallback=()=>{
+      if(danubeFallbackShown)return;
+      danubeFallbackShown=true;
+      console.warn('Clara: Kartenhintergrund nicht rechtzeitig verfügbar – zeige die schematische Donaukarte.');
+      if(danubeMapInstance){try{danubeMapInstance.remove();}catch(_){}danubeMapInstance=null;}
+      renderDanubeMapFallback();
+    };
     danubeTiles.on('tileerror',()=>{
       danubeTileErrors++;
-      if(danubeTileErrors>=6&&danubeMapInstance){
-        console.warn('Clara: Kartenkacheln nicht erreichbar – wechsle zur schematischen Donaukarte.');
-        try{danubeMapInstance.remove();}catch(_){}
-        danubeMapInstance=null;
-        renderDanubeMapFallback();
-      }
+      if(danubeTileErrors>=6)showDanubeFallback();
     });
+    // Some networks leave tile requests pending without firing tileerror.
+    // Do not leave the map blank forever in that case.
+    setTimeout(()=>{
+      if(danubeMapInstance&&!danubeFallbackShown&&!host.querySelector('.leaflet-tile-loaded'))showDanubeFallback();
+    },12000);
     const riverStops=riverRoutePlaces;
     const routeLine=window.L.polyline(riverStops.map(p=>[p.lat,p.lon]),{
       color:'#c79b53',weight:3,opacity:.85,dashArray:'7 8',lineCap:'round'
@@ -263,15 +271,22 @@ function initDanubeLocksMap(){
     danubeLocksMap=window.L.map(host,{scrollWheelZoom:false}).setView([48.2,15.5],5);
     const lockTiles=window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}).addTo(danubeLocksMap);
     let lockTileErrors=0;
+    let lockFallbackShown=false;
+    const showLocksFallback=()=>{
+      if(lockFallbackShown)return;
+      lockFallbackShown=true;
+      console.warn('Clara: Schleusenkarten-Hintergrund nicht rechtzeitig verfügbar – zeige die schematische Übersicht.');
+      if(danubeLocksMap){try{danubeLocksMap.remove();}catch(_){}danubeLocksMap=null;}
+      renderDanubeLocksFallback();
+    };
     lockTiles.on('tileerror',()=>{
       lockTileErrors++;
-      if(lockTileErrors>=6&&danubeLocksMap){
-        console.warn('Clara: Schleusenkarten-Kacheln nicht erreichbar – wechsle zur schematischen Übersicht.');
-        try{danubeLocksMap.remove();}catch(_){}
-        danubeLocksMap=null;
-        renderDanubeLocksFallback();
-      }
+      if(lockTileErrors>=6)showLocksFallback();
     });
+    // Also handle stalled tile requests which never emit tileerror.
+    setTimeout(()=>{
+      if(danubeLocksMap&&!lockFallbackShown&&!host.querySelector('.leaflet-tile-loaded'))showLocksFallback();
+    },12000);
     danubeLockRecords.forEach((lock,index)=>{
       if(!Number.isFinite(lock.latitude)||!Number.isFinite(lock.longitude))return;
       const icon=window.L.divIcon({className:'lock-map-marker',html:'<span>'+(index+1)+'</span>',iconSize:[25,25],iconAnchor:[12,12]});
