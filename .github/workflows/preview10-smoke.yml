@@ -25,5 +25,6 @@ jobs:
           node --check netlify/functions/clara-speech.js
           node --check netlify/functions/clara-speech-visemes.js
           node --check netlify/functions/chat.js
+          node --check scripts/smoke-check.mjs
       - name: Validate destinations, locks, and PWA shell
         run: node scripts/smoke-check.mjs
