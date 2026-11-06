@@ -1804,3 +1804,54 @@ body{background:#f3f5f1;color:var(--ink);letter-spacing:-.01em}
  #clara-app .heading{margin-bottom:16px}
  #clara-app .main{padding-left:11px;padding-right:11px}
 }
+
+/* Preview 10 Premium pass — accessible controls, calm hierarchy and mobile-first planner */
+:root{--premium-forest:#123b38;--premium-sage:#e7f0ea;--premium-paper:#fbfaf6;--premium-gold:#b9955c;--premium-line:#dce5df}
+:focus-visible{outline:3px solid #b9955c!important;outline-offset:3px}
+#marketing-home .site-header{backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+#marketing-home .site-nav a{transition:color .18s ease,opacity .18s ease}
+#marketing-home .site-nav a:hover{color:var(--premium-gold)}
+#marketing-home .site-cta,#clara-app .btn{min-height:44px}
+#clara-app .panel{border:1px solid var(--premium-line);box-shadow:0 10px 30px rgba(18,59,56,.045)}
+#clara-app .heading h1{letter-spacing:-.035em}
+#clara-app .planner-panel{padding:clamp(18px,3vw,30px)}
+#clara-app .planner-intro{max-width:680px;margin-bottom:22px}
+#clara-app .planner-step{font-size:10px;font-weight:800;letter-spacing:.16em;color:var(--premium-gold)}
+#clara-app .planner-intro p{color:var(--muted);margin:7px 0 0}
+#clara-app .planner-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+#clara-app .planner-actions .btn{min-width:170px}
+#clara-app .saved-plans{display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,1fr);align-items:center;gap:18px;margin-top:28px;padding:20px;border:1px solid var(--premium-line);border-radius:16px;background:var(--premium-paper)}
+#clara-app .saved-plans h3{margin:6px 0 3px}
+#clara-app .saved-plans p{margin:0;font-size:13px}
+#clara-app .saved-plan-controls{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:center}
+#clara-app .saved-plan-controls select{min-width:0}
+#clara-app input,#clara-app select,#clara-app textarea{min-height:44px;border-radius:10px;border:1px solid var(--premium-line);background:#fff;padding:10px 12px}
+#clara-app .btn.outline{border-color:#cbd9d1}
+#clara-app .btn.ghost{background:transparent;border:1px solid var(--premium-line);border-radius:10px;padding:10px 14px}
+@media(max-width:760px){
+ #marketing-home .site-header{position:sticky;top:0;z-index:50;flex-wrap:wrap;gap:8px;padding:10px 14px}
+ #marketing-home .site-nav{order:3;width:100%;overflow-x:auto;white-space:nowrap;justify-content:flex-start;gap:18px;padding:7px 0;scrollbar-width:none}
+ #marketing-home .site-nav::-webkit-scrollbar{display:none}
+ #marketing-home .site-actions{margin-left:auto}
+ #marketing-home .site-nav a{font-size:13px}
+ #marketing-home .site-hero.clara-welcome-hero{min-height:500px}
+ #marketing-home .landing-mobile-nav{padding-bottom:max(8px,env(safe-area-inset-bottom))}
+ #clara-app .planner-panel{padding:16px}
+ #clara-app .planner-actions{display:grid;grid-template-columns:1fr}
+ #clara-app .planner-actions .btn{width:100%}
+ #clara-app .saved-plans{grid-template-columns:1fr;padding:15px;gap:12px}
+ #clara-app .saved-plan-controls{grid-template-columns:1fr 1fr}
+ #clara-app .saved-plan-controls select{grid-column:1/-1}
+ #clara-app .saved-plan-controls button{width:100%}
+ #clara-app .formgrid{grid-template-columns:1fr}
+ #clara-app .heading{align-items:flex-start}
+}
+@media(max-width:380px){
+ #marketing-home .site-brand small{font-size:10px}
+ #marketing-home .site-actions .language-label{display:none}
+ #clara-app .saved-plan-controls{grid-template-columns:1fr}
+ #clara-app .saved-plan-controls select{grid-column:auto}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
