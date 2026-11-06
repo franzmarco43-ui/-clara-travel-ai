@@ -682,12 +682,28 @@ function setClaraSpeaking(active){
   document.querySelectorAll('#page-home .avatar-stage, #page-clara .avatar-stage').forEach(el=>el.classList.toggle('speaking',active));
   document.querySelectorAll('#page-home .avatar, #page-clara .avatar').forEach(el=>el.classList.toggle('speaking',active));
 }
+function updateClaraVisemeMouthPosition(video){
+  const frame=document.getElementById('claraVideoFrame');
+  if(!video||!frame||!video.videoWidth||!video.videoHeight)return;
+  const width=frame.clientWidth||300;
+  const height=frame.clientHeight||320;
+  const scale=Math.min(width/video.videoWidth,height/video.videoHeight);
+  const renderedHeight=video.videoHeight*scale;
+  const verticalOffset=(height-renderedHeight)/2;
+  // The supplied landscape welcome video places the resting mouth higher
+  // than the earlier portrait cut. Account for object-fit:contain letterboxing.
+  const sourceMouthY=video.videoWidth>video.videoHeight?0.54:0.623;
+  const top=((verticalOffset+renderedHeight*sourceMouthY)/height)*100;
+  frame.style.setProperty('--clara-viseme-mouth-top',Math.max(0,Math.min(100,top)).toFixed(2)+'%');
+}
 function freezeClaraVideoAtNeutralFrame(video){
   if(!video)return;
   const seek=()=>{
     video.pause();
+    updateClaraVisemeMouthPosition(video);
     const duration=Number(video.duration);
-    const target=Number.isFinite(duration)&&duration>0?Math.min(2,Math.max(0,duration-0.15)):2;
+    const preferredFrame=video.videoWidth>video.videoHeight?4:2;
+    const target=Number.isFinite(duration)&&duration>0?Math.min(preferredFrame,Math.max(0,duration-0.15)):preferredFrame;
     try{video.currentTime=target;}catch(error){console.warn('Clara-Neutralbild konnte nicht gesetzt werden:',error);}
   };
   video.pause();
@@ -1579,7 +1595,7 @@ function playClaraWelcome(){
   });
  }
 }
-document.addEventListener('DOMContentLoaded',()=>{try{history.replaceState({claraTravelAI:true,view:'landing',page:'home'},'',window.location.href);}catch(_){}restoreClaraLanguage();restoreClaraConnection();const welcomeButton=document.getElementById('claraWelcomeSpeak');if(welcomeButton)welcomeButton.hidden=false;const welcomeStatus=document.getElementById('claraWelcomeStatus');if(welcomeStatus)welcomeStatus.textContent='Klicke auf „Clara kennenlernen“, um ihre Stimme zu hören.';updateClaraWelcome();const heroVideo=document.querySelector('.clara-welcome-hero video.hero-scene-video');if(heroVideo){heroVideo.muted=true;heroVideo.autoplay=false;heroVideo.loop=true;heroVideo.playsInline=true;heroVideo.pause();const holdHeroFrame=()=>{heroVideo.pause();if(heroVideo.currentTime>0.05){try{heroVideo.currentTime=0;}catch(_){}}};heroVideo.addEventListener('loadedmetadata',holdHeroFrame,{once:true});if(heroVideo.readyState>=1)holdHeroFrame();}const auto=document.getElementById('claraAutoSpeak');if(auto){try{auto.checked=localStorage.getItem('clara.autoSpeak')!=='false';}catch(_){auto.checked=true;}auto.addEventListener('change',()=>{try{localStorage.setItem('clara.autoSpeak',String(auto.checked));}catch(_){}if(!auto.checked)stopClaraSpeech();});}const rate=document.getElementById('claraRate');if(rate){rate.disabled=true;rate.title='Das Tempo wird derzeit durch Azure vorgegeben.';}loadClaraVoices();});
+document.addEventListener('DOMContentLoaded',()=>{try{history.replaceState({claraTravelAI:true,view:'landing',page:'home'},'',window.location.href);}catch(_){}restoreClaraLanguage();restoreClaraConnection();const welcomeButton=document.getElementById('claraWelcomeSpeak');if(welcomeButton)welcomeButton.hidden=false;const welcomeStatus=document.getElementById('claraWelcomeStatus');if(welcomeStatus)welcomeStatus.textContent='Klicke auf „Clara kennenlernen“, um ihre Stimme zu hören.';updateClaraWelcome();const chatVideo=document.getElementById('claraChatVideo');if(chatVideo){const positionMouth=()=>updateClaraVisemeMouthPosition(chatVideo);if(chatVideo.readyState>=1)positionMouth();else chatVideo.addEventListener('loadedmetadata',positionMouth,{once:true});window.addEventListener('resize',positionMouth,{passive:true});}const heroVideo=document.querySelector('.clara-welcome-hero video.hero-scene-video');if(heroVideo){heroVideo.muted=true;heroVideo.autoplay=false;heroVideo.loop=true;heroVideo.playsInline=true;heroVideo.pause();const holdHeroFrame=()=>{heroVideo.pause();if(heroVideo.currentTime>0.05){try{heroVideo.currentTime=0;}catch(_){}}};heroVideo.addEventListener('loadedmetadata',holdHeroFrame,{once:true});if(heroVideo.readyState>=1)holdHeroFrame();}const auto=document.getElementById('claraAutoSpeak');if(auto){try{auto.checked=localStorage.getItem('clara.autoSpeak')!=='false';}catch(_){auto.checked=true;}auto.addEventListener('change',()=>{try{localStorage.setItem('clara.autoSpeak',String(auto.checked));}catch(_){}if(!auto.checked)stopClaraSpeech();});}const rate=document.getElementById('claraRate');if(rate){rate.disabled=true;rate.title='Das Tempo wird derzeit durch Azure vorgegeben.';}loadClaraVoices();});
 
 
 
