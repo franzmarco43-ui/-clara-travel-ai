@@ -1884,3 +1884,31 @@ body{background:#f3f5f1;color:var(--ink);letter-spacing:-.01em}
  #marketing-home .featured-card .city-live-row:last-of-type{grid-column:1/-1}
  #marketing-home .featured-card [data-live-weather]{font-size:16px!important}
 }
+
+
+/* Preview 10 · mobile usability: stable viewport, thumb-friendly controls and safe-area spacing */
+@media(max-width:760px){
+ html,body{max-width:100%;overflow-x:clip}
+ #marketing-home .site-header{padding-top:max(9px,env(safe-area-inset-top))}
+ #marketing-home .mobile-menu-toggle{min-width:44px;min-height:44px}
+ #marketing-home .mobile-site-nav a{min-height:44px;display:flex;align-items:center}
+ #marketing-home .landing-mobile-nav{padding-bottom:max(8px,env(safe-area-inset-bottom))}
+ #marketing-home .landing-mobile-nav button{min-height:48px;touch-action:manipulation}
+ #marketing-home .hero-button,#marketing-home .featured-card .dest-info>button{min-height:46px}
+ #clara-app .topbar{padding-top:max(9px,env(safe-area-inset-top))}
+ #clara-app .mobile-nav{padding-bottom:max(8px,env(safe-area-inset-bottom))}
+ #clara-app .mobile-nav button{min-height:48px;touch-action:manipulation}
+ #clara-app .chatform input,#clara-app .chatform button{min-height:46px}
+ #clara-app .planner-actions .btn,#clara-app .saved-plan-controls button{min-height:46px}
+ #clara-app .danube-map,#clara-app .locks-map{touch-action:pan-x pan-y}
+}
+@media(max-width:360px){
+ #marketing-home .site-actions{gap:5px}
+ #marketing-home .landing-language select{max-width:88px}
+ #clara-app .top-actions{gap:4px}
+ #clara-app .app-language select{max-width:84px}
+ #clara-app .top-actions .btn.gold{font-size:10px;padding-inline:7px}
+}
+@media(prefers-reduced-motion:reduce){
+ #marketing-home .featured-grid .destination:hover{transform:none}
+}
