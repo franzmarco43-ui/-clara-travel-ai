@@ -57,6 +57,17 @@ test('rejects untrusted chat preflight requests', async () => {
   assert.equal(response.headers['Access-Control-Allow-Origin'], undefined);
 });
 
+test('rejects other numbered deploy previews', async () => {
+  const { handler } = loadHandler();
+  const response = await handler({
+    httpMethod: 'OPTIONS',
+    headers: { origin: 'https://deploy-preview-11--clara-travel-ai.netlify.app' },
+    body: ''
+  });
+  assert.equal(response.statusCode, 403);
+  assert.equal(response.headers['Access-Control-Allow-Origin'], undefined);
+});
+
 test('rejects untrusted chat POST before loading modules or calling external services', async () => {
   const { handler, calls } = loadHandler();
   const response = await handler({

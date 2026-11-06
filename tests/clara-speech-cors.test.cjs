@@ -39,7 +39,7 @@ function loadHandler({ originFetch } = {}) {
   return { handler: moduleExports.handler, getAzureCalls: () => azureCalls };
 }
 
-test('allows preflight only for the production and numbered Clara preview domains', async () => {
+test('allows preflight only for production and Preview 10', async () => {
   const { handler } = loadHandler();
   for (const origin of [productionOrigin, previewOrigin]) {
     const response = await handler({ httpMethod: 'OPTIONS', headers: { origin }, body: '' });
@@ -54,6 +54,13 @@ test('allows preflight only for the production and numbered Clara preview domain
   });
   assert.equal(rejected.statusCode, 403);
   assert.equal(rejected.headers['Access-Control-Allow-Origin'], undefined);
+  const otherPreview = await handler({
+    httpMethod: 'OPTIONS',
+    headers: { origin: 'https://deploy-preview-11--clara-travel-ai.netlify.app' },
+    body: ''
+  });
+  assert.equal(otherPreview.statusCode, 403);
+  assert.equal(otherPreview.headers['Access-Control-Allow-Origin'], undefined);
 });
 
 test('rejects an untrusted browser origin before contacting Azure', async () => {

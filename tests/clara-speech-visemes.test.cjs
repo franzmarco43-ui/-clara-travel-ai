@@ -80,7 +80,7 @@ test('returns sorted, timestamped German Azure visemes for the allowed preview o
   assert.equal(lastSpeechConfig.receivedRegion, 'germanywestcentral');
 });
 
-test('rejects an origin outside the production and numbered preview domains', async () => {
+test('rejects origins outside production and Preview 10', async () => {
   const handler = loadHandler();
   const response = await handler({
     httpMethod: 'POST',
@@ -88,9 +88,15 @@ test('rejects an origin outside the production and numbered preview domains', as
     body: JSON.stringify({ text: 'Hallo Clara', language: 'de' })
   });
   assert.equal(response.statusCode, 403);
+  const otherPreview = await handler({
+    httpMethod: 'POST',
+    headers: { origin: 'https://deploy-preview-11--clara-travel-ai.netlify.app' },
+    body: JSON.stringify({ text: 'Hallo Clara', language: 'de' })
+  });
+  assert.equal(otherPreview.statusCode, 403);
 });
 
-test('allows the numbered preview CORS preflight', async () => {
+test('allows the Preview 10 CORS preflight', async () => {
   const handler = loadHandler();
   const response = await handler({
     httpMethod: 'OPTIONS',

@@ -8,7 +8,7 @@ exports.handler = async (event) => {
   const origin = event.headers?.origin || event.headers?.Origin || "";
   const allowedOrigin = !origin ||
     origin === "https://clara-travel-ai.netlify.app" ||
-    /^https:\/\/deploy-preview-\d+--clara-travel-ai\.netlify\.app$/i.test(origin);
+    origin === "https://deploy-preview-10--clara-travel-ai.netlify.app";
   const corsHeaders = {
     "Content-Type": "application/json; charset=utf-8",
     "Cache-Control": "no-store",

@@ -200,7 +200,7 @@ exports.handler = async function (event) {
   const requestOrigin = event.headers?.origin || event.headers?.Origin || "";
   const isAllowedOrigin = !requestOrigin ||
     requestOrigin === "https://clara-travel-ai.netlify.app" ||
-    /^https:\/\/deploy-preview-\d+--clara-travel-ai\.netlify\.app$/i.test(requestOrigin);
+    requestOrigin === "https://deploy-preview-10--clara-travel-ai.netlify.app";
   const headers = {
     "Content-Type": "application/json",
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
