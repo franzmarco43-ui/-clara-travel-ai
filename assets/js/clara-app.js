@@ -704,7 +704,7 @@ function splitClaraSpeechChunks(value){
   if(current)chunks.push(current);
   return chunks;
 }
-async function fetchClaraSpeechChunk(text,language){
+async async function fetchClaraSpeechChunk(text,language){
   const controller=new AbortController();
   const timeout=setTimeout(()=>controller.abort(),15000);
   try{
