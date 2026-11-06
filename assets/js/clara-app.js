@@ -801,6 +801,20 @@ function playClaraAudioBlob(blob){
     }
   });
 }
+// Landing-page welcome action: use the same speech pipeline as chat.
+function playClaraWelcome(){
+  const greeting='Hallo! Ich bin Clara von Donau. Schön, dass du da bist. Gemeinsam entdecken wir die schönsten Orte entlang der Donau – von Passau bis zum Donaudelta. Wohin möchtest du reisen?';
+  const status=document.getElementById('claraWelcomeStatus');
+  const button=document.getElementById('claraWelcomeSpeak');
+  const live=document.getElementById('claraWelcomeGreeting');
+  if(status)status.textContent='Clara bereitet ihre Begrüßung vor …';
+  if(button)button.hidden=false;
+  if(live)live.textContent=greeting;
+  unlockClaraAudio();
+  speakClara(greeting,true);
+}
+window.playClaraWelcome=playClaraWelcome;
+
 async function speakClara(value,force=false,speechMessage=null){
   // Resume WebAudio synchronously while the click/submit still carries user activation.
   unlockClaraAudio();
