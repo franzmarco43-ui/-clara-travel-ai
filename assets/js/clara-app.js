@@ -471,14 +471,29 @@ async function saveClaraTripPlan(){
  }
  if(status)status.textContent=cloudSaved?'Reiseplan auf diesem Gerät und in deinem Clara-Konto gespeichert.':localSaved?'Reiseplan auf diesem Gerät gespeichert. Für die Kontosynchronisierung bitte anmelden und Clara Memory freigeben.':'Der Reiseplan konnte nicht gespeichert werden.';
 }
-function renderClaraTripPlans(){
+async function renderClaraTripPlans(){
  const select=document.getElementById('savedTripPlans');if(!select)return;
- const items=readClaraTripPlans();select.innerHTML='<option value="">Reiseplan auswählen …</option>';
- items.forEach(item=>{const option=document.createElement('option');option.value=item.id;option.textContent=item.destination+' · '+item.duration+' · '+new Date(item.savedAt).toLocaleDateString('de-DE');select.appendChild(option);});
+ const localItems=readClaraTripPlans();select.innerHTML='<option value="">Reiseplan auswählen …</option>';
+ localItems.forEach(item=>{const option=document.createElement('option');option.value=item.id;option.textContent=item.destination+' · '+item.duration+' · '+new Date(item.savedAt).toLocaleDateString('de-DE')+' (dieses Gerät)';select.appendChild(option);});
+ if(window.claraSupabase&&claraUser){
+  try{
+   const profile=await window.claraSupabase.from('clara_profiles').select('consent_memory').eq('user_id',claraUser.id).maybeSingle();
+   if(profile.error)throw profile.error;
+   if(profile.data?.consent_memory===true){
+    const result=await window.claraSupabase.from('clara_memories').select('id,content,created_at').eq('user_id',claraUser.id).eq('memory_type','saved_trip_plan').order('created_at',{ascending:false}).limit(30);
+    if(result.error)throw result.error;
+    (result.data||[]).forEach(row=>{const plan=row.content;if(!plan||!plan.destination)return;const option=document.createElement('option');option.value='cloud:'+row.id;option.textContent=plan.destination+' · '+plan.duration+' · '+new Date(row.created_at).toLocaleDateString('de-DE')+' (Konto)';select.appendChild(option);});
+   }
+  }catch(error){console.warn('Gespeicherte Kontoreisen laden:',error);}
+ }
 }
 async function loadClaraTripPlan(){
  const select=document.getElementById('savedTripPlans'),id=select?.value;if(!id){toast('Bitte wähle zuerst einen gespeicherten Reiseplan.');return;}
- const plan=readClaraTripPlans().find(item=>item.id===id);if(!plan){toast('Dieser Reiseplan wurde lokal nicht gefunden.');return;}
+ let plan=readClaraTripPlans().find(item=>item.id===id);
+ if(!plan&&id.startsWith('cloud:')&&window.claraSupabase&&claraUser){
+  try{const result=await window.claraSupabase.from('clara_memories').select('content').eq('id',id.slice(6)).eq('user_id',claraUser.id).eq('memory_type','saved_trip_plan').maybeSingle();if(result.error)throw result.error;plan=result.data?.content;}catch(error){console.warn('Kontoreise laden:',error);}
+ }
+ if(!plan){toast('Dieser Reiseplan wurde nicht gefunden.');return;}
  document.getElementById('destination').value=plan.destination;document.getElementById('duration').value=plan.duration;document.getElementById('interest').value=plan.interest;document.getElementById('pace').value=plan.pace;document.getElementById('mobility').value=plan.mobility;makePlan();
  const status=document.getElementById('planSaveStatus');if(status)status.textContent='Dein gespeicherter Reiseplan wurde geladen.';
 }
