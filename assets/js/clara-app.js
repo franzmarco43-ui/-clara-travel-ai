@@ -110,7 +110,12 @@ async function loadCityWeather(){const cards=[...document.querySelectorAll('[dat
 function placeCard(p){const t=claraPlace(p);return `<article class="featured-card"><div class="dest-img" style="background-image:linear-gradient(180deg,#102f2820,#102f2866),url('${p.image}');background-size:cover;background-position:center" role="img" aria-label="${claraCardText('view')} ${p.name}"><span>${t.country}</span></div><div class="dest-info"><h3>${p.name}</h3><p>${t.desc}</p><div class="city-live" data-city-live="${p.name}"><div class="city-live-row"><b>${claraCardText('date')}</b><span data-live-time>${claraCardText('loading')}</span></div><div class="city-live-row"><b>${claraCardText('weather')}</b><span data-live-weather>${claraCardText('loading')}</span></div><div class="city-live-row"><b>${claraCardText('level')}</b><span data-live-level>${claraCardText('levelInfo')}</span></div><small data-live-updated>${claraCardText('fetching')}</small></div><button onclick="selectDestination('${p.name}')">${claraCardText('discover')}</button></div></article>`}
 const featuredPlaceNames=['Passau','Melk','Bratislava','Russe','Puszta'];
 document.getElementById('destinations').innerHTML=featuredPlaceNames.map(name=>places.find(p=>p.name===name)).filter(Boolean).map(placeCard).join('');
-updateCityClocks();setInterval(updateCityClocks,1000);setInterval(()=>{if(document.visibilityState==='visible')loadCityWeather();},15*60*1000);
+updateCityClocks();
+// Load live weather immediately on the landing page; refresh periodically and when the tab becomes visible.
+loadCityWeather();
+setInterval(updateCityClocks,1000);
+setInterval(()=>{if(document.visibilityState==='visible')loadCityWeather();},15*60*1000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){updateCityClocks();loadCityWeather();}});
 document.getElementById('destination').innerHTML=places.map(p=>`<option>${p.name}</option>`).join('');
 const riverRoutePlaces=places.filter(p=>p.routeType==='river');
 document.getElementById('routeList').innerHTML=riverRoutePlaces.map((p,i)=>`<button type="button" class="route-point" onclick="focusDanubeStop('${p.name}')"><span class="route-number">${i+1}</span><span>${p.name}</span><span class="route-country">${claraPlace(p).country}</span></button>`).join('');
