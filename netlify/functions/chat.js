@@ -198,7 +198,7 @@ function researchFailureMessage(reason) {
 }
 exports.handler = async function (event) {
   const requestOrigin = event.headers?.origin || event.headers?.Origin || "";
-  const isAllowedOrigin =
+  const isAllowedOrigin = !requestOrigin ||
     requestOrigin === "https://clara-travel-ai.netlify.app" ||
     /^https:\/\/deploy-preview-\d+--clara-travel-ai\.netlify\.app$/i.test(requestOrigin);
   const headers = {
@@ -208,11 +208,18 @@ exports.handler = async function (event) {
     "Vary": "Origin"
   };
   // Allow the production site and Netlify numbered deploy previews only.
-  // Other origins receive no CORS permission.
-  if (isAllowedOrigin) headers["Access-Control-Allow-Origin"] = requestOrigin;
+  // Reject foreign browser origins before they can consume backend/API resources.
+  if (requestOrigin && isAllowedOrigin) headers["Access-Control-Allow-Origin"] = requestOrigin;
 
   if (event.httpMethod === "OPTIONS") {
-    return { statusCode: 204, headers, body: "" };
+    return { statusCode: isAllowedOrigin ? 204 : 403, headers, body: "" };
+  }
+  if (!isAllowedOrigin) {
+    return {
+      statusCode: 403,
+      headers,
+      body: JSON.stringify({ error: "Ursprung nicht freigegeben." })
+    };
   }
 
   if (event.httpMethod !== "POST") {
