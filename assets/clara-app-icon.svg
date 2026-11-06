@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<rect width="512" height="512" rx="112" fill="#123b3b"/>
+<circle cx="256" cy="256" r="184" fill="#f6f3e9"/>
+<path d="M112 294c55-52 111-52 166 0s111 52 166 0" fill="none" stroke="#2a7771" stroke-width="24" stroke-linecap="round"/>
+<path d="M128 342c48-34 96-34 144 0s96 34 144 0" fill="none" stroke="#9caa86" stroke-width="16" stroke-linecap="round"/>
+<path d="M256 108c-38 0-68 30-68 68 0 55 68 116 68 116s68-61 68-116c0-38-30-68-68-68z" fill="#c69a62"/>
+<circle cx="256" cy="176" r="24" fill="#f6f3e9"/>
+<text x="256" y="442" text-anchor="middle" font-family="Georgia,serif" font-size="48" fill="#f6f3e9">Clara</text>
+</svg>
