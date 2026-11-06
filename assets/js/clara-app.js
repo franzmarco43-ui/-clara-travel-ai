@@ -1069,10 +1069,7 @@ let claraSupabase = null;
 let claraUser = null;
 let claraRecoveryTokenHash = null;
 let claraRecoveryCode = null;
-const CLARA_CONFIG_KEY = 'clara.travel.supabase.public.v1';
 // Public browser configuration only. Never place a Supabase Secret/service_role key here.
-const CLARA_DEFAULT_SUPABASE_URL = 'https://ufsglnhebhbmadwzftau.supabase.co';
-const CLARA_DEFAULT_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_5B9FYMgDQ0SJjCYEeJgPgA_4DD4o3rN'; // Public publishable key only; RLS remains the authorization boundary.
 function memoryStatus(id,msg,isError=false){const el=document.getElementById(id);if(el){el.textContent=msg;el.style.color=isError?'#a33':'var(--muted)';}}
 function connectSupabase(){
   const url=document.getElementById('sbUrl').value.trim();
