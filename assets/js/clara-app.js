@@ -705,18 +705,30 @@ function splitClaraSpeechChunks(value){
   return chunks;
 }
 async function fetchClaraSpeechChunk(text,language){
-  const response=await fetch('/.netlify/functions/clara-speech',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({text,language})
-  });
-  if(!response.ok){
-    let detail={};try{detail=await response.json();}catch(_){}
-    throw new Error(detail.error||('Sprachausgabe fehlgeschlagen ('+response.status+')'));
+  const controller=new AbortController();
+  const timeout=setTimeout(()=>controller.abort(),15000);
+  try{
+    const response=await fetch('/.netlify/functions/clara-speech',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({text,language}),
+      signal:controller.signal
+    });
+    if(!response.ok){
+      let detail={};try{detail=await response.json();}catch(_){}
+      const reason=detail.error||('Sprachausgabe fehlgeschlagen ('+response.status+')');
+      throw new Error(reason);
+    }
+    const blob=await response.blob();
+    if(!blob.size)throw new Error('Azure hat eine leere Audiodatei geliefert.');
+    if(!blob.type.includes('audio')&&!blob.type.includes('octet-stream'))throw new Error('Der Sprachdienst hat keine Audiodatei zurückgegeben.');
+    return blob;
+  }catch(error){
+    if(error.name==='AbortError')throw new Error('Der Sprachdienst antwortet nicht innerhalb von 15 Sekunden.');
+    throw error;
+  }finally{
+    clearTimeout(timeout);
   }
-  const blob=await response.blob();
-  if(!blob.size)throw new Error('Azure hat eine leere Audiodatei geliefert.');
-  return blob;
 }
 function playClaraAudioBlob(blob){
   return new Promise((resolve,reject)=>{
@@ -731,12 +743,18 @@ function playClaraAudioBlob(blob){
       if(claraAudioElement===audio)claraAudioElement=null;
       resolve();
     };
-    audio.onerror=()=>{
+    const cleanup=()=>{
       if(claraAudioObjectUrl===url){URL.revokeObjectURL(url);claraAudioObjectUrl=null;}
       if(claraAudioElement===audio)claraAudioElement=null;
+    };
+    audio.onerror=()=>{
+      cleanup();
       reject(new Error('Die Audiodatei konnte nicht abgespielt werden.'));
     };
-    audio.play().catch(reject);
+    audio.play().catch(error=>{
+      cleanup();
+      reject(new Error('Der Browser hat die Wiedergabe blockiert: '+(error.message||'unbekannter Fehler')));
+    });
   });
 }
 async function speakClara(value,force=false,speechMessage=null){
@@ -781,7 +799,11 @@ async function speakClara(value,force=false,speechMessage=null){
         if(match)utterance.voice=match;
         utterance.onstart=()=>{setClaraSpeaking(true);if(status)status.textContent='Clara spricht jetzt mit der verfügbaren Browser-Stimme.';};
         utterance.onend=()=>{setClaraSpeaking(false);stopClaraVideo();};
-        utterance.onerror=()=>{setClaraSpeaking(false);stopClaraVideo();};
+        utterance.onerror=(event)=>{
+          setClaraSpeaking(false);
+          stopClaraVideo();
+          if(status)status.textContent='Auch die Browser-Stimme konnte nicht starten ('+(event.error||'unbekannter Fehler')+'). Bitte Browser-Audio und Lautstärke prüfen.';
+        };
         window.speechSynthesis.speak(utterance);
         return;
       }catch(fallbackError){console.warn('Browser-Sprachausgabe fehlgeschlagen:',fallbackError);}
@@ -1276,3 +1298,12 @@ function playClaraWelcome(){
 }
 document.addEventListener('DOMContentLoaded',()=>{try{history.replaceState({claraTravelAI:true,view:'landing',page:'home'},'',window.location.href);}catch(_){}restoreClaraLanguage();restoreClaraConnection();const welcomeButton=document.getElementById('claraWelcomeSpeak');if(welcomeButton)welcomeButton.hidden=false;const welcomeStatus=document.getElementById('claraWelcomeStatus');if(welcomeStatus)welcomeStatus.textContent='Klicke auf „Clara kennenlernen“, um ihre Stimme zu hören.';updateClaraWelcome();const heroVideo=document.querySelector('#marketing-home video.hero-scene-video');if(heroVideo){heroVideo.muted=true;heroVideo.autoplay=false;heroVideo.loop=true;heroVideo.playsInline=true;heroVideo.pause();const holdHeroFrame=()=>{heroVideo.pause();if(heroVideo.currentTime>0.05){try{heroVideo.currentTime=0;}catch(_){}}};heroVideo.addEventListener('loadedmetadata',holdHeroFrame,{once:true});if(heroVideo.readyState>=1)holdHeroFrame();}const auto=document.getElementById('claraAutoSpeak');if(auto){try{auto.checked=localStorage.getItem('clara.autoSpeak')!=='false';}catch(_){auto.checked=true;}auto.addEventListener('change',()=>{try{localStorage.setItem('clara.autoSpeak',String(auto.checked));}catch(_){}if(!auto.checked)stopClaraSpeech();});}const rate=document.getElementById('claraRate');if(rate){rate.disabled=true;rate.title='Das Tempo wird derzeit durch Azure vorgegeben.';}loadClaraVoices();});
 
+
+
+// Expose functions used by the HTML controls explicitly. This also makes
+// failures caused by stale or partially loaded preview scripts easier to detect.
+Object.assign(window,{
+  openAppPage,showPage,returnToLanding,playClaraWelcome,
+  speakClara,stopClaraSpeech,sendChat,startClaraListening,
+  setClaraLanguage,quickAsk,makePlan
+});
