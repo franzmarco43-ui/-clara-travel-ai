@@ -468,12 +468,13 @@ async function saveClaraTripPlan(){
  const status=document.getElementById('planSaveStatus');
  const items=readClaraTripPlans().filter(item=>!(item.destination===plan.destination&&item.duration===plan.duration));
  items.unshift(plan);const localSaved=writeClaraTripPlans(items);
- let cloudSaved=false;
+ let cloudSaved=false,cloudConsent=false,cloudError=null;
  if(window.claraSupabase&&claraUser){
   try{
    const profile=await window.claraSupabase.from('clara_profiles').select('consent_memory').eq('user_id',claraUser.id).maybeSingle();
    if(profile.error)throw profile.error;
    if(profile.data?.consent_memory===true){
+    cloudConsent=true;
     // Einen bereits gespeicherten Plan mit gleichem Ziel und gleicher Dauer
     // aktualisieren, statt bei jedem erneuten Speichern einen Duplikat-Eintrag anzulegen.
     const existing=await window.claraSupabase.from('clara_memories')
@@ -502,9 +503,16 @@ async function saveClaraTripPlan(){
     }
     cloudSaved=true;
    }
-  }catch(error){console.warn('Cloud-Speicherung Reiseplan:',error);}
+  }catch(error){cloudError=error;console.warn('Cloud-Speicherung Reiseplan:',error);}
  }
- if(status)status.textContent=cloudSaved?(localSaved?'Reiseplan auf diesem Gerät und in deinem Clara-Konto gespeichert.':'Reiseplan in deinem Clara-Konto gespeichert.'):localSaved?'Reiseplan auf diesem Gerät gespeichert. Für die Kontosynchronisierung bitte anmelden und Clara Memory freigeben.':'Der Reiseplan konnte nicht gespeichert werden.';
+ if(status){
+  if(cloudSaved)status.textContent=localSaved?'Reiseplan auf diesem Gerät und in deinem Clara-Konto gespeichert.':'Reiseplan in deinem Clara-Konto gespeichert.';
+  else if(!localSaved)status.textContent='Der Reiseplan konnte nicht gespeichert werden.';
+  else if(cloudError)status.textContent='Reiseplan lokal gespeichert; die Kontosynchronisierung ist fehlgeschlagen. Bitte Verbindung und Kontoberechtigung prüfen.';
+  else if(!window.claraSupabase||!claraUser)status.textContent='Reiseplan lokal gespeichert. Für die Kontosynchronisierung bitte anmelden und Clara Memory freigeben.';
+  else if(!cloudConsent)status.textContent='Reiseplan lokal gespeichert. Für die Kontosynchronisierung bitte Clara Memory freigeben.';
+  else status.textContent='Reiseplan lokal gespeichert; die Kontosynchronisierung ist derzeit nicht verfügbar.';
+ }
  await renderClaraTripPlans();
 }
 async function renderClaraTripPlans(){
