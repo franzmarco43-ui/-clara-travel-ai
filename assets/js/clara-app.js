@@ -1057,7 +1057,7 @@ async function speakClara(value,force=false,speechMessage=null){
   stopClaraSpeech();
   const status=document.getElementById('voiceStatus');
   const speechLanguage=(()=>{try{return claraLang();}catch(_){return 'de';}})();
-  const speechVoiceLabels={de:'Katja',en:'Sonia',nl:'Fenna',fr:'Denise',ro:'Alina'};
+  const speechVoiceLabels={de:'Seraphina',en:'Sonia',nl:'Fenna',fr:'Denise',ro:'Alina'};
   const activeVoiceLabel=speechVoiceLabels[speechLanguage]||speechVoiceLabels.de;
   const run=claraSpeechRun;
   try{
