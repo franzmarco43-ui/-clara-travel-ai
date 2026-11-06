@@ -79,7 +79,7 @@ assert.match(html, /<html lang="de">/, 'German must be the initial document lang
 assert.ok(app.includes('clara.language-default-de'), 'The app must migrate first-visit language to German');
 assert.ok(html.includes('assets/clara-welcome.mp4'), 'The welcome video source must be wired into the homepage');
 assert.ok(existsSync('assets/clara-welcome.mp4'), 'The configured welcome video file must exist');
-assert.doesNotMatch(html + app, /(?:SUPABASE_SERVICE_ROLE_KEY|service_role)\\s*[:=]\\s*['\"][^'\"]{8,}['\"]/i, 'Browser code must never contain a Supabase service-role credential');
+assert.doesNotMatch(html + app, /(?:SUPABASE_SERVICE_ROLE_KEY|service_role)\s*[:=]\s*['"][^'"]{8,}['"]/i, 'Browser code must never contain a Supabase service-role credential');
 assert.doesNotMatch(html + app, /AZURE_SPEECH_KEY|AZURE_SPEECH_REGION/i, 'Azure Speech credentials and server configuration must stay out of browser code');
 
 const expectedWelcomeVideoBlobSha = '742d5da95c9945449866d30438e0b8b215010449';
