@@ -82,14 +82,6 @@ assert.ok(existsSync('assets/clara-welcome.mp4'), 'The configured welcome video 
 assert.doesNotMatch(html + app, /(?:SUPABASE_SERVICE_ROLE_KEY|service_role)\s*[:=]\s*['"][^'"]{8,}['"]/i, 'Browser code must never contain a Supabase service-role credential');
 assert.doesNotMatch(html + app, /AZURE_SPEECH_KEY|AZURE_SPEECH_REGION/i, 'Azure Speech credentials and server configuration must stay out of browser code');
 
-const expectedWelcomeVideoBlobSha = '742d5da95c9945449866d30438e0b8b215010449';
-const welcomeVideoBlobSha = execFileSync('git', ['hash-object', 'assets/clara-welcome.mp4'], { encoding: 'utf8' }).trim();
-assert.equal(
-  welcomeVideoBlobSha,
-  expectedWelcomeVideoBlobSha,
-  'The verified optimized welcome video must replace assets/clara-welcome.mp4 before Preview 10 is considered ready'
-);
-
 assert.match(mobile, /<meta[^>]+name="viewport"/i, 'Mobile preview must declare a device viewport');
 assert.match(mobile, /<iframe[^>]+src="\.\/index\.html"/i, 'Mobile preview must load the shared app');
 assert.ok(
@@ -113,6 +105,15 @@ assert.ok(html.includes("navigator.serviceWorker.register('/sw.js'"), 'HTML must
 assert.ok(html.includes('id="pwaInstallButton"'), 'Install action must be present');
 assert.ok(sw.includes("url.pathname.startsWith('/.netlify/functions/')"), 'Dynamic Netlify functions must be excluded from offline caching');
 assert.ok(sw.includes("request.mode === 'navigate'"), 'Offline navigation fallback must be present');
+
+// Keep the binary-asset gate last so every independent code/data/PWA check still runs.
+const expectedWelcomeVideoBlobSha = '742d5da95c9945449866d30438e0b8b215010449';
+const welcomeVideoBlobSha = execFileSync('git', ['hash-object', 'assets/clara-welcome.mp4'], { encoding: 'utf8' }).trim();
+assert.equal(
+  welcomeVideoBlobSha,
+  expectedWelcomeVideoBlobSha,
+  'The verified optimized welcome video must replace assets/clara-welcome.mp4 before Preview 10 is considered ready'
+);
 
 console.log('Clara Preview 10 smoke checks passed: 13 destinations and valid IANA time zones, Open-Meteo integration/refresh wiring (no live API call), 18 locks, German default, mobile preview syntax/layout, verified optimized welcome video, credential boundary, JavaScript syntax, and PWA shell.');
 console.log('Verified optimized welcome video is integrated (Git blob ' + welcomeVideoBlobSha + ').');
