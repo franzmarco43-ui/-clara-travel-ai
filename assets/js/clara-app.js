@@ -730,34 +730,47 @@ async function fetchClaraSpeechChunk(text,language){
     clearTimeout(timeout);
   }
 }
+function unlockClaraAudio(){
+  try{
+    const AudioContextClass=window.AudioContext||window.webkitAudioContext;
+    if(!AudioContextClass)return false;
+    if(!claraAudioContext)claraAudioContext=new AudioContextClass();
+    if(claraAudioContext.state==='suspended')claraAudioContext.resume().catch(error=>console.warn('Clara AudioContext konnte nicht aktiviert werden:',error));
+    return true;
+  }catch(error){console.warn('Clara WebAudio ist nicht verfügbar:',error);return false;}
+}
 function playClaraAudioBlob(blob){
-  return new Promise((resolve,reject)=>{
-    const url=URL.createObjectURL(blob);
-    const audio=new Audio(url);
-    claraAudioObjectUrl=url;
-    claraAudioElement=audio;
-    audio.preload='auto';
-    audio.volume=1;
-    audio.onended=()=>{
-      if(claraAudioObjectUrl===url){URL.revokeObjectURL(url);claraAudioObjectUrl=null;}
-      if(claraAudioElement===audio)claraAudioElement=null;
-      resolve();
-    };
-    const cleanup=()=>{
-      if(claraAudioObjectUrl===url){URL.revokeObjectURL(url);claraAudioObjectUrl=null;}
-      if(claraAudioElement===audio)claraAudioElement=null;
-    };
-    audio.onerror=()=>{
-      cleanup();
-      reject(new Error('Die Audiodatei konnte nicht abgespielt werden.'));
-    };
-    audio.play().catch(error=>{
-      cleanup();
-      reject(new Error('Der Browser hat die Wiedergabe blockiert: '+(error.message||'unbekannter Fehler')));
-    });
+  return new Promise(async(resolve,reject)=>{
+    try{
+      if(claraAudioContext&&claraAudioContext.state==='running'){
+        const bytes=await blob.arrayBuffer();
+        const buffer=await claraAudioContext.decodeAudioData(bytes);
+        const source=claraAudioContext.createBufferSource();
+        source.buffer=buffer;
+        source.connect(claraAudioContext.destination);
+        claraAudioSource=source;
+        source.onended=()=>{if(claraAudioSource===source)claraAudioSource=null;resolve();};
+        source.start(0);
+        return;
+      }
+      const url=URL.createObjectURL(blob);
+      const audio=new Audio(url);
+      claraAudioObjectUrl=url;
+      claraAudioElement=audio;
+      audio.preload='auto';audio.volume=1;
+      const cleanup=()=>{
+        if(claraAudioObjectUrl===url){URL.revokeObjectURL(url);claraAudioObjectUrl=null;}
+        if(claraAudioElement===audio)claraAudioElement=null;
+      };
+      audio.onended=()=>{cleanup();resolve();};
+      audio.onerror=()=>{cleanup();reject(new Error('Die Audiodatei konnte nicht abgespielt werden.'));};
+      try{await audio.play();}catch(error){cleanup();reject(new Error('Der Browser hat die Wiedergabe blockiert: '+(error.message||'unbekannter Fehler')));}
+    }catch(error){reject(new Error('Claras Audio konnte nicht decodiert oder abgespielt werden: '+(error.message||error)));}
   });
 }
 async function speakClara(value,force=false,speechMessage=null){
+  // Resume WebAudio synchronously while the click/submit still carries user activation.
+  unlockClaraAudio();
   const auto=document.getElementById('claraAutoSpeak');
   if(!force&&auto&&!auto.checked)return;
   const chunks=splitClaraSpeechChunks(value);
@@ -960,6 +973,8 @@ async function createInfluencerContent(){
 function claraChatText(key){const lang=(()=>{try{return claraLang();}catch(_){return 'de';}})();return CLARA_CHAT_I18N[lang]?.[key]||key;}
 async function sendChat(e){
   e.preventDefault();
+  // Preserve the browser's user-activation window while the chat request is in flight.
+  unlockClaraAudio();
   const input=document.getElementById('chatInput');
   const q=input.value.trim();
   if(!q)return;
