@@ -502,12 +502,32 @@ async function loadClaraTripPlan(){
  document.getElementById('destination').value=plan.destination;document.getElementById('duration').value=plan.duration;document.getElementById('interest').value=plan.interest;document.getElementById('pace').value=plan.pace;document.getElementById('mobility').value=plan.mobility;makePlan();
  const status=document.getElementById('planSaveStatus');if(status)status.textContent='Dein gespeicherter Reiseplan wurde geladen.';
 }
-function deleteClaraTripPlan(){
- const select=document.getElementById('savedTripPlans'),id=select?.value;if(!id){toast('Bitte wähle zuerst einen Reiseplan.');return;}
- const plan=readClaraTripPlans().find(item=>item.id===id);if(!plan)return;
- if(!confirm('Diesen lokal gespeicherten Reiseplan löschen?'))return;
- writeClaraTripPlans(readClaraTripPlans().filter(item=>item.id!==id));renderClaraTripPlans();
- const status=document.getElementById('planSaveStatus');if(status)status.textContent='Reiseplan von diesem Gerät gelöscht. Ein eventuell vorhandener Kontoeintrag bleibt davon unberührt.';
+async function deleteClaraTripPlan(){
+ const select=document.getElementById('savedTripPlans'),id=select?.value;
+ if(!id){toast('Bitte wähle zuerst einen Reiseplan.');return;}
+ const isCloud=id.startsWith('cloud:');
+ const localPlan=readClaraTripPlans().find(item=>item.id===id);
+ if(!localPlan&&!isCloud){toast('Dieser Reiseplan wurde nicht gefunden.');return;}
+ const question=isCloud?'Diesen Reiseplan aus deinem Clara-Konto löschen?':'Diesen lokal gespeicherten Reiseplan löschen?';
+ if(!confirm(question))return;
+ const status=document.getElementById('planSaveStatus');
+ if(isCloud){
+  if(!window.claraSupabase||!claraUser){if(status)status.textContent='Bitte melde dich an, um den Kontoeintrag zu löschen.';return;}
+  try{
+   const result=await window.claraSupabase.from('clara_memories').delete().eq('id',id.slice(6)).eq('user_id',claraUser.id).eq('memory_type','saved_trip_plan').select('id');
+   if(result.error)throw result.error;
+   if(!result.data?.length){if(status)status.textContent='Der Kontoeintrag wurde nicht gefunden oder konnte wegen fehlender Berechtigung nicht gelöscht werden.';return;}
+   if(status)status.textContent='Reiseplan aus deinem Clara-Konto gelöscht.';
+  }catch(error){
+   console.error('Kontoreise löschen:',error);
+   if(status)status.textContent='Der Reiseplan konnte im Konto nicht gelöscht werden. Bitte prüfe deine Verbindung und Berechtigung.';
+   return;
+  }
+ }else{
+  if(!writeClaraTripPlans(readClaraTripPlans().filter(item=>item.id!==id))){if(status)status.textContent='Der lokale Reiseplan konnte nicht gelöscht werden.';return;}
+  if(status)status.textContent='Reiseplan von diesem Gerät gelöscht.';
+ }
+ await renderClaraTripPlans();
 }
 function loadClaraVoices(){
   const select=document.getElementById('claraVoice');
