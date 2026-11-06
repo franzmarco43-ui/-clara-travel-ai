@@ -651,23 +651,44 @@ function setClaraSpeaking(active){
   document.querySelectorAll('#page-home .avatar-stage, #page-clara .avatar-stage').forEach(el=>el.classList.toggle('speaking',active));
   document.querySelectorAll('#page-home .avatar, #page-clara .avatar').forEach(el=>el.classList.toggle('speaking',active));
 }
+function freezeClaraVideoAtNeutralFrame(video){
+  if(!video)return;
+  const seek=()=>{
+    video.pause();
+    const duration=Number(video.duration);
+    const target=Number.isFinite(duration)&&duration>0?Math.min(2,Math.max(0,duration-0.15)):2;
+    try{video.currentTime=target;}catch(error){console.warn('Clara-Neutralbild konnte nicht gesetzt werden:',error);}
+  };
+  video.pause();
+  if(video.readyState>=1)seek();
+  else if(video.dataset.claraNeutralSeek!=='pending'){
+    video.dataset.claraNeutralSeek='pending';
+    video.addEventListener('loadedmetadata',()=>{
+      delete video.dataset.claraNeutralSeek;
+      seek();
+    },{once:true});
+  }
+}
 function startClaraVideo(){
-  // Keep Clara visibly animated during the separate Azure speech track.
-  // This restores the existing talking-video behavior; exact phoneme/viseme
-  // synchronization still requires timestamped Azure viseme events.
-  const video=getClaraSpeakingVideo();
+  // Freeze the prerecorded talking clip on a neutral face frame. The mouth
+  // overlay is then driven only by Azure's real audioOffset/visemeId events.
+  const video=document.getElementById('claraChatVideo');
   if(!video)return;
   video.muted=true;
-  video.loop=true;
+  video.loop=false;
+  video.controls=false;
   video.playsInline=true;
-  const playPromise=video.play();
-  if(playPromise&&typeof playPromise.catch==='function')playPromise.catch(error=>console.warn('Clara-Video konnte nicht starten:',error));
+  document.getElementById('claraVideoFrame')?.classList.add('speech-active');
+  freezeClaraVideoAtNeutralFrame(video);
 }
 function stopClaraVideo(){
-  document.querySelectorAll('.clara-welcome-hero video.hero-scene-video, #page-home video.clara-welcome-video, #claraChatVideo').forEach(video=>{
-    video.pause();
-    try{video.currentTime=0;}catch(_){}
-  });
+  const hero=document.querySelector('.clara-welcome-hero video.hero-scene-video');
+  if(hero){hero.pause();hero.muted=true;hero.controls=false;hero.loop=false;try{hero.currentTime=0;}catch(_){}}
+  const home=document.querySelector('#page-home video.clara-welcome-video');
+  if(home){home.pause();home.muted=false;home.controls=true;home.loop=false;try{home.currentTime=0;}catch(_){}}
+  const chat=document.getElementById('claraChatVideo');
+  if(chat){chat.muted=true;chat.loop=false;chat.controls=false;freezeClaraVideoAtNeutralFrame(chat);}
+  document.getElementById('claraVideoFrame')?.classList.remove('speech-active');
 }
 let claraSpeechRun=0;
 function stopClaraSpeech(){
