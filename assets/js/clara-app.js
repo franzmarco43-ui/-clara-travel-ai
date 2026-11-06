@@ -756,31 +756,49 @@ function unlockClaraAudio(){
 }
 function playClaraAudioBlob(blob){
   return new Promise(async(resolve,reject)=>{
-    try{
-      if(claraAudioContext&&claraAudioContext.state==='running'){
-        const bytes=await blob.arrayBuffer();
-        const buffer=await claraAudioContext.decodeAudioData(bytes);
-        const source=claraAudioContext.createBufferSource();
-        source.buffer=buffer;
-        source.connect(claraAudioContext.destination);
-        claraAudioSource=source;
-        source.onended=()=>{if(claraAudioSource===source)claraAudioSource=null;resolve();};
-        source.start(0);
-        return;
-      }
+    let settled=false;
+    const finish=(error)=>{
+      if(settled)return;
+      settled=true;
+      if(error)reject(error);else resolve();
+    };
+    const playWithHtmlAudio=async()=>{
       const url=URL.createObjectURL(blob);
-      const audio=new Audio(url);
+      const audio=new Audio();
       claraAudioObjectUrl=url;
       claraAudioElement=audio;
-      audio.preload='auto';audio.volume=1;
+      audio.preload='auto';
+      audio.volume=1;
+      audio.src=url;
       const cleanup=()=>{
         if(claraAudioObjectUrl===url){URL.revokeObjectURL(url);claraAudioObjectUrl=null;}
         if(claraAudioElement===audio)claraAudioElement=null;
       };
-      audio.onended=()=>{cleanup();resolve();};
-      audio.onerror=()=>{cleanup();reject(new Error('Die Audiodatei konnte nicht abgespielt werden.'));};
-      try{await audio.play();}catch(error){cleanup();reject(new Error('Der Browser hat die Wiedergabe blockiert: '+(error.message||'unbekannter Fehler')));}
-    }catch(error){reject(new Error('Claras Audio konnte nicht decodiert oder abgespielt werden: '+(error.message||error)));}
+      audio.onended=()=>{cleanup();finish();};
+      audio.onerror=()=>{cleanup();finish(new Error('Die Audiodatei konnte auch mit dem Browser-Audioplayer nicht abgespielt werden.'));};
+      try{await audio.play();}
+      catch(error){cleanup();finish(new Error('Der Browser hat die Audiowiedergabe blockiert: '+(error.message||'unbekannter Fehler')));}
+    };
+    try{
+      if(claraAudioContext&&claraAudioContext.state==='running'){
+        try{
+          const bytes=await blob.arrayBuffer();
+          const buffer=await claraAudioContext.decodeAudioData(bytes);
+          const source=claraAudioContext.createBufferSource();
+          source.buffer=buffer;
+          source.connect(claraAudioContext.destination);
+          claraAudioSource=source;
+          source.onended=()=>{if(claraAudioSource===source)claraAudioSource=null;finish();};
+          source.start(0);
+          return;
+        }catch(decodeError){
+          console.warn('Clara WebAudio-Decodierung fehlgeschlagen; verwende HTML-Audioplayer:',decodeError);
+        }
+      }
+      await playWithHtmlAudio();
+    }catch(error){
+      finish(new Error('Claras Audio konnte nicht abgespielt werden: '+(error.message||error)));
+    }
   });
 }
 async function speakClara(value,force=false,speechMessage=null){
