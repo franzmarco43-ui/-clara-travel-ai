@@ -403,6 +403,7 @@ function returnToLanding(){
 }
 
 function showPage(page){
+  if(page==='planner')renderClaraTripPlans();
   const activePage=document.getElementById('page-'+page);
   if(!activePage){
     console.warn('Clara: unbekannte App-Seite:',page);
@@ -446,6 +447,48 @@ function makePlan(){const name=document.getElementById('destination').value,dura
 'Russe':[['Vormittag','Historisches Stadtzentrum','Entdecke die elegante Architektur des Zentrums und die Plätze rund um die Freiheitsstatue.'],['Mittag','Bulgarische Küche','Probiere Banitsa, Shopska-Salat oder regionale Fischgerichte.'],['Nachmittag','Donauufer und Sexaginta Prista','Genieße den Blick auf die Donau und besuche die römische Festungsanlage.']],
 'Donaudelta':[['Vormittag','Bootstour mit Guide','Wähle einen seriösen lokalen Anbieter und beachte Naturschutzregeln.'],['Mittag','Regionale Küche','Entdecke lokale Fischgerichte, wenn du sie magst.'],['Nachmittag','Naturbeobachtung','Plane Zeit für Vögel und Wasserwege ein.']]
 }[name];const days=duration==='1 Tag'?1:duration==='7 Tage'?7:3;const safeStops=stops||[['Vormittag','Ortszentrum entdecken',`Erkunde die wichtigsten Orte in ${name}.`],['Mittag','Regional genießen','Plane eine Pause mit regionalen Spezialitäten ein.'],['Nachmittag','Natur und Kultur','Wähle ein Erlebnis passend zu deinen Interessen.']];let out=`<div class="itinerary"><h3>Claras Vorschlag: ${name} · ${duration}</h3><p class="muted" style="margin:0">Schwerpunkt: ${interest} · Tempo: ${pace} · Mobilität: ${mobility}</p>`;for(let d=1;d<=days;d++){out+=`<div class="stop"><div class="num">${d}</div><div><h4>${days===1?'Dein Tag':`Tag ${d}`}: ${d===1?safeStops[0][1]:d===2?(safeStops[1][1]):safeStops[2][1]}</h4><p>${d===1?safeStops[0][2]:d===2?safeStops[1][2]:safeStops[2][2]}</p></div></div>`}if(mobility==='Rollator'){out+=`<div class="stop"><div class="num">i</div><div><h4>Hinweis für Gäste mit Rollator</h4><p>${claraRollatorNotice}</p></div></div>`;}out+=`<div class="stop"><div class="num">✦</div><div><h4>Claras persönlicher Tipp</h4><p>${p.desc} Öffnungszeiten, Wetter, Tickets und lokale Bedingungen bitte vor der Abreise aktuell prüfen.</p></div></div><button class="btn soft" onclick="speakClara('Willkommen in ${name}! Ich habe dir einen ${duration} langen Vorschlag mit Schwerpunkt ${interest} vorbereitet. Passe ihn jederzeit an deine Wünsche an.')">▶ Clara stellt deinen Plan vor</button></div>`;document.getElementById('planResult').innerHTML=out}
+
+const CLARA_TRIP_STORAGE_KEY='clara.travel.savedTrips.v1';
+function claraTripStorageKey(){return CLARA_TRIP_STORAGE_KEY+(claraUser?.id?'.'+claraUser.id:'.guest');}
+function readClaraTripPlans(){try{const value=JSON.parse(localStorage.getItem(claraTripStorageKey())||'[]');return Array.isArray(value)?value:[];}catch(_){return [];}}
+function writeClaraTripPlans(items){try{localStorage.setItem(claraTripStorageKey(),JSON.stringify(items));return true;}catch(error){console.warn('Reiseplan lokal speichern:',error);return false;}}
+function currentClaraTripPlan(){const destination=document.getElementById('destination');if(!destination?.value){toast('Bitte wähle zuerst ein Reiseziel und erstelle einen Reiseplan.');return null;}if(!document.getElementById('planResult')?.innerHTML.trim()){makePlan();}return {id:'trip-'+Date.now(),destination:destination.value,duration:document.getElementById('duration').value,interest:document.getElementById('interest').value,pace:document.getElementById('pace').value,mobility:document.getElementById('mobility')?.value||'Keine besondere Angabe',savedAt:new Date().toISOString()};}
+async function saveClaraTripPlan(){
+ const plan=currentClaraTripPlan();if(!plan)return;
+ const status=document.getElementById('planSaveStatus');
+ const items=readClaraTripPlans().filter(item=>!(item.destination===plan.destination&&item.duration===plan.duration));
+ items.unshift(plan);const localSaved=writeClaraTripPlans(items);renderClaraTripPlans();
+ let cloudSaved=false;
+ if(window.claraSupabase&&claraUser){
+  try{
+   const profile=await window.claraSupabase.from('clara_profiles').select('consent_memory').eq('user_id',claraUser.id).maybeSingle();
+   if(profile.error)throw profile.error;
+   if(profile.data?.consent_memory===true){
+    const result=await window.claraSupabase.from('clara_memories').insert({user_id:claraUser.id,memory_type:'saved_trip_plan',content:plan});
+    if(result.error)throw result.error;cloudSaved=true;
+   }
+  }catch(error){console.warn('Cloud-Speicherung Reiseplan:',error);}
+ }
+ if(status)status.textContent=cloudSaved?'Reiseplan auf diesem Gerät und in deinem Clara-Konto gespeichert.':localSaved?'Reiseplan auf diesem Gerät gespeichert. Für die Kontosynchronisierung bitte anmelden und Clara Memory freigeben.':'Der Reiseplan konnte nicht gespeichert werden.';
+}
+function renderClaraTripPlans(){
+ const select=document.getElementById('savedTripPlans');if(!select)return;
+ const items=readClaraTripPlans();select.innerHTML='<option value="">Reiseplan auswählen …</option>';
+ items.forEach(item=>{const option=document.createElement('option');option.value=item.id;option.textContent=item.destination+' · '+item.duration+' · '+new Date(item.savedAt).toLocaleDateString('de-DE');select.appendChild(option);});
+}
+async function loadClaraTripPlan(){
+ const select=document.getElementById('savedTripPlans'),id=select?.value;if(!id){toast('Bitte wähle zuerst einen gespeicherten Reiseplan.');return;}
+ const plan=readClaraTripPlans().find(item=>item.id===id);if(!plan){toast('Dieser Reiseplan wurde lokal nicht gefunden.');return;}
+ document.getElementById('destination').value=plan.destination;document.getElementById('duration').value=plan.duration;document.getElementById('interest').value=plan.interest;document.getElementById('pace').value=plan.pace;document.getElementById('mobility').value=plan.mobility;makePlan();
+ const status=document.getElementById('planSaveStatus');if(status)status.textContent='Dein gespeicherter Reiseplan wurde geladen.';
+}
+function deleteClaraTripPlan(){
+ const select=document.getElementById('savedTripPlans'),id=select?.value;if(!id){toast('Bitte wähle zuerst einen Reiseplan.');return;}
+ const plan=readClaraTripPlans().find(item=>item.id===id);if(!plan)return;
+ if(!confirm('Diesen lokal gespeicherten Reiseplan löschen?'))return;
+ writeClaraTripPlans(readClaraTripPlans().filter(item=>item.id!==id));renderClaraTripPlans();
+ const status=document.getElementById('planSaveStatus');if(status)status.textContent='Reiseplan von diesem Gerät gelöscht. Ein eventuell vorhandener Kontoeintrag bleibt davon unberührt.';
+}
 function loadClaraVoices(){
   const select=document.getElementById('claraVoice');
   if(select){
