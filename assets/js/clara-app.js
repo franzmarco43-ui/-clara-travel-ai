@@ -278,16 +278,39 @@ function askClaraAboutLock(index){
 
 function toggleMobileMenu(){const menu=document.getElementById('mobile-site-nav');const button=document.querySelector('.mobile-menu-toggle');if(!menu||!button)return;const open=menu.classList.toggle('open');button.setAttribute('aria-expanded',String(open));button.setAttribute('aria-label',open?'Menü schließen':'Menü öffnen');button.textContent=open?'×':'☰';}
 function closeMobileMenu(){const menu=document.getElementById('mobile-site-nav');const button=document.querySelector('.mobile-menu-toggle');if(menu)menu.classList.remove('open');if(button){button.setAttribute('aria-expanded','false');button.setAttribute('aria-label','Menü öffnen');button.textContent='☰';}}
+function claraRouteState(view,page){return view==='app'?{claraView:'app',page:page||'home'}:{claraView:'landing'};}
 function openAppPage(page){document.getElementById('marketing-home').style.display='none';document.getElementById('clara-app').style.display='block';showPage(page);}
 function openDestination(name){openAppPage('planner');selectDestination(name);}
-function returnToLanding(){document.getElementById('clara-app').style.display='none';document.getElementById('marketing-home').style.display='block';window.scrollTo({top:0,behavior:'smooth'});}
+function returnToLanding(fromHistory=false){
+  document.getElementById('clara-app').style.display='none';
+  document.getElementById('marketing-home').style.display='block';
+  if(!fromHistory&&history.state?.claraView!=='landing')history.pushState(claraRouteState('landing'),'',window.location.pathname+window.location.search);
+  closeMobileMenu();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function restoreClaraRouteFromHistory(){
+  const state=history.state||claraRouteState('landing');
+  if(state.claraView==='app'&&document.getElementById('page-'+state.page)){
+    document.getElementById('marketing-home').style.display='none';
+    document.getElementById('clara-app').style.display='block';
+    showPage(state.page,true);
+  }else{
+    returnToLanding(true);
+  }
+}
+window.addEventListener('popstate',restoreClaraRouteFromHistory);
 
-function showPage(page){
+function showPage(page,fromHistory=false){
   const activePage=document.getElementById('page-'+page);
   if(!activePage){
     console.warn('Clara: unbekannte App-Seite:',page);
     return;
   }
+  if(!fromHistory&&!(history.state?.claraView==='app'&&history.state?.page===page)){
+    history.pushState(claraRouteState('app',page),'',window.location.pathname+window.location.search);
+  }
+  document.getElementById('marketing-home').style.display='none';
+  document.getElementById('clara-app').style.display='block';
   document.querySelectorAll('.page').forEach(section=>section.classList.toggle('hidden',section!==activePage));
   document.querySelectorAll('[data-page]').forEach(button=>{
     const active=button.dataset.page===page;
@@ -295,6 +318,7 @@ function showPage(page){
     if(active)button.setAttribute('aria-current','page');
     else button.removeAttribute('aria-current');
   });
+  closeMobileMenu();
   if(typeof loadCityWeather==='function')loadCityWeather();
   if(page==='intelligence'){
     const destinationHost=document.getElementById('intelligenceDestinations');
