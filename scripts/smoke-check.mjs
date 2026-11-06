@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
+import vm from 'node:vm';
 
 const read = path => readFileSync(path, 'utf8');
 const html = read('index.html');
@@ -11,6 +12,12 @@ const destinations = JSON.parse(read('netlify/functions/data/danube-destinations
 const locks = JSON.parse(read('netlify/functions/data/danube-locks.json'));
 
 for (const path of ['assets/js/clara-app.js', 'sw.js']) execFileSync(process.execPath, ['--check', path], { stdio: 'pipe' });
+for (const [index, part] of html.split('<script').slice(1).entries()) {
+  const openingEnd = part.indexOf('>');
+  if (openingEnd < 0 || part.slice(0, openingEnd).includes('src=')) continue;
+  const closing = part.indexOf('</script>');
+  if (closing >= 0) new vm.Script(part.slice(openingEnd + 1, closing), { filename: 'index.html:inline-' + index });
+}
 
 assert.equal(destinations.records.length, 13, 'Destination knowledge base must contain 13 records');
 assert.equal(locks.records.length, 18, 'Lock knowledge base must contain 18 records');
