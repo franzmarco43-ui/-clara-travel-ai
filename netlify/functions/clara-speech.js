@@ -92,7 +92,7 @@ exports.handler = async (event) => {
 
   language = String(language || "de").toLowerCase();
   const voices = {
-    de: { locale: "de-DE", name: "de-DE-KatjaNeural" },
+    de: { locale: "de-DE", name: "de-DE-SeraphinaMultilingualNeural" },
     en: { locale: "en-GB", name: "en-GB-SoniaNeural" },
     nl: { locale: "nl-NL", name: "nl-NL-FennaNeural" },
     fr: { locale: "fr-FR", name: "fr-FR-DeniseNeural" },
