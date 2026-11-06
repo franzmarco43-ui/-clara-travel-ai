@@ -84,7 +84,11 @@ assert.doesNotMatch(html + app, /AZURE_SPEECH_KEY|AZURE_SPEECH_REGION/i, 'Azure 
 
 const expectedWelcomeVideoBlobSha = '742d5da95c9945449866d30438e0b8b215010449';
 const welcomeVideoBlobSha = execFileSync('git', ['hash-object', 'assets/clara-welcome.mp4'], { encoding: 'utf8' }).trim();
-const optimizedWelcomeVideoIntegrated = welcomeVideoBlobSha === expectedWelcomeVideoBlobSha;
+assert.equal(
+  welcomeVideoBlobSha,
+  expectedWelcomeVideoBlobSha,
+  'The verified optimized welcome video must replace assets/clara-welcome.mp4 before Preview 10 is considered ready'
+);
 
 assert.match(mobile, /<meta[^>]+name="viewport"/i, 'Mobile preview must declare a device viewport');
 assert.match(mobile, /<iframe[^>]+src="\.\/index\.html"/i, 'Mobile preview must load the shared app');
@@ -110,9 +114,5 @@ assert.ok(html.includes('id="pwaInstallButton"'), 'Install action must be presen
 assert.ok(sw.includes("url.pathname.startsWith('/.netlify/functions/')"), 'Dynamic Netlify functions must be excluded from offline caching');
 assert.ok(sw.includes("request.mode === 'navigate'"), 'Offline navigation fallback must be present');
 
-console.log('Clara Preview 10 smoke checks passed: 13 destinations and valid IANA time zones, Open-Meteo integration/refresh wiring (no live API call), 18 locks, German default, mobile preview syntax/layout, video presence, credential boundary, JavaScript syntax, and PWA shell.');
-if (optimizedWelcomeVideoIntegrated) {
-  console.log('Verified optimized welcome video is integrated (Git blob ' + welcomeVideoBlobSha + ').');
-} else {
-  console.warn('Welcome video exists but is not the verified optimized file. Expected Git blob ' + expectedWelcomeVideoBlobSha + ', found ' + welcomeVideoBlobSha + '.');
-}
+console.log('Clara Preview 10 smoke checks passed: 13 destinations and valid IANA time zones, Open-Meteo integration/refresh wiring (no live API call), 18 locks, German default, mobile preview syntax/layout, verified optimized welcome video, credential boundary, JavaScript syntax, and PWA shell.');
+console.log('Verified optimized welcome video is integrated (Git blob ' + welcomeVideoBlobSha + ').');
