@@ -164,7 +164,7 @@ function initDanubeMap(){
     // Do not leave the map blank forever in that case.
     setTimeout(()=>{
       if(danubeMapInstance&&!danubeFallbackShown&&!host.querySelector('.leaflet-tile-loaded'))showDanubeFallback();
-    },12000);
+    },5000);
     const riverStops=riverRoutePlaces;
     const routeLine=window.L.polyline(riverStops.map(p=>[p.lat,p.lon]),{
       color:'#c79b53',weight:3,opacity:.85,dashArray:'7 8',lineCap:'round'
