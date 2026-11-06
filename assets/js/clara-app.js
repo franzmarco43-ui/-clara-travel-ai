@@ -109,13 +109,25 @@ const riverRoutePlaces=places.filter(p=>p.routeType==='river');
 document.getElementById('routeList').innerHTML=riverRoutePlaces.map((p,i)=>`<button type="button" class="route-point" onclick="focusDanubeStop('${p.name}')"><span class="route-number">${i+1}</span><span>${p.name}</span><span class="route-country">${claraPlace(p).country}</span></button>`).join('');
 let danubeMapInstance=null;
 const danubeMarkers={};
+function renderDanubeMapFallback(){
+  const host=document.getElementById('danubeMap');
+  if(!host)return;
+  const route=riverRoutePlaces.filter(p=>Number.isFinite(p.lat)&&Number.isFinite(p.lon));
+  if(!route.length){host.innerHTML='<p style="padding:22px">Die Stationsdaten für die Donaukarte sind nicht verfügbar.</p>';return;}
+  const all=places.filter(p=>Number.isFinite(p.lat)&&Number.isFinite(p.lon));
+  const lons=all.map(p=>p.lon),lats=all.map(p=>p.lat);
+  const minLon=Math.min(...lons)-1,maxLon=Math.max(...lons)+1,minLat=Math.min(...lats)-1,maxLat=Math.max(...lats)+1;
+  const xy=p=>({x:36+(p.lon-minLon)/(maxLon-minLon)*928,y:28+(maxLat-p.lat)/(maxLat-minLat)*494});
+  const line=route.map(p=>{const q=xy(p);return q.x+','+q.y;}).join(' ');
+  const markers=route.map((p,i)=>{const q=xy(p);return '<g role="button" tabindex="0" aria-label="'+p.name+'" onclick="renderMapDestination(\''+p.name+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \')renderMapDestination(\''+p.name+'\')"><circle cx="'+q.x+'" cy="'+q.y+'" r="15" fill="#245c50" stroke="#fff" stroke-width="3"/><text x="'+q.x+'" y="'+(q.y+4)+'" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">'+(i+1)+'</text><text x="'+Math.min(890,q.x+17)+'" y="'+(q.y-12)+'" font-size="13" font-weight="600" fill="#24473e">'+p.name+'</text></g>';}).join('');
+  const extra=places.find(p=>p.routeType==='excursion');
+  const extraSvg=extra?(()=>{const q=xy(extra);return '<g role="button" tabindex="0" aria-label="Puszta-Ausflug" onclick="renderMapDestination(\''+extra.name+'\')"><circle cx="'+q.x+'" cy="'+q.y+'" r="14" fill="#4c8c79" stroke="#fff" stroke-width="3"/><text x="'+q.x+'" y="'+(q.y+4)+'" text-anchor="middle" font-size="12" fill="#fff">✦</text><text x="'+Math.min(890,q.x+16)+'" y="'+(q.y-12)+'" font-size="13" font-weight="600" fill="#24473e">'+extra.name+' · Ausflug</text></g>';})():'';
+  host.innerHTML='<div style="height:100%;min-height:300px;background:linear-gradient(145deg,#eaf2ed,#dbe9e1);overflow:hidden"><svg viewBox="0 0 1000 560" role="img" aria-label="Schematische Donaukarte mit Stationen" style="width:100%;height:100%;min-height:300px;display:block"><path d="M0 95 Q170 155 270 110 T520 170 T760 260 T1000 390" fill="none" stroke="#b7d9d6" stroke-width="46" opacity=".6"/><polyline points="'+line+'" fill="none" stroke="#c79b53" stroke-width="4" stroke-dasharray="7 8" stroke-linecap="round"/>'+markers+extraSvg+'<text x="22" y="540" font-size="12" fill="#536b60">Schematische Stationsübersicht · Kartenhintergrund derzeit nicht verfügbar</text></svg></div>';
+}
 function initDanubeMap(){
   const host=document.getElementById('danubeMap');
   if(!host)return;
-  if(!window.L){
-    host.innerHTML='<div style="padding:22px;color:#53645d">Die Kartenbibliothek ist noch nicht verfügbar. Bitte lade die Seite erneut; die Stationsliste bleibt verfügbar.</div>';
-    return;
-  }
+  if(!window.L){renderDanubeMapFallback();return;}
   if(danubeMapInstance){
     requestAnimationFrame(()=>danubeMapInstance&&danubeMapInstance.invalidateSize());
     return;
@@ -125,40 +137,39 @@ function initDanubeMap(){
     return;
   }
   try{
-  danubeMapInstance=window.L.map(host,{scrollWheelZoom:false}).setView([46.9,20.0],5);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-    maxZoom:18,
-    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
-  }).addTo(danubeMapInstance);
-  const riverStops=riverRoutePlaces;
-  const routeLine=L.polyline(riverStops.map(p=>[p.lat,p.lon]),{
-    color:'#c79b53',weight:3,opacity:.85,dashArray:'7 8',lineCap:'round'
-  }).addTo(danubeMapInstance);
-  routeLine.bindTooltip('Schematische Verbindung der Reise-Stationen',{sticky:true});
-  riverStops.forEach((p,i)=>{
-    const icon=L.divIcon({className:'route-marker',html:`<span>${i+1}</span>`,iconSize:[29,29],iconAnchor:[14,14]});
-    const marker=L.marker([p.lat,p.lon],{icon}).addTo(danubeMapInstance);
-    marker.bindPopup(`<strong>${p.name}</strong><br><span>${p.tag}</span><br><small>${p.country}</small>`);
-    marker.on('click',()=>renderMapDestination(p.name));
-    danubeMarkers[p.name]=marker;
-  });
-  const puszta=places.find(p=>p.routeType==='excursion');
-  const budapest=riverStops.find(p=>p.name==='Budapest');
-  if(puszta&&budapest){
-    const excursionIcon=L.divIcon({className:'route-marker excursion',html:'<span>✦</span>',iconSize:[29,29],iconAnchor:[14,14]});
-    const marker=L.marker([puszta.lat,puszta.lon],{icon:excursionIcon}).addTo(danubeMapInstance);
-    marker.bindPopup('<strong>Puszta – Landausflug</strong><br><span>Separater Ausflug, keine Donaustation</span>');
-    marker.on('click',()=>renderMapDestination(puszta.name));
-    danubeMarkers[puszta.name]=marker;
-    L.polyline([[budapest.lat,budapest.lon],[puszta.lat,puszta.lon]],{color:'#4c8c79',weight:2,dashArray:'3 8',opacity:.9}).addTo(danubeMapInstance).bindTooltip('Land-Ausflug ab Budapest');
-  }
-  const allPlaces=places;
-  danubeMapInstance.fitBounds(L.latLngBounds(allPlaces.map(p=>[p.lat,p.lon])),{padding:[24,24]});
-  requestAnimationFrame(()=>danubeMapInstance&&danubeMapInstance.invalidateSize());
+    danubeMapInstance=window.L.map(host,{scrollWheelZoom:false}).setView([46.9,20.0],5);
+    window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+      maxZoom:18,
+      attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
+    }).addTo(danubeMapInstance);
+    const riverStops=riverRoutePlaces;
+    const routeLine=window.L.polyline(riverStops.map(p=>[p.lat,p.lon]),{
+      color:'#c79b53',weight:3,opacity:.85,dashArray:'7 8',lineCap:'round'
+    }).addTo(danubeMapInstance);
+    routeLine.bindTooltip('Schematische Verbindung der Reise-Stationen',{sticky:true});
+    riverStops.forEach((p,i)=>{
+      const icon=window.L.divIcon({className:'route-marker',html:'<span>'+(i+1)+'</span>',iconSize:[29,29],iconAnchor:[14,14]});
+      const marker=window.L.marker([p.lat,p.lon],{icon}).addTo(danubeMapInstance);
+      marker.bindPopup('<strong>'+p.name+'</strong><br><span>'+p.tag+'</span><br><small>'+p.country+'</small>');
+      marker.on('click',()=>renderMapDestination(p.name));
+      danubeMarkers[p.name]=marker;
+    });
+    const puszta=places.find(p=>p.routeType==='excursion');
+    const budapest=riverStops.find(p=>p.name==='Budapest');
+    if(puszta&&budapest){
+      const excursionIcon=window.L.divIcon({className:'route-marker excursion',html:'<span>✦</span>',iconSize:[29,29],iconAnchor:[14,14]});
+      const marker=window.L.marker([puszta.lat,puszta.lon],{icon:excursionIcon}).addTo(danubeMapInstance);
+      marker.bindPopup('<strong>Puszta – Landausflug</strong><br><span>Separater Ausflug, keine Donaustation</span>');
+      marker.on('click',()=>renderMapDestination(puszta.name));
+      danubeMarkers[puszta.name]=marker;
+      window.L.polyline([[budapest.lat,budapest.lon],[puszta.lat,puszta.lon]],{color:'#4c8c79',weight:2,dashArray:'3 8',opacity:.9}).addTo(danubeMapInstance).bindTooltip('Land-Ausflug ab Budapest');
+    }
+    danubeMapInstance.fitBounds(window.L.latLngBounds(places.map(p=>[p.lat,p.lon])),{padding:[24,24]});
+    requestAnimationFrame(()=>danubeMapInstance&&danubeMapInstance.invalidateSize());
   }catch(error){
     console.error('Clara: Donaukarte konnte nicht initialisiert werden',error);
     if(danubeMapInstance){try{danubeMapInstance.remove();}catch(_){}danubeMapInstance=null;}
-    host.innerHTML='<div style="padding:22px;color:#53645d">Die Karte konnte nicht gestartet werden. Bitte prüfe die Internetverbindung und lade die Seite erneut.</div>';
+    renderDanubeMapFallback();
   }
 }
 function renderMapDestination(name){
@@ -221,23 +232,42 @@ function renderLockList(){
   const status=document.getElementById('lockStatus');
   if(status)status.textContent=matches.length+' von '+danubeLockRecords.length+' Schleusen angezeigt';
 }
+function renderDanubeLocksFallback(){
+  const host=document.getElementById('locksMap');
+  if(!host||!danubeLockRecords.length)return;
+  const records=danubeLockRecords.filter(lock=>Number.isFinite(lock.latitude)&&Number.isFinite(lock.longitude));
+  if(!records.length){host.innerHTML='<p style="padding:22px">Für die Schleusen sind keine Koordinaten verfügbar.</p>';return;}
+  const lons=records.map(r=>r.longitude),lats=records.map(r=>r.latitude);
+  const minLon=Math.min(...lons)-.25,maxLon=Math.max(...lons)+.25,minLat=Math.min(...lats)-.25,maxLat=Math.max(...lats)+.25;
+  const xy=r=>({x:40+(r.longitude-minLon)/(maxLon-minLon)*920,y:28+(maxLat-r.latitude)/(maxLat-minLat)*384});
+  const line=records.map(r=>{const p=xy(r);return p.x+','+p.y;}).join(' ');
+  const markers=records.map(r=>{const i=danubeLockRecords.indexOf(r),p=xy(r);return '<g role="button" tabindex="0" aria-label="'+escapeLockHtml(r.name)+'" onclick="selectLock('+i+')" onkeydown="if(event.key===\'Enter\'||event.key===\' \')selectLock('+i+')"><circle cx="'+p.x+'" cy="'+p.y+'" r="12" fill="'+(i===selectedLockIndex?'#c18c39':'#245c50')+'" stroke="#fff" stroke-width="3"/><text x="'+p.x+'" y="'+(p.y+4)+'" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">'+(i+1)+'</text><title>'+escapeLockHtml(r.name)+' · '+escapeLockHtml(r.country)+'</title></g>';}).join('');
+  host.innerHTML='<div style="height:100%;min-height:270px;background:linear-gradient(145deg,#eaf2ed,#dbe9e1);overflow:hidden"><svg viewBox="0 0 1000 440" role="img" aria-label="Schematische Schleusenkarte mit 18 Standorten" style="width:100%;height:100%;min-height:270px;display:block"><path d="M0 65 Q190 120 300 90 T610 210 T1000 345" fill="none" stroke="#b7d9d6" stroke-width="38" opacity=".65"/><polyline points="'+line+'" fill="none" stroke="#c79b53" stroke-width="4" stroke-dasharray="6 7"/>'+markers+'<text x="18" y="425" font-size="12" fill="#536b60">Schematische Übersicht · Nummern entsprechen der Schleusenliste</text></svg></div>';
+}
 function initDanubeLocksMap(){
   const host=document.getElementById('locksMap');
-  if(!host||!window.L||!danubeLockRecords.length)return;
-  if(danubeLocksMap){setTimeout(()=>danubeLocksMap.invalidateSize(),120);return;}
-  danubeLocksMap=L.map(host,{scrollWheelZoom:false}).setView([48.2,15.5],5);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}).addTo(danubeLocksMap);
-  danubeLockRecords.forEach((lock,index)=>{
-    if(typeof lock.latitude!=='number'||typeof lock.longitude!=='number')return;
-    const icon=L.divIcon({className:'lock-map-marker',html:'<span>'+(index+1)+'</span>',iconSize:[25,25],iconAnchor:[12,12]});
-    const marker=L.marker([lock.latitude,lock.longitude],{icon}).addTo(danubeLocksMap);
-    marker.bindPopup('<b>'+escapeLockHtml(lock.name)+'</b><br>'+escapeLockHtml(lock.country)+'<br>Strom-km '+escapeLockHtml(lock.riverKm));
-    marker.on('click',()=>selectLock(index,false));
-    danubeLockMarkers[index]=marker;
-  });
-  const points=danubeLockRecords.filter(lock=>typeof lock.latitude==='number'&&typeof lock.longitude==='number').map(lock=>[lock.latitude,lock.longitude]);
-  if(points.length)danubeLocksMap.fitBounds(L.latLngBounds(points),{padding:[20,20]});
-  setTimeout(()=>danubeLocksMap.invalidateSize(),120);
+  if(!host||!danubeLockRecords.length)return;
+  if(!window.L){renderDanubeLocksFallback();return;}
+  if(danubeLocksMap){setTimeout(()=>danubeLocksMap&&danubeLocksMap.invalidateSize(),120);return;}
+  try{
+    danubeLocksMap=window.L.map(host,{scrollWheelZoom:false}).setView([48.2,15.5],5);
+    window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}).addTo(danubeLocksMap);
+    danubeLockRecords.forEach((lock,index)=>{
+      if(!Number.isFinite(lock.latitude)||!Number.isFinite(lock.longitude))return;
+      const icon=window.L.divIcon({className:'lock-map-marker',html:'<span>'+(index+1)+'</span>',iconSize:[25,25],iconAnchor:[12,12]});
+      const marker=window.L.marker([lock.latitude,lock.longitude],{icon}).addTo(danubeLocksMap);
+      marker.bindPopup('<b>'+escapeLockHtml(lock.name)+'</b><br>'+escapeLockHtml(lock.country)+'<br>Strom-km '+escapeLockHtml(lock.riverKm));
+      marker.on('click',()=>selectLock(index,false));
+      danubeLockMarkers[index]=marker;
+    });
+    const points=danubeLockRecords.filter(lock=>Number.isFinite(lock.latitude)&&Number.isFinite(lock.longitude)).map(lock=>[lock.latitude,lock.longitude]);
+    if(points.length)danubeLocksMap.fitBounds(window.L.latLngBounds(points),{padding:[20,20]});
+    setTimeout(()=>danubeLocksMap&&danubeLocksMap.invalidateSize(),120);
+  }catch(error){
+    console.error('Clara: Schleusenkarte konnte nicht initialisiert werden',error);
+    if(danubeLocksMap){try{danubeLocksMap.remove();}catch(_){}danubeLocksMap=null;}
+    renderDanubeLocksFallback();
+  }
 }
 function selectLock(index,focusMap=true){
   const lock=danubeLockRecords[index];
