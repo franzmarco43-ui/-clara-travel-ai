@@ -33,6 +33,7 @@
         <option value="de">Deutsch</option><option value="en">English</option><option value="nl">Nederlands</option><option value="fr">Français</option><option value="ro">Română</option>
       </select>
     </label>
+    <button class="site-icon" id="pwaInstallButton" type="button" aria-label="Clara als App installieren" title="Clara als App installieren" hidden>⇩</button>
     <button class="site-icon" type="button" aria-label="Zu den Reisezielen" onclick="document.getElementById('featured-destinations').scrollIntoView({behavior:'smooth'})">⌕</button>
     <button class="site-cta" type="button" aria-label="Clara fragen" onclick="openAppPage('clara')"><svg class="site-cta-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5 7.7 7.7 0 0 1-3.5-.85L4 20l1.85-4.15A7.5 7.5 0 1 1 20 11.5Z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.5 11.5h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span class="desktop-cta-label">Clara fragen</span></button>
     <button class="mobile-menu-toggle" type="button" aria-label="Menü öffnen" aria-expanded="false" onclick="toggleMobileMenu()">☰</button>
@@ -193,4 +194,30 @@ window.addEventListener('load',()=>{
       .catch(error=>console.warn('Clara Offline-Modus konnte nicht aktiviert werden:',error));
   }
 },{once:true});
+let claraInstallPrompt=null;
+const claraInstallButton=document.getElementById('pwaInstallButton');
+const claraIsStandalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+const claraIsIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+if(claraInstallButton&&!claraIsStandalone){
+  if(claraIsIOS)claraInstallButton.hidden=false;
+  window.addEventListener('beforeinstallprompt',event=>{
+    event.preventDefault();
+    claraInstallPrompt=event;
+    claraInstallButton.hidden=false;
+  });
+  claraInstallButton.addEventListener('click',async()=>{
+    if(claraInstallPrompt){
+      claraInstallPrompt.prompt();
+      const choice=await claraInstallPrompt.userChoice;
+      if(choice.outcome==='accepted')claraInstallButton.hidden=true;
+      claraInstallPrompt=null;
+      return;
+    }
+    const status=document.getElementById('claraWelcomeStatus');
+    if(status)status.textContent=claraIsIOS
+      ? 'Clara installieren: Tippe in Safari auf „Teilen“ und wähle „Zum Home-Bildschirm“.'
+      : 'Clara kann über das Installieren-Symbol deines Browsers zum Startbildschirm hinzugefügt werden.';
+  });
+  window.addEventListener('appinstalled',()=>{claraInstallButton.hidden=true;claraInstallPrompt=null;});
+}
 </script></body></html>
