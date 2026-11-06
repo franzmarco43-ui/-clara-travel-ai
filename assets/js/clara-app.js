@@ -320,7 +320,6 @@ window.addEventListener('popstate',event=>restoreClaraRoute(event.state));
 function openAppPage(page){
   document.getElementById('marketing-home').style.display='none';
   document.getElementById('clara-app').style.display='block';
-  claraSetRoute({view:'app',page});
   showPage(page);
 }
 function openDestination(name){openAppPage('planner');selectDestination(name);}
