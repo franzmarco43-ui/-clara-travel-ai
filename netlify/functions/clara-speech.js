@@ -2,15 +2,35 @@
 // Keeps AZURE_SPEECH_KEY on Netlify's server; never expose it to the browser.
 
 exports.handler = async (event) => {
+  // Match the origin policy used by the timestamped-viseme endpoint.
+  // Requests without an Origin header remain usable for same-origin/server calls;
+  // browser cross-origin requests are limited to Clara's own domains.
+  const origin = event.headers?.origin || event.headers?.Origin || "";
+  const allowedOrigin = !origin ||
+    origin === "https://clara-travel-ai.netlify.app" ||
+    /^https:\/\/deploy-preview-\d+--clara-travel-ai\.netlify\.app$/i.test(origin);
+  const corsHeaders = {
+    "Content-Type": "application/json; charset=utf-8",
+    "Cache-Control": "no-store",
+    "X-Content-Type-Options": "nosniff",
+    "Vary": "Origin",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS"
+  };
+  if (origin && allowedOrigin) corsHeaders["Access-Control-Allow-Origin"] = origin;
+
   if (event.httpMethod === "OPTIONS") {
     return {
-      statusCode: 204,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "Content-Type",
-        "Access-Control-Allow-Methods": "GET, POST, OPTIONS"
-      },
+      statusCode: allowedOrigin ? 204 : 403,
+      headers: corsHeaders,
       body: ""
+    };
+  }
+  if (!allowedOrigin) {
+    return {
+      statusCode: 403,
+      headers: corsHeaders,
+      body: JSON.stringify({ error: "Ursprung nicht freigegeben." })
     };
   }
 
@@ -26,7 +46,7 @@ exports.handler = async (event) => {
   if (event.httpMethod === "GET") {
     return {
       statusCode: 200,
-      headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" },
+      headers: { ...corsHeaders, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" },
       body: JSON.stringify({
         service: "clara-speech",
         ready: Boolean(speechKey && region),
@@ -38,7 +58,7 @@ exports.handler = async (event) => {
   }
 
   if (event.httpMethod !== "POST") {
-    return { statusCode: 405, headers: { "Allow": "GET, POST, OPTIONS" }, body: "Method not allowed" };
+    return { statusCode: 405, headers: { ...corsHeaders, "Allow": "GET, POST, OPTIONS" }, body: "Method not allowed" };
   }
 
   if (!speechKey || !region) {
@@ -46,7 +66,7 @@ exports.handler = async (event) => {
     if (!speechKey) missing.push("AZURE_SPEECH_KEY");
     return {
       statusCode: 500,
-      headers: { "Content-Type": "application/json; charset=utf-8" },
+      headers: { ...corsHeaders, "Content-Type": "application/json; charset=utf-8" },
       body: JSON.stringify({
         error: "Azure Speech-Konfiguration unvollständig.",
         missing
@@ -63,7 +83,7 @@ exports.handler = async (event) => {
   } catch {
     return {
       statusCode: 400,
-      headers: { "Content-Type": "application/json; charset=utf-8" },
+      headers: { ...corsHeaders, "Content-Type": "application/json; charset=utf-8" },
       body: JSON.stringify({ error: "Ungültige JSON-Anfrage." })
     };
   }
@@ -71,14 +91,14 @@ exports.handler = async (event) => {
   if (!text) {
     return {
       statusCode: 400,
-      headers: { "Content-Type": "application/json; charset=utf-8" },
+      headers: { ...corsHeaders, "Content-Type": "application/json; charset=utf-8" },
       body: JSON.stringify({ error: "Bitte gib einen Text ein." })
     };
   }
   if (text.length > 1800) {
     return {
       statusCode: 413,
-      headers: { "Content-Type": "application/json; charset=utf-8" },
+      headers: { ...corsHeaders, "Content-Type": "application/json; charset=utf-8" },
       body: JSON.stringify({ error: "Der Text ist zu lang. Bitte maximal 1.800 Zeichen verwenden." })
     };
   }
@@ -133,7 +153,7 @@ exports.handler = async (event) => {
       console.error("Azure Speech error", azureResponse.status, detail.slice(0, 1200));
       return {
         statusCode: 502,
-        headers: { "Content-Type": "application/json; charset=utf-8" },
+        headers: { ...corsHeaders, "Content-Type": "application/json; charset=utf-8" },
         body: JSON.stringify({
           error: "Azure Speech konnte die Stimme nicht erzeugen.",
           azureStatus: azureResponse.status,
@@ -146,6 +166,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       headers: {
+        ...corsHeaders,
         "Content-Type": "audio/wav",
         "Cache-Control": "no-store",
         "X-Content-Type-Options": "nosniff"
@@ -157,7 +178,7 @@ exports.handler = async (event) => {
     console.error("Clara Speech function failed", error);
     return {
       statusCode: 502,
-      headers: { "Content-Type": "application/json; charset=utf-8" },
+      headers: { ...corsHeaders, "Content-Type": "application/json; charset=utf-8" },
       body: JSON.stringify({
         error: error && error.name === "AbortError"
           ? "Azure Speech hat nach 12 Sekunden nicht geantwortet."
