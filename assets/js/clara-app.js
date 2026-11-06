@@ -1,5 +1,5 @@
-// Clara Memory configuration is initialized before any page handlers can run.
-const CLARA_CONFIG_KEY = 'clara.travel.supabase.public.v1';
+// Store the key on window: no top-level lexical binding can enter a temporal dead zone.
+window.CLARA_CONFIG_KEY = 'clara.travel.supabase.public.v1';
 const CLARA_DEFAULT_SUPABASE_URL = 'https://ufsglnhebhbmadwzftau.supabase.co';
 const CLARA_DEFAULT_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_5B9FYMgDQ0SJjCYEeJgPgA_4DD4o3rN'; // Public publishable key only; RLS remains the authorization boundary.
 
@@ -1078,7 +1078,7 @@ function connectSupabase(){
   if(!/^https:\/\/[a-zA-Z0-9-]+\.supabase\.co$/.test(url)){memoryStatus('sbStatus','Die Projekt-URL sieht nicht korrekt aus. Erwartet wird https://….supabase.co',true);return;}
   if(!window.supabase || !window.supabase.createClient){memoryStatus('sbStatus','Supabase-Bibliothek konnte nicht geladen werden. Bitte Internetverbindung prüfen.',true);return;}
   try{
-    localStorage.setItem(CLARA_CONFIG_KEY,JSON.stringify({url,key}));
+    localStorage.setItem(window.CLARA_CONFIG_KEY,JSON.stringify({url,key}));
     claraSupabase=window.supabase.createClient(url,key);
     claraSupabase.auth.onAuthStateChange((event,session)=>{
       if(event==='PASSWORD_RECOVERY'){
@@ -1097,7 +1097,7 @@ function connectSupabase(){
 }
 function restoreClaraConnection(){
   try{
-    const saved=JSON.parse(localStorage.getItem(CLARA_CONFIG_KEY)||'null');
+    const saved=JSON.parse(localStorage.getItem(window.CLARA_CONFIG_KEY)||'null');
     const url=saved?.url||CLARA_DEFAULT_SUPABASE_URL;
     const key=saved?.key||CLARA_DEFAULT_SUPABASE_PUBLISHABLE_KEY;
     document.getElementById('sbUrl').value=url;
