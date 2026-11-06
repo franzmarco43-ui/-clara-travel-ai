@@ -43,15 +43,15 @@ assert.deepEqual(
   'App cards and the destination knowledge base must describe the same 13 places'
 );
 
-const timezoneMatch = app.match(/const cityTimeZones\\s*=\\s*\\{([\\s\\S]*?)\\};/);
+const timezoneMatch = app.match(/const cityTimeZones\s*=\s*\{([\s\S]*?)\};/);
 assert.ok(timezoneMatch, 'Every destination must have a local time-zone map');
-const timezoneNames = [...timezoneMatch[1].matchAll(/'([^']+)'\\s*:/g)].map(match => match[1]);
+const timezoneNames = [...timezoneMatch[1].matchAll(/'([^']+)'\s*:/g)].map(match => match[1]);
 assert.equal(timezoneNames.length, 13, 'All 13 destinations need a time-zone entry');
 assert.equal(new Set(timezoneNames).size, 13, 'Time-zone entries must be unique');
 assert.ok(appPlaces.every(name => timezoneNames.includes(name)), 'Every destination must have a local time zone');
 assert.ok(app.includes('api.open-meteo.com/v1/forecast'), 'Live Open-Meteo weather integration must be present');
-assert.ok(/function updateCityClocks\\s*\\(/.test(app), 'Local clocks must be updated by the app');
-assert.ok(/async function loadCityWeather\\s*\\(/.test(app), 'Current weather must be loaded asynchronously');
+assert.ok(/function updateCityClocks\s*\(/.test(app), 'Local clocks must be updated by the app');
+assert.ok(/async function loadCityWeather\s*\(/.test(app), 'Current weather must be loaded asynchronously');
 
 assert.match(html, /<html lang="de">/, 'German must be the initial document language');
 assert.ok(app.includes('clara.language-default-de'), 'The app must migrate first-visit language to German');
@@ -59,18 +59,18 @@ assert.ok(html.includes('assets/clara-welcome.mp4'), 'The welcome video source m
 assert.ok(existsSync('assets/clara-welcome.mp4'), 'The configured welcome video file must exist');
 
 assert.match(mobile, /<meta[^>]+name="viewport"/i, 'Mobile preview must declare a device viewport');
-assert.match(mobile, /<iframe[^>]+src="\\.\\/index\\.html"/i, 'Mobile preview must load the shared app');
+assert.match(mobile, /<iframe[^>]+src="\.\/index\.html"/i, 'Mobile preview must load the shared app');
 assert.ok(
   mobile.includes("setOrientation('portrait')") && mobile.includes("setOrientation('landscape')"),
   'Mobile preview must expose portrait and landscape controls'
 );
-const mobileScripts = [...mobile.matchAll(/<script\\b[^>]*>([\\s\\S]*?)<\\/script>/gi)];
+const mobileScripts = [...mobile.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
 assert.ok(mobileScripts.length > 0, 'Mobile preview must contain its orientation controller');
 mobileScripts.forEach((match, index) => {
   new vm.Script(match[1], { filename: 'mobile-preview.html:inline-' + index });
 });
-assert.ok(/@media\\s*\\(\\s*max-width:\\s*760px\\s*\\)/.test(css), 'The shared app styles must include a phone breakpoint');
-assert.ok(/@media\\s*\\(\\s*max-width:\\s*520px\\s*\\)/.test(css), 'The shared app styles must include a narrow-phone breakpoint');
+assert.ok(/@media\s*\(\s*max-width:\s*760px\s*\)/.test(css), 'The shared app styles must include a phone breakpoint');
+assert.ok(/@media\s*\(\s*max-width:\s*520px\s*\)/.test(css), 'The shared app styles must include a narrow-phone breakpoint');
 
 assert.equal(manifest.display, 'standalone', 'PWA must support standalone app display');
 assert.equal(manifest.scope, '/', 'PWA scope must cover the site');
