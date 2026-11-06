@@ -8,14 +8,15 @@ const vm = require('node:vm');
 
 const functionPath = path.join(__dirname, '..', 'netlify', 'functions', 'clara-speech-visemes.js');
 const previewOrigin = 'https://deploy-preview-10--clara-travel-ai.netlify.app';
+let lastSpeechConfig = null;
 
 function loadHandler({ key = 'test-only-placeholder', region = 'germanywestcentral', visemes = [] } = {}) {
   const source = fs.readFileSync(functionPath, 'utf8');
   class FakeSpeechSynthesizer {
     constructor(config) {
       this.config = config;
+      lastSpeechConfig = config;
       this.visemeReceived = null;
-      FakeSpeechSynthesizer.lastInstance = this;
     }
     speakTextAsync(text, onSuccess) {
       assert.equal(text, 'Hallo Clara');
@@ -76,7 +77,7 @@ test('returns sorted, timestamped German Azure visemes for the allowed preview o
     { audioOffset: 10000000, visemeId: 1 },
     { audioOffset: 20000000, visemeId: 3 }
   ]));
-  assert.equal(FakeSpeechSynthesizer.lastInstance.config.receivedRegion, 'germanywestcentral');
+  assert.equal(lastSpeechConfig.receivedRegion, 'germanywestcentral');
 });
 
 test('rejects an origin outside the production and numbered preview domains', async () => {
