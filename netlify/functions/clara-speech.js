@@ -19,7 +19,7 @@ exports.handler = async (event) => {
   // Keep that known-good region as a safe fallback if the Netlify variable
   // was accidentally removed; an explicitly configured region always wins.
   const rawRegion = (process.env.AZURE_SPEECH_REGION || "").trim().toLowerCase();
-  const configuredRegion = rawRegion.replace(/[\\s_-]/g, "");
+  const configuredRegion = rawRegion.replace(/[\s_-]/g, "");
   const region = configuredRegion || "germanywestcentral";
 
   // Safe diagnostic endpoint: confirms configuration without exposing secrets.
