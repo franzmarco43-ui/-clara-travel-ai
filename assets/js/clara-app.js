@@ -475,7 +475,25 @@ const CLARA_TRIP_STORAGE_KEY='clara.travel.savedTrips.v1';
 function claraTripStorageKey(){return CLARA_TRIP_STORAGE_KEY+(claraUser?.id?'.'+claraUser.id:'.guest');}
 function readClaraTripPlans(){try{const value=JSON.parse(localStorage.getItem(claraTripStorageKey())||'[]');return Array.isArray(value)?value:[];}catch(_){return [];}}
 function writeClaraTripPlans(items){try{localStorage.setItem(claraTripStorageKey(),JSON.stringify(items));return true;}catch(error){console.warn('Reiseplan lokal speichern:',error);return false;}}
-function currentClaraTripPlan(){const destination=document.getElementById('destination');if(!destination?.value){toast('Bitte wähle zuerst ein Reiseziel und erstelle einen Reiseplan.');return null;}if(!document.getElementById('planResult')?.innerHTML.trim()){makePlan();}return {id:'trip-'+Date.now(),destination:destination.value,duration:document.getElementById('duration').value,interest:document.getElementById('interest').value,pace:document.getElementById('pace').value,mobility:document.getElementById('mobility')?.value||'Keine besondere Angabe',savedAt:new Date().toISOString()};}
+function currentClaraTripPlan(){
+ const destination=document.getElementById('destination');
+ if(!destination?.value){
+  toast('Bitte wähle zuerst ein Reiseziel und erstelle einen Reiseplan.');
+  return null;
+ }
+ // Always regenerate from the current form values. Otherwise a previously
+ // rendered itinerary can remain visible after the user changes the controls.
+ makePlan();
+ return {
+  id:'trip-'+Date.now(),
+  destination:destination.value,
+  duration:document.getElementById('duration').value,
+  interest:document.getElementById('interest').value,
+  pace:document.getElementById('pace').value,
+  mobility:document.getElementById('mobility')?.value||'Keine besondere Angabe',
+  savedAt:new Date().toISOString()
+ };
+}
 async function saveClaraTripPlan(){
  const plan=currentClaraTripPlan();if(!plan)return;
  const status=document.getElementById('planSaveStatus');
