@@ -134,6 +134,37 @@ assert.ok(existsSync('assets/clara-welcome.mp4'), 'The configured welcome video 
 assert.doesNotMatch(html + app, /(?:SUPABASE_SERVICE_ROLE_KEY|service_role)\s*[:=]\s*['"][^'"]{8,}['"]/i, 'Browser code must never contain a Supabase service-role credential');
 assert.doesNotMatch(html + app, /AZURE_SPEECH_KEY|AZURE_SPEECH_REGION/i, 'Azure Speech credentials and server configuration must stay out of browser code');
 
+const publicBrowserFiles = [
+  'index.html',
+  'mobile-preview.html',
+  'clara_travel_ai_1_0_optimiert_2.html',
+  'avatar-audio-test.html',
+  'avatar-seraphina-test.html',
+  'avatar-test.html',
+  'avatar-tts-test.html',
+  'clara-audio-studio.html',
+  'clara-photo-animation-test.html',
+  'clara-video.html',
+  'assets/js/clara-app.js',
+  'sw.js'
+];
+const publicBrowserCode = publicBrowserFiles.map(read).join('\n');
+assert.doesNotMatch(
+  publicBrowserCode,
+  /(?:SUPABASE_SERVICE_ROLE_KEY|service_role)\s*[:=]\s*['"][^'"]{8,}['"]/i,
+  'No public HTML/JavaScript asset may contain a Supabase service-role credential'
+);
+assert.doesNotMatch(
+  publicBrowserCode,
+  /sb_secret_[A-Za-z0-9_-]{20,}/i,
+  'No public HTML/JavaScript asset may contain a Supabase secret key'
+);
+assert.doesNotMatch(
+  publicBrowserCode,
+  /AZURE_SPEECH_KEY\s*[:=]\s*['"][^'"]{8,}['"]/i,
+  'No public HTML/JavaScript asset may contain a hard-coded Azure Speech key'
+);
+
 assert.match(mobile, /<meta[^>]+name="viewport"/i, 'Mobile preview must declare a device viewport');
 assert.match(mobile, /<iframe[^>]+src="\.\/index\.html"/i, 'Mobile preview must load the shared app');
 assert.ok(
