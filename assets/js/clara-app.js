@@ -981,7 +981,7 @@ async function fetchClaraSpeechChunkWithVisemes(text,language){
   try{
     const controller=new AbortController();
     const timeout=setTimeout(()=>controller.abort(),20000);
-    let response;
+    let response,data;
     try{
       response=await fetch('/.netlify/functions/clara-speech-visemes',{
         method:'POST',
@@ -989,8 +989,9 @@ async function fetchClaraSpeechChunkWithVisemes(text,language){
         body:JSON.stringify({text,language}),
         signal:controller.signal
       });
+      // Keep the abort deadline active until the complete JSON/audio payload is read.
+      data=await response.json().catch(()=>({}));
     }finally{clearTimeout(timeout);}
-    const data=await response.json().catch(()=>({}));
     if(!response.ok)throw new Error(data.error||'Azure-Visem-Synthese nicht verfügbar ('+response.status+').');
     if(typeof data.audio!=='string'||!data.audio)throw new Error('Azure hat keine Audiodaten zurückgegeben.');
     const binary=atob(data.audio);
