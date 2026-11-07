@@ -9,7 +9,7 @@ const vm = require('node:vm');
 const appPath = path.join(__dirname, '..', 'assets', 'js', 'clara-app.js');
 const app = fs.readFileSync(appPath, 'utf8');
 const start = app.indexOf('function currentClaraTripPlan(){');
-const end = app.indexOf('\\nasync function saveClaraTripPlan()', start);
+const end = app.indexOf('\nasync function saveClaraTripPlan()', start);
 
 assert.notEqual(start, -1, 'The current trip-plan builder must exist');
 assert.ok(end > start, 'The trip-plan builder must be isolated from cloud persistence');
@@ -114,7 +114,7 @@ test('supports local trip-plan save, load, and delete without a signed-in accoun
     setItem(key, value) { storage.set(key, String(value)); }
   };
   const blockStart = app.indexOf('const CLARA_TRIP_STORAGE_KEY=');
-  const blockEnd = app.indexOf('\\nfunction loadClaraVoices()', blockStart);
+  const blockEnd = app.indexOf('\nfunction loadClaraVoices()', blockStart);
   assert.notEqual(blockStart, -1, 'Local and cloud trip-plan persistence must exist');
   assert.ok(blockEnd > blockStart, 'Trip-plan persistence block must be isolated for testing');
   const persistenceSource = app.slice(blockStart, blockEnd);
@@ -128,8 +128,8 @@ test('supports local trip-plan save, load, and delete without a signed-in accoun
     console: { warn() {}, error() {} }
   };
   vm.runInNewContext(
-    'let claraUser = null;\\n' + persistenceSource +
-    '\\nglobalThis.__tripPlanApi = { saveClaraTripPlan, loadClaraTripPlan, deleteClaraTripPlan };',
+    'let claraUser = null;\n' + persistenceSource +
+    '\nglobalThis.__tripPlanApi = { saveClaraTripPlan, loadClaraTripPlan, deleteClaraTripPlan };',
     sandbox
   );
   const api = sandbox.__tripPlanApi;
