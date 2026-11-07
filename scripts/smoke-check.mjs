@@ -39,7 +39,7 @@ assert.ok(locks.records.every(item => item.name && Number.isFinite(item.latitude
 assert.equal(new Set(locks.records.map(item => item.name)).size, 18, 'Lock names must be unique');
 assert.deepEqual(publicLocks, locks, 'Public lock data and the chat knowledge-base copy must stay identical');
 const validatorStart = app.indexOf('function validateDanubeLockData(data)');
-const validatorEnd = app.indexOf('\\nasync function loadDanubeLocks()', validatorStart);
+const validatorEnd = app.indexOf('\nasync function loadDanubeLocks()', validatorStart);
 assert.notEqual(validatorStart, -1, 'Runtime lock-data validator must exist');
 assert.ok(validatorEnd > validatorStart, 'Runtime lock-data validator must be isolated for tests');
 const validateDanubeLockData = vm.runInNewContext('(' + app.slice(validatorStart, validatorEnd).trim() + ')');
