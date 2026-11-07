@@ -2,4 +2,4 @@
 # These values are identifiers/public client configuration, not private credentials.
 # GROQ_API_KEY and TAVILY_API_KEY are intentionally NOT omitted and must remain server-side.
 [build.environment]
-  SECRETS_SCAN_OMIT_KEYS = "SUPABASE_PROJECT_URL,SUPABASE_ANON_KEY,REVIEW_ID"
+  SECRETS_SCAN_OMIT_KEYS = "SUPABASE_PROJECT_URL,SUPABASE_ANON_KEY,SUPABASE_PUBLISHABLE_KEY,REVIEW_ID"

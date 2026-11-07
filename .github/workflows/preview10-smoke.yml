@@ -1,0 +1,30 @@
+name: Clara Preview 10 smoke checks
+
+on:
+  push:
+    branches:
+      - preview-10-einheitliches-design
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out preview branch
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check app and service worker syntax
+        run: |
+          node --check assets/js/clara-app.js
+          node --check sw.js
+          node --check netlify/functions/clara-speech.js
+          node --check netlify/functions/clara-speech-visemes.js
+          node --check netlify/functions/chat.js
+          node --check scripts/smoke-check.mjs
+      - name: Validate destinations, locks, and PWA shell
+        run: node scripts/smoke-check.mjs

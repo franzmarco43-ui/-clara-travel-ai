@@ -140,7 +140,7 @@ function filterRelevantResearchResults(message, results) {
       if (inUrl) score += 3;
       if (inContent) score += 1;
     }
-    if (item.likelyOfficial) score += 2;
+    if (item.likelyOfficial) score += 12;
     return {item, matches, score};
   }).filter(entry => entry.matches >= minimumMatches && entry.score > 0)
     .sort((a, b) => b.score - a.score);
@@ -197,16 +197,29 @@ function researchFailureMessage(reason) {
   return "Ich konnte gerade keine belastbaren Live-Suchergebnisse abrufen. Deshalb möchte ich dir keine möglicherweise veralteten oder vermuteten Angaben als Tatsache nennen.";
 }
 exports.handler = async function (event) {
+  const requestOrigin = event.headers?.origin || event.headers?.Origin || "";
+  const isAllowedOrigin = !requestOrigin ||
+    requestOrigin === "https://clara-travel-ai.netlify.app" ||
+    requestOrigin === "https://deploy-preview-10--clara-travel-ai.netlify.app";
   const headers = {
     "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "https://clara-travel-ai.netlify.app",
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Vary": "Origin"
   };
+  // Allow the production site and Netlify numbered deploy previews only.
+  // Reject foreign browser origins before they can consume backend/API resources.
+  if (requestOrigin && isAllowedOrigin) headers["Access-Control-Allow-Origin"] = requestOrigin;
 
   if (event.httpMethod === "OPTIONS") {
-    return { statusCode: 204, headers, body: "" };
+    return { statusCode: isAllowedOrigin ? 204 : 403, headers, body: "" };
+  }
+  if (!isAllowedOrigin) {
+    return {
+      statusCode: 403,
+      headers,
+      body: JSON.stringify({ error: "Ursprung nicht freigegeben." })
+    };
   }
 
   if (event.httpMethod !== "POST") {
@@ -219,8 +232,11 @@ exports.handler = async function (event) {
 
   try {
     const apiKey = process.env.GROQ_API_KEY;
-   const supabaseUrl = process.env.SUPABASE_PROJECT_URL;
-    const supabaseKey = process.env.SUPABASE_ANON_KEY;
+   const defaultSupabaseUrl = "https://ufsglnhebhbmadwzftau.supabase.co";
+    const defaultSupabasePublishableKey = "sb_publishable_5B9FYMgDQ0SJjCYEeJgPgA_4DD4o3rN";
+    const supabaseUrl = String(process.env.SUPABASE_PROJECT_URL || defaultSupabaseUrl).replace(/\/+$/, "");
+    const configuredSupabaseKey = String(process.env.SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY || "").trim();
+    const supabaseKey = configuredSupabaseKey || (supabaseUrl === defaultSupabaseUrl ? defaultSupabasePublishableKey : "");
     const passauKnowledge = require("./data/passau.json");
     const danubeLocksKnowledge = require("./data/danube-locks.json");
     const danubeDestinationsKnowledge = require("./data/danube-destinations.json");
@@ -265,25 +281,40 @@ exports.handler = async function (event) {
         const user = await authResponse.json();
 
         if (user && user.id) {
-          const profileUrl =
+          // Check the consent flag in isolation before requesting any personal fields.
+          const consentUrl =
             `${supabaseUrl}/rest/v1/clara_profiles` +
-            `?select=display_name,interests,travel_pace,budget_level,consent_memory` +
-            `&user_id=eq.${encodeURIComponent(user.id)}&limit=1`;
+            `?select=consent_memory&user_id=eq.${encodeURIComponent(user.id)}&limit=1`;
 
-          const profileResponse = await fetch(profileUrl, {
+          const consentResponse = await fetch(consentUrl, {
             headers: {
               "apikey": supabaseKey,
               "Authorization": `Bearer ${accessToken}`
             }
           });
 
-          if (profileResponse.ok) {
-            const profiles = await profileResponse.json();
-            const profile = profiles[0];
+          if (consentResponse.ok) {
+            const consentProfiles = await consentResponse.json();
+            const consentProfile = consentProfiles[0];
 
-            // Ohne ausdrückliche Zustimmung keine persönlichen Daten laden.
-            if (profile && profile.consent_memory === true) {
+            // Personal profile fields and saved memories are requested only after explicit consent.
+            if (consentProfile && consentProfile.consent_memory === true) {
+              const profileUrl =
+                `${supabaseUrl}/rest/v1/clara_profiles` +
+                `?select=display_name,interests,travel_pace,budget_level` +
+                `&user_id=eq.${encodeURIComponent(user.id)}&limit=1`;
+
+              const profileResponse = await fetch(profileUrl, {
+                headers: {
+                  "apikey": supabaseKey,
+                  "Authorization": `Bearer ${accessToken}`
+                }
+              });
+              const profiles = profileResponse.ok ? await profileResponse.json() : [];
+              const profile = profiles[0] || {};
+
               const memoryUrl =
+
                 `${supabaseUrl}/rest/v1/clara_memories` +
                 `?select=memory_type,content,created_at` +
                 `&user_id=eq.${encodeURIComponent(user.id)}` +
@@ -477,8 +508,9 @@ exports.handler = async function (event) {
                 "Budapest: Beschreibe Buda und Pest als die zwei bekannten Donauseiten, aber verkürze die Stadtgeschichte nicht auf zwei Gründungsteile. Budapest entstand 1873 durch die Vereinigung von Buda, Pest und Óbuda. " +
                 "Budapest-Thermen: Nenne ein konkretes Bad nicht als aktuell geöffnet oder besuchbar, wenn du den aktuellen Betreiberstatus nicht geprüft hast. Das Gellért-Bad ist laut offizieller Betreiberinformation seit 1. Oktober 2025 geschlossen; eine Wiedereröffnung ist derzeit für 2028 geplant. Behandle diesen Status als zeitgebunden und prüfe ihn vor jeder späteren Besuchsempfehlung erneut. " +
                 "Live-Recherche steht nur dann für eine Antwort zur Verfügung, wenn dir unten ein aktueller LIVE-WEBRECHERCHE-Abschnitt mit tatsächlich abgerufenen Quellen übergeben wird. Ohne diesen Abschnitt behaupte niemals, online recherchiert oder eine Quelle aktuell geprüft zu haben. " +
-                "Bei aktuellen, ortsspezifischen oder veränderlichen Angaben nutze die übergebenen Suchquellen. Belege relevante Tatsachen mit den Quellenmarkern [1], [2] usw. Nenne keine Quellen, die nicht im Rechercheabschnitt enthalten sind. " +
-                "Sind Quellen veraltet, widersprüchlich, nicht amtlich genug oder nicht aussagekräftig, sage das klar. Trenne gesicherte Fakten, redaktionelles Ortswissen und offene Punkte. Ergänze keine plausibel klingenden Details. " +
+                "Bei aktuellen, ortsspezifischen oder veränderlichen Angaben nutze die übergebenen Suchquellen. Belege jede einzelne Tatsachenbehauptung nur mit einer Quelle, deren übergebener Suchauszug genau diese Aussage tatsächlich stützt. Ein Quellenmarker am Absatzende darf nicht pauschal mehrere unterschiedliche Behauptungen belegen. Nenne keine Quelle, nur weil sie thematisch zum Ort passt. " +
+                "Bevorzuge bei Ortsgeschichte, Sehenswürdigkeiten, Öffnungszeiten und offiziellen Einrichtungen die zuständige Stadt, den Betreiber oder die offizielle Tourismusorganisation. Reiseblogs und private Reiseberichte dürfen nur ergänzend und klar als Drittquellen dienen. Wenn eine Aussage durch die übergebenen Auszüge nicht belegt ist, lasse sie weg oder kennzeichne sie als nicht verifiziert. " +
+                "Sind Quellen veraltet, widersprüchlich, nicht amtlich genug oder nicht aussagekräftig, sage das klar. Trenne gesicherte Fakten, redaktionelles Ortswissen und offene Punkte. Ergänze keine plausibel klingenden Details. Gib am Ende nur die Quellen aus, die tatsächlich mindestens eine konkrete Aussage in deiner Antwort stützen. " +
                 "Bei Rollator- oder Mobilitätsfragen niemals konkrete Weg-Eignung, Barrierefreiheit oder Routen behaupten, solange dafür keine verlässliche aktuelle Quelle tatsächlich geprüft wurde. Ohne solche Prüfung ausschließlich den neutralen Hinweis aus der Wissensdatei verwenden. " +
                 "Schreibe Zeitangaben immer vollständig aus: Minuten statt min, Stunden statt h oder Std. Verwende keine abgekürzten Zeiteinheiten. Formuliere zum Beispiel 10 bis 15 Minuten oder 2 Stunden und 30 Minuten. " +
                 memoryText + destinationKnowledge + destinationContext + rollatorContext + lockKnowledge + researchContext

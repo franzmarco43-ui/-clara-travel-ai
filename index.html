@@ -1,60 +1,120 @@
 <!doctype html>
 <html lang="de">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#123c3a">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<script>/* Preview 10: German is the first-visit default; explicit language choices persist. */(function(){var supported=["de","en","nl","fr","ro"],language="de";try{var migration="clara.language-default-de-v2";if(localStorage.getItem(migration)!=="1"){if(localStorage.getItem("clara.language")==="fr")localStorage.setItem("clara.language","de");localStorage.setItem(migration,"1");}var saved=localStorage.getItem("clara.language");if(supported.indexOf(saved)!==-1)language=saved;else localStorage.setItem("clara.language","de");}catch(_){}document.documentElement.lang=language;})();</script>
+<meta name="theme-color" content="#123b3b">
+<meta name="application-name" content="Clara">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clara">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="/assets/clara-app-icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <title>Clara Travel AI — Deine persönliche Reisebegleiterin</title>
-<style>
-:root{--green:#123c3a;--green2:#245c50;--mint:#dcebe4;--cream:#f7f4ec;--gold:#caa86a;--ink:#172b29;--muted:#687773;--white:#fff;--line:#e2e8e3;--shadow:0 12px 35px #183b3012}
-*{box-sizing:border-box}body{margin:0;background:#f1f4f0;color:var(--ink);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:auto;min-height:100vh;background:var(--cream);box-shadow:0 0 60px #193a3010}.topbar{display:flex;align-items:center;justify-content:space-between;padding:17px 24px;background:var(--green);color:white;position:sticky;top:0;z-index:5}.brand{display:flex;gap:11px;align-items:center;font-weight:800;letter-spacing:-.4px}.logo{width:39px;height:39px;border-radius:13px;background:var(--mint);color:var(--green);display:grid;place-items:center;font-size:22px}.brand small{display:block;font-weight:500;opacity:.72;font-size:11px;letter-spacing:.6px}.top-actions{display:flex;gap:8px}.btn{border:0;border-radius:13px;padding:11px 15px;font-weight:700;background:var(--green);color:white}.btn.light{background:#ffffff17;color:white;border:1px solid #ffffff40}.btn.gold{background:var(--gold);color:#1f2d27}.btn.soft{background:var(--mint);color:var(--green)}.btn.outline{background:transparent;border:1px solid var(--line);color:var(--ink)}.layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 73px)}.sidebar{padding:22px 14px;border-right:1px solid var(--line);background:#fbfaf6}.navlabel{font-size:10px;letter-spacing:1.5px;color:#83908a;font-weight:800;margin:12px 12px}.nav{display:flex;align-items:center;gap:12px;width:100%;padding:12px;border:0;background:transparent;color:#50615a;border-radius:13px;text-align:left;margin:3px 0;font-weight:650}.nav.active,.nav:hover{background:var(--mint);color:var(--green)}.side-note{margin:25px 5px 0;padding:15px;border-radius:17px;background:#edf2e9;font-size:12px;color:#54655d}.main{padding:28px;min-width:0}.eyebrow{color:var(--green2);font-size:11px;letter-spacing:1.6px;font-weight:850;text-transform:uppercase}.heading{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:22px}.heading h1{font-size:clamp(26px,4vw,39px);letter-spacing:-1.2px;line-height:1.12;margin:7px 0}.muted{color:var(--muted)}.hero{display:grid;grid-template-columns:1.12fr .88fr;background:var(--green);color:white;border-radius:25px;overflow:hidden;min-height:320px;box-shadow:var(--shadow)}.hero-copy{padding:30px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center}.hero h2{font-size:clamp(27px,3vw,39px);line-height:1.12;letter-spacing:-1px;margin:10px 0}.hero p{max-width:410px;color:#d7e5dd}.hero .actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}.avatar-stage{position:relative;display:grid;place-items:center;min-height:300px;background:radial-gradient(ellipse at 50% 42%,#527b68 0%,#234f45 43%,#123c3a 72%)}.halo{position:absolute;width:250px;height:250px;border:1px solid #ffffff2b;border-radius:50%;box-shadow:0 0 0 25px #ffffff08,0 0 0 50px #ffffff05}.avatar{width:174px;height:224px;position:relative;filter:drop-shadow(0 15px 25px #081e1b50);animation:bob 4s ease-in-out infinite}.avatar .hair{position:absolute;left:29px;top:10px;width:119px;height:160px;background:linear-gradient(100deg,#39271f,#67432f 50%,#2a211d);border-radius:58px 58px 42px 42px;z-index:1}.avatar .face{position:absolute;left:43px;top:28px;width:91px;height:115px;border-radius:48% 48% 44% 44%;background:linear-gradient(115deg,#f1c7a7,#dba17d);z-index:2;box-shadow:inset -9px -2px 0 #bd82634a}.avatar .neck{position:absolute;z-index:2;left:77px;top:128px;width:30px;height:35px;background:#dba17d}.avatar .body{position:absolute;z-index:2;left:19px;bottom:0;width:139px;height:77px;border-radius:60px 60px 12px 12px;background:linear-gradient(100deg,#e5e0d1,#fff8e9 50%,#c5d2c6)}.eye{position:absolute;top:51px;width:7px;height:4px;border-radius:100%;background:#4a3028}.eye.left{left:21px}.eye.right{right:21px}.brow{position:absolute;top:42px;width:17px;height:5px;border-top:2px solid #69412e;border-radius:50%}.brow.left{left:15px}.brow.right{right:15px}.nose{position:absolute;top:60px;left:43px;width:6px;height:18px;border-right:1px solid #b67d60;border-radius:50%}.mouth{position:absolute;left:34px;top:86px;width:23px;height:10px;border-bottom:3px solid #a95150;border-radius:0 0 50% 50%;transition:all .2s}.avatar.speaking .mouth{height:17px;background:#6d3438;border:2px solid #a95150;border-radius:50%;animation:talk .2s infinite alternate}.avatar.speaking{animation:bob .5s ease-in-out infinite}.avatar-label{position:absolute;bottom:17px;background:#ffffff16;border:1px solid #ffffff38;padding:7px 12px;border-radius:30px;font-size:12px;backdrop-filter:blur(8px)}@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}@keyframes talk{to{transform:scaleY(.5)}}@media(prefers-reduced-motion:reduce){.avatar,.avatar.speaking{animation:none}.destination{transition:none}.chatbox{scroll-behavior:auto}}.section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:28px 0 14px}.section-head h2{margin:0;font-size:21px;letter-spacing:-.5px}.destinations{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.destination{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:white;box-shadow:0 5px 20px #183b3007;transition:.2s}.destination:hover{transform:translateY(-2px);box-shadow:var(--shadow)}.dest-img{height:116px;display:grid;place-items:center;font-size:44px;background:linear-gradient(135deg,#dcebe4,#f0dfbd);position:relative}.dest-img span{position:absolute;bottom:9px;left:11px;color:#173c34;background:#ffffffd9;padding:4px 8px;border-radius:8px;font-size:10px;font-weight:800}.dest-info{padding:13px}.dest-info h3{margin:0;font-size:16px}.dest-info p{font-size:12px;color:var(--muted);margin:5px 0 12px;min-height:36px}.dest-info button{width:100%;padding:9px;border-radius:10px;border:1px solid #d8e5dc;background:#f5f8f4;color:var(--green);font-weight:750}.cards{display:grid;grid-template-columns:1fr 1fr;gap:14px}.panel{background:white;border:1px solid var(--line);border-radius:20px;padding:19px;box-shadow:0 5px 20px #183b3006}.panel h3{margin:0 0 6px}.row{display:flex;gap:10px;align-items:center}.bubble{width:39px;height:39px;border-radius:13px;background:var(--mint);display:grid;place-items:center;font-size:20px;flex-shrink:0}.chatbox{height:270px;overflow:auto;background:#f8faf6;border:1px solid var(--line);border-radius:15px;padding:13px;margin:13px 0;display:flex;flex-direction:column;gap:10px}.msg{max-width:88%;padding:11px 13px;border-radius:15px;background:white;border:1px solid var(--line);align-self:flex-start}.msg.user{background:var(--mint);align-self:flex-end;border-color:#d3e5db}.chatform{display:flex;gap:8px}.chatform input{flex:1;min-width:0;border:1px solid var(--line);border-radius:12px;padding:12px;background:white}.mic-btn{min-width:48px;white-space:nowrap}.mic-btn.listening{background:#a43e3e;color:#fff;border-color:#a43e3e}.mic-btn:focus-visible{outline:3px solid #caa86a;outline-offset:2px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.field label{display:block;font-size:12px;font-weight:800;margin-bottom:6px}.field select,.field input{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:white;color:var(--ink)}.itinerary{margin-top:18px;display:grid;gap:10px}.stop{display:flex;gap:12px;padding:13px;background:#f7faf6;border-radius:14px}.num{width:31px;height:31px;border-radius:50%;background:var(--green);color:white;display:grid;place-items:center;font-weight:800;flex-shrink:0}.stop h4{margin:0 0 3px}.stop p{margin:0;color:var(--muted);font-size:13px}.map-intro{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:13px}.map-intro h2{margin:4px 0 5px;font-size:22px}.map-intro p{margin:0;color:var(--muted);font-size:13px}.map-legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:#52635c}.legend-item{display:inline-flex;align-items:center;gap:6px}.legend-dot{width:9px;height:9px;border-radius:50%;background:#c79b53;box-shadow:0 0 0 3px #c79b5325}.legend-dot.excursion{background:#4c8c79;box-shadow:0 0 0 3px #4c8c7925}.map-composition{display:grid;grid-template-columns:minmax(0,1fr) 285px;gap:14px;align-items:stretch}.danube-map{height:560px;width:100%;border:1px solid #dce5de;border-radius:19px;overflow:hidden;background:#e7eee9;z-index:0}.route-side{min-width:0;background:#fff;border:1px solid var(--line);border-radius:18px;padding:15px;max-height:560px;overflow:auto}.route-side h3{margin:0 0 4px;font-size:16px}.route-side .muted{font-size:11px;margin-bottom:12px}.route-list{position:relative;display:grid;gap:7px}.route-point{display:flex;align-items:center;gap:9px;width:100%;background:#f8faf7;border:1px solid #edf1ed;border-radius:11px;padding:8px 10px;text-align:left;color:var(--ink);font-size:12px;font-weight:700}.route-point:hover,.route-point:focus-visible{border-color:#8bad9d;background:#eef5f0;outline:none}.route-number{width:23px;height:23px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;background:#245c50;color:white;font-size:11px}.route-country{margin-left:auto;color:#78857f;font-size:10px;font-weight:600}.excursion-panel{display:flex;gap:12px;align-items:center;background:#eff5f0;border:1px solid #dce9df;border-radius:15px;padding:13px 15px;margin-top:14px}.excursion-panel strong{display:block}.excursion-panel p{font-size:12px;color:var(--muted);margin:3px 0 0}.excursion-mark{width:34px;height:34px;display:grid;place-items:center;border-radius:11px;background:#d9ebe1;flex-shrink:0}.map-disclaimer{font-size:11px;color:#74817b;margin:11px 2px 0}.route-marker{background:transparent;border:0}.route-marker span{display:grid;place-items:center;width:29px;height:29px;border:2px solid #fff;border-radius:50%;background:#245c50;color:white;box-shadow:0 3px 12px #102f2860;font-weight:800;font-size:11px}.route-marker.excursion span{background:#4c8c79}.leaflet-popup-content-wrapper{border-radius:12px}.leaflet-control-attribution{font-size:9px!important}.locks-layout{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:14px;align-items:stretch}.locks-map{height:440px;width:100%;border:1px solid #dce5de;border-radius:17px;overflow:hidden;background:#e7eee9}.locks-sidebar{min-width:0;border:1px solid var(--line);border-radius:16px;padding:13px;background:#fbfcfa;max-height:440px;overflow:auto}.lock-list{display:grid;gap:6px}.lock-row{display:flex;align-items:center;gap:8px;border:1px solid #e6ece7;background:#fff;border-radius:10px;padding:9px 10px;text-align:left;width:100%;color:var(--ink);font-size:12px}.lock-row.active,.lock-row:hover{border-color:#8bad9d;background:#edf5f0}.lock-row .route-number{width:22px;height:22px}.lock-row small{display:block;color:#78857f;font-size:10px;font-weight:500}.lock-detail{min-width:0}.lock-detail-top{display:flex;gap:15px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}.lock-detail h2{margin:3px 0 5px;font-size:24px}.lock-detail p{margin:4px 0;color:var(--muted);font-size:13px}.lock-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:15px 0}.lock-stat{background:#f4f7f3;border:1px solid #e7ede7;border-radius:13px;padding:11px}.lock-stat small{display:block;font-size:10px;color:#718079}.lock-stat b{display:block;font-size:16px;margin-top:2px}.lock-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}.lock-table th,.lock-table td{border-bottom:1px solid #e9eeea;padding:9px 8px;text-align:left;vertical-align:top}.lock-table th{width:38%;color:#63736b;font-weight:650}.lock-note{margin-top:13px;padding:12px 13px;background:#f5f7f2;border-radius:12px;font-size:12px;color:#56675f}.lock-definitions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.lock-definitions>div{padding:12px;border-radius:12px;background:#f6f8f5;border:1px solid #ebefea}.lock-definitions p{font-size:12px;color:var(--muted);margin:4px 0 0}.source-links{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;margin-top:13px}.source-links a{color:#245c50;text-decoration:underline}.lock-map-marker{background:transparent;border:0}.lock-map-marker span{display:grid;place-items:center;width:25px;height:25px;border:2px solid white;border-radius:50%;background:#245c50;color:white;box-shadow:0 3px 10px #102f2855;font-size:10px;font-weight:800}.lock-map-marker.active span{background:#c18c39;width:31px;height:31px;font-size:12px}.lock-row:focus-visible{outline:2px solid #c79b53;outline-offset:2px}@media(max-width:850px){.locks-layout{grid-template-columns:1fr}.locks-map{height:360px}.locks-sidebar{max-height:310px}.lock-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:520px){.locks-map{height:300px}.lock-detail h2{font-size:20px}.lock-table{font-size:12px}.lock-table th{width:42%}.lock-definitions{grid-template-columns:1fr}.source-links{display:grid;gap:7px}}@media(max-width:850px){.map-composition{grid-template-columns:1fr}.danube-map{height:470px}.route-side{max-height:300px}}@media(max-width:520px){.danube-map{height:390px}.route-side{max-height:260px}.map-intro h2{font-size:19px}}.premium-hero{padding:27px;border-radius:22px;background:linear-gradient(135deg,#153e38,#2e6858);color:white}.premium-hero h2{font-size:30px;margin:7px 0}.perks{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:20px 0}.perk{background:#ffffff12;border:1px solid #ffffff24;padding:12px;border-radius:13px}.hidden{display:none!important}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#172b29;color:white;padding:12px 18px;border-radius:12px;box-shadow:var(--shadow);z-index:10;max-width:90%;text-align:center}.mobile-nav{display:none}.footer{font-size:11px;color:#8a9690;margin-top:25px;text-align:center}
-.field input[type=password],.field input[type=url],.field input[type=email]{min-width:0}
-/* Clara 1.0 performance and accessibility refinements */
-.panel{box-shadow:0 8px 28px #183b3009}.btn{min-height:44px}.nav:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #caa86a;outline-offset:2px}.chatbox{scroll-behavior:smooth}.voice-settings{margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:15px;background:#fbfcf9}.voice-settings .formgrid{gap:10px}.voice-settings .field select{min-height:44px}
-@media(max-width:520px){.main{padding:15px 12px 100px}.heading{display:block}.heading>.btn{margin-top:12px}.destinations,.cards,.formgrid{grid-template-columns:1fr}.hero{border-radius:19px}.hero-copy{padding:22px 17px 8px}.hero h2{font-size:29px}.avatar-stage{min-height:220px}.chatbox{height: min(42vh,330px)}.chatform{align-items:stretch}.chatform .btn{padding:10px 12px}.mobile-nav button{font-size:9px}}
-@media(max-width:850px){.layout{grid-template-columns:1fr}.sidebar{display:none}.main{padding:18px 15px 90px}.topbar{padding:12px 15px}.top-actions .hide-small{display:none}.hero{grid-template-columns:1fr}.hero-copy{padding:24px 22px 8px}.avatar-stage{min-height:255px}.destinations{grid-template-columns:repeat(2,minmax(0,1fr))}.dest-img{height:100px}.mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:#fffefb;border-top:1px solid var(--line);padding:8px 4px calc(8px + env(safe-area-inset-bottom));z-index:8;justify-content:space-around}.mobile-nav button{border:0;background:transparent;color:#687773;font-size:10px;display:grid;justify-items:center;gap:3px;padding:5px}.mobile-nav button b{font-size:19px}.mobile-nav button.active{color:var(--green)}.heading{margin-bottom:15px}.cards{grid-template-columns:1fr}.perks{grid-template-columns:1fr 1fr}}
-@media(max-width:420px){.destinations{grid-template-columns:1fr 1fr;gap:9px}.dest-info{padding:10px}.dest-info p{font-size:11px}.formgrid{grid-template-columns:1fr}.hero h2{font-size:29px}.heading .btn{padding:9px}.perks{grid-template-columns:1fr}}
-.clara-welcome-video{display:block;width:min(100%,300px);height:320px;object-fit:contain;border-radius:18px;background:#0b2926;box-shadow:0 15px 35px #081e1b55}.avatar-stage{padding:20px 20px 54px}@media(max-width:760px){.clara-welcome-video{height:300px;width:min(100%,240px)}}.clara-photo-wrap{position:relative;width:min(100%,230px);height:245px;display:grid;place-items:center;overflow:hidden;border-radius:18px;background:radial-gradient(ellipse at 50% 40%,#527b68,#123c3a);box-shadow:0 12px 30px #081e1b40}.clara-photo-wrap{animation:claraIdle 7s ease-in-out infinite}.clara-photo{width:100%;height:100%;object-fit:cover;object-position:center 34%;border-radius:18px;transition:transform .35s,filter .35s,box-shadow .35s}.avatar-image-missing{padding:18px;color:white;font-size:13px}to{height:11px;width:14px;border-radius:45% 45% 55% 55%}}@keyframes claraIdle{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}35%{transform:translateY(-3px) rotate(-.35deg)}70%{transform:translateY(-1px) rotate(.35deg)}}
-/* Destination cards – richer, elegant travel-button styling */
-.destination{position:relative;border:1px solid #dfe8df;border-radius:20px;background:linear-gradient(160deg,#fff 0%,#fbfcf8 100%);box-shadow:0 7px 22px #183b300b;transition:transform .24s ease,box-shadow .24s ease,border-color .24s ease}
-.destination:hover{transform:translateY(-5px);border-color:#c5ad7c;box-shadow:0 16px 34px #183b3019}
-.destination:focus-within{outline:3px solid #caa86a;outline-offset:3px}
-.dest-img{height:132px;position:relative;isolation:isolate;overflow:hidden;font-size:48px;background:linear-gradient(135deg,#dcebe4,#f4e8ce)}
-.dest-img:before{content:"";position:absolute;z-index:-1;width:155px;height:155px;border:1px solid #ffffff90;border-radius:50%;right:-28px;top:-62px;box-shadow:0 0 0 17px #ffffff22,0 0 0 34px #ffffff18}
-.dest-img:after{content:"";position:absolute;z-index:-1;width:95px;height:95px;border-radius:50%;left:-30px;bottom:-48px;background:#ffffff35}
-.destination:nth-child(6n+1) .dest-img{background:linear-gradient(135deg,#d6e8df,#e9e2c8)}
-.destination:nth-child(6n+2) .dest-img{background:linear-gradient(135deg,#d7e9e8,#dce4f0)}
-.destination:nth-child(6n+3) .dest-img{background:linear-gradient(135deg,#e8dfc9,#f5ead4)}
-.destination:nth-child(6n+4) .dest-img{background:linear-gradient(135deg,#e9d9c8,#f2e7d9)}
-.destination:nth-child(6n+5) .dest-img{background:linear-gradient(135deg,#d9e4ed,#e9e0d4)}
-.destination:nth-child(6n) .dest-img{background:linear-gradient(135deg,#d8e8df,#e8e2ce)}
-.dest-img span{left:12px;bottom:11px;padding:5px 10px;border:1px solid #ffffffa8;border-radius:30px;background:#ffffffdf;color:#294b40;box-shadow:0 3px 10px #183b3010;letter-spacing:.25px}
-.dest-info{padding:15px}
-.dest-info h3{font-size:17px;letter-spacing:-.25px;color:#183d36}
-.dest-info p{line-height:1.45;min-height:52px}
-.dest-info button{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:42px;padding:10px 12px;border:1px solid #c7d9cd;border-radius:12px;background:linear-gradient(135deg,#edf5ef,#e2eee6);color:#17483d;font-weight:800;box-shadow:0 3px 9px #183b3009;transition:background .2s ease,transform .2s ease,box-shadow .2s ease}
-.dest-info button:hover{background:linear-gradient(135deg,#245c50,#123c3a);border-color:#245c50;color:#fff;transform:translateY(-1px);box-shadow:0 7px 16px #123c3a25}
-@media(max-width:520px){.dest-img{height:112px}.dest-info{padding:11px}.dest-info p{min-height:48px}}
-@media(prefers-reduced-motion:reduce){.destination,.dest-info button{transition:none}}
-
-</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="stylesheet" href="/assets/css/clara.css?v=preview10-viseme-aspect-4"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 </head>
 <body>
-<div class="app">
-<header class="topbar"><div class="brand"><div class="logo">✦</div><div>Clara Travel AI<small>DEINE REISE. DEINE GESCHICHTE.</small></div></div><div class="top-actions"><button class="btn light hide-small" onclick="showPage('planner')">＋ Reise planen</button><button class="btn gold" onclick="showPage('premium')">✧ Premium</button></div></header>
+
+<div id="marketing-home">
+<header class="site-header">
+  <a href="#marketing-home" class="site-brand" aria-label="Clara von Donau – Startseite"><span class="brand-script">Clara</span><small>von Donau <span aria-hidden="true">〜</span></small></a>
+  <nav class="site-nav" aria-label="Hauptnavigation">
+    <a href="#marketing-home">Startseite</a><a href="#featured-destinations">Reiseziele</a>
+    <a href="#" onclick="openAppPage('planner');return false">Reiseplaner</a>
+    <a href="#" onclick="openAppPage('intelligence');return false">Genussreise</a>
+    <a href="#" onclick="openAppPage('intelligence');return false">Claras Geschichten</a>
+    <a href="#" onclick="openAppPage('clara');return false">Über Clara</a>
+  </nav>
+  <div class="site-actions">
+    <label class="language-switch landing-language" for="landingLanguage"><span aria-hidden="true">🌐</span><span class="language-label">Sprache</span>
+      <select id="landingLanguage" aria-label="Sprache wählen" onchange="setClaraLanguage(this.value)">
+        <option value="de">Deutsch</option><option value="en">English</option><option value="nl">Nederlands</option><option value="fr">Français</option><option value="ro">Română</option>
+      </select>
+    </label>
+    <button class="site-icon" id="pwaInstallButton" type="button" aria-label="Clara als App installieren" title="Clara als App installieren" hidden>⇩</button>
+    <button class="site-icon" type="button" aria-label="Zu den Reisezielen" onclick="document.getElementById('featured-destinations').scrollIntoView({behavior:'smooth'})">⌕</button>
+    <button class="site-cta" type="button" aria-label="Clara fragen" onclick="openAppPage('clara')"><svg class="site-cta-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5 7.7 7.7 0 0 1-3.5-.85L4 20l1.85-4.15A7.5 7.5 0 1 1 20 11.5Z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.5 11.5h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span class="desktop-cta-label">Clara fragen</span></button>
+    <button class="mobile-menu-toggle" type="button" aria-label="Menü öffnen" aria-expanded="false" onclick="toggleMobileMenu()">☰</button>
+  </div>
+</header>
+<nav class="mobile-site-nav" id="mobile-site-nav" aria-label="Mobiles Hauptmenü">
+  <a href="#marketing-home" onclick="closeMobileMenu()">Startseite</a><a href="#featured-destinations" onclick="closeMobileMenu()">Reiseziele</a>
+  <a href="#" onclick="closeMobileMenu();openAppPage('planner');return false">Reiseplaner</a>
+  <a href="#" onclick="closeMobileMenu();openAppPage('intelligence');return false">Genussreise</a>
+  <a href="#" onclick="closeMobileMenu();openAppPage('intelligence');return false">Claras Geschichten</a>
+  <a href="#" onclick="closeMobileMenu();openAppPage('clara');return false">Über Clara</a>
+  <label class="language-switch mobile-language-switch" for="landingLanguageMobile"><span aria-hidden="true">🌐</span><span class="language-label">Sprache</span>
+    <select id="landingLanguageMobile" aria-label="Sprache wählen" onchange="setClaraLanguage(this.value)">
+      <option value="de">Deutsch</option><option value="en">English</option><option value="nl">Nederlands</option><option value="fr">Français</option><option value="ro">Română</option>
+    </select>
+  </label>
+</nav>
+<section class="site-hero clara-welcome-hero" aria-labelledby="landingHeroTitle">
+  <video class="hero-scene-video" muted playsinline preload="metadata" aria-label="Clara begrüßt dich persönlich"><source src="assets/clara-welcome.mp4" type="video/mp4"></video>
+  <div class="hero-shade" aria-hidden="true"></div>
+  <div class="hero-copy">
+    <div class="welcome-pill"><span aria-hidden="true">♥</span> Willkommen an der Donau</div>
+    <h1 id="landingHeroTitle">Entdecke Europas<br>Donau mit Clara</h1>
+    <span class="hero-underline" aria-hidden="true"></span>
+    <p>Reisetipps, kulinarische Highlights und echte Lieblingsorte entlang Europas schönstem Fluss.</p>
+    <div class="hero-buttons">
+      <button class="hero-button primary" type="button" onclick="document.getElementById('featured-destinations').scrollIntoView({behavior:'smooth'})">Reiseziele entdecken</button>
+      <button class="hero-button secondary" type="button" onclick="playClaraWelcome()"><span aria-hidden="true">▶</span> Clara kennenlernen</button>
+    </div>
+    <div class="hero-pagination" aria-hidden="true"><span class="active"></span><span></span><span></span><span></span></div>
+    <div id="claraWelcomeGreeting" class="welcome-greeting-sr" aria-live="polite"></div>
+    <button class="welcome-speak-button" id="claraWelcomeSpeak" type="button" onclick="playClaraWelcome()" hidden>🔊 Clara begrüßen lassen</button>
+    <div class="hero-sound-note" id="claraWelcomeStatus" role="status" aria-live="polite">Clara bereitet ihre Begrüßung vor …</div>
+  </div>
+</section>
+<section class="site-section featured-section" id="featured-destinations" aria-labelledby="featuredTitle">
+  <div class="section-kicker">Die schönsten Orte · 12 Donaustationen + 1 Landausflug</div>
+  <h2 class="section-title" id="featuredTitle">Entlang der Donau – alle Reiseziele</h2>
+  <p class="destination-intro">Entdecke jede Station mit Kurzbeschreibung, aktueller Ortszeit und Wetter. Der Donaupegel wird erst angezeigt, wenn eine offizielle Messstation eindeutig zugeordnet ist.</p>
+  <div class="featured-carousel">
+    <div class="featured-grid" id="featured-grid" aria-label="Alle Reiseziele entlang der Donau"></div>
+  </div>
+</section>
+<section class="site-section map-section" aria-labelledby="landingMapTitle">
+  <div class="map-promo">
+    <div class="map-promo-copy">
+      <div class="section-kicker">Deine Donau entdecken</div><h2 id="landingMapTitle">Interaktive Donau-Karte</h2>
+      <p>Klicke auf die Stationen und entdecke Highlights, Sehenswürdigkeiten und Claras persönliche Tipps.</p>
+      <button class="site-cta map-cta" type="button" onclick="openAppPage('map')">Karte ansehen <span aria-hidden="true">→</span></button>
+    </div>
+    <div id="landingDanubeMap" class="landing-map" role="group" aria-label="Donau-Route mit anklickbaren Stationen von Linz bis zum Donaudelta"></div>
+  </div>
+</section>
+<footer class="site-footer">
+  <div><strong>Clara von Donau ♡</strong><div>Clara Travel AI · Deine Reise beginnt mit einem Gespräch</div></div>
+  <div>Von Passau bis zum Donaudelta · Reiseinspiration entlang Europas Donau</div>
+</footer>
+<nav class="landing-mobile-nav" aria-label="Schnellnavigation">
+  <button type="button" class="active" onclick="window.scrollTo({top:0,behavior:'smooth'})"><b>⌂</b><span>Start</span></button>
+  <button type="button" onclick="openAppPage('map')"><b>⌖</b><span>Karte</span></button>
+  <button type="button" onclick="openAppPage('planner')"><b>▤</b><span>Reiseplaner</span></button>
+  <button type="button" onclick="openAppPage('intelligence')"><b>♡</b><span>Genussreise</span></button>
+  <button type="button" onclick="openAppPage('clara')"><b>☏</b><span>Clara</span></button>
+</nav>
+</div>
+
+<div class="app" id="clara-app" style="display:none">
+<header class="topbar"><div class="brand"><div class="logo">✦</div><div>Clara Travel AI<small>DEINE REISE. DEINE GESCHICHTE.</small></div></div><div class="top-actions"><label class="language-switch app-language" for="appLanguage"><span>🌐 <span class="language-label">Sprache</span></span><select id="appLanguage" aria-label="Sprache wählen" onchange="setClaraLanguage(this.value)"><option value="de">Deutsch</option><option value="en">English</option><option value="nl">Nederlands</option><option value="fr">Français</option><option value="ro">Română</option></select></label><button class="btn light hide-small" onclick="returnToLanding()">⌂ Startseite</button><button class="btn light hide-small" onclick="showPage('planner')">＋ Reise planen</button><button class="btn gold" onclick="showPage('premium')">✧ Premium</button></div></header>
 <div class="layout">
 <aside class="sidebar"><div class="navlabel">DEIN REISEBEREICH</div><button class="nav active" data-page="home" onclick="showPage('home')">⌂ &nbsp; Übersicht</button><button class="nav" data-page="planner" onclick="showPage('planner')">▤ &nbsp; Reise planen</button><button class="nav" data-page="map" onclick="showPage('map')">⌖ &nbsp; Donau-Karte</button><button class="nav" data-page="locks" onclick="showPage('locks')">▥ &nbsp; Donau-Schleusen</button><button class="nav" data-page="clara" onclick="showPage('clara')">☏ &nbsp; Mit Clara sprechen</button><button class="nav" data-page="intelligence" onclick="showPage('intelligence')">✦ &nbsp; Donau-Wissen</button><button class="nav" data-page="premium" onclick="showPage('premium')">✧ &nbsp; Premium entdecken</button><button class="nav" data-page="memory" onclick="showPage('memory')">🧠 &nbsp; Mein Clara-Gedächtnis</button><div class="side-note"><b>Deine Reise, dein Tempo.</b><p>Clara ist eine virtuelle KI-Reisebegleiterin. Reiseinformationen bitte vor Ort überprüfen.</p></div></aside>
 <main class="main">
 <section id="page-home" class="page">
-<div class="heading"><div><div class="eyebrow">DEINE PERSÖNLICHE KI-REISEBEGLEITERIN</div><h1>Europa wartet auf dich.</h1><div class="muted">Entdecke Europas Flüsse, Städte und besondere Reiseerlebnisse mit Clara an deiner Seite.</div></div><button class="btn outline" onclick="showPage('clara')">♡ Clara fragen</button></div>
+<div class="heading"><div><div class="eyebrow">DEIN REISEBEREICH</div><h1>Deine Reise, dein Tempo.</h1><div class="muted">Plane deine Donau-Reise, entdecke die Stationen und sprich jederzeit mit Clara.</div></div><button class="btn outline" onclick="showPage('clara')">♡ Clara fragen</button></div>
 <div class="hero"><div class="hero-copy"><div class="eyebrow" style="color:#d9c08d">LERN CLARA KENNEN</div><h2>Hallo, ich bin Clara.<br>Wohin reisen wir?</h2><p>Gemeinsam entdecken wir die schönsten Orte Europas – entlang der großen Flüsse, mit besonderen Ausflügen, regionaler Küche und Geschichten, die jede Reise unvergesslich machen.</p><div class="actions"><button class="btn gold" onclick="showPage('planner')">Meine Reise planen →</button><button class="btn light" onclick="speakClara('Hallo! Ich bin Clara von Donau. Gemeinsam entdecken wir besondere Orte, regionale Küche und Geschichten entlang der Donau.')">▶ Clara begrüßt mich</button></div></div>
-<div class="avatar-stage"><video class="clara-welcome-video" controls playsinline preload="metadata" poster="assets/clara-avatar.png.png" aria-label="Clara von Donau begrüßt dich"><source src="assets/clara-welcome.mp4" type="video/mp4">Dein Browser unterstützt die Videowiedergabe nicht.</video><div class="avatar-label">✦ Clara · Virtuelle KI-Reisebegleiterin</div></div></div>
+<div class="avatar-stage"><video class="clara-welcome-video" controls playsinline preload="metadata"  aria-label="Clara von Donau begrüßt dich"><source src="assets/clara-welcome.mp4" type="video/mp4">Dein Browser unterstützt die Videowiedergabe nicht.</video><div class="avatar-label">✦ Clara · Virtuelle KI-Reisebegleiterin</div></div></div>
 <div class="section-head"><div><div class="eyebrow">DEINE NÄCHSTE ENTDECKUNG</div><h2>Starte entlang der Donau</h2></div><button class="btn outline" onclick="showPage('map')">Alle Stationen →</button></div>
 <div class="destinations" id="destinations"></div>
 <div class="section-head"><div><div class="eyebrow">DEIN NÄCHSTER SCHRITT</div><h2>Eine Reise, die zu dir passt</h2></div></div>
 <div class="cards"><div class="panel"><div class="row"><div class="bubble">✧</div><div><h3>Dein persönlicher Reiseplan</h3><div class="muted" style="font-size:13px">Kultur, Kulinarik oder Natur – du entscheidest.</div></div></div><button class="btn soft" style="margin-top:15px" onclick="showPage('planner')">Reise zusammenstellen</button></div><div class="panel"><div class="row"><div class="bubble">☏</div><div><h3>Frag Clara</h3><div class="muted" style="font-size:13px">Frag Clara nach Reisezielen, Ausflügen und regionalen Geheimtipps in Europa.</div></div></div><button class="btn soft" style="margin-top:15px" onclick="showPage('clara')">Gespräch starten</button></div></div>
 </section>
-<section id="page-planner" class="page hidden"><div class="heading"><div><div class="eyebrow">INDIVIDUELL FÜR DICH</div><h1>Plane deine Reise</h1><div class="muted">Wähle Ziel, Reisedauer und Interessen.</div></div></div><div class="panel"><div class="formgrid"><div class="field"><label for="destination">Dein Reiseziel</label><select id="destination"></select></div><div class="field"><label for="duration">Reisedauer</label><select id="duration"><option>1 Tag</option><option selected>3 Tage</option><option>7 Tage</option></select></div><div class="field"><label for="interest">Was magst du?</label><select id="interest"><option>Kultur & Geschichte</option><option>Kulinarik & Märkte</option><option>Natur & Abenteuer</option><option>Entspannung & Genuss</option><option>Flusskreuzfahrt & Landgänge</option></select></div><div class="field"><label for="pace">Dein Reisetempo</label><select id="pace"><option>Entspannt</option><option>Ausgewogen</option><option>Viel entdecken</option></select></div><div class="field"><label for="mobility">Gehhilfe / Mobilität</label><select id="mobility"><option>Keine besondere Angabe</option><option>Rollator</option></select></div></div><button class="btn" style="margin-top:18px" onclick="makePlan()">✦ Meinen Reiseplan erstellen</button><div id="planResult"></div></div></section>
+<section id="page-planner" class="page hidden"><div class="heading"><div><div class="eyebrow">INDIVIDUELL FÜR DICH</div><h1>Plane deine Reise</h1><div class="muted">Deine persönliche Route entlang der Donau – jederzeit anpassbar.</div></div></div><div class="panel planner-panel"><div class="planner-intro"><span class="planner-step">01 · DEINE WÜNSCHE</span><p>Wähle Reiseziel, Dauer und Interessen. Clara stellt daraus einen passenden Vorschlag zusammen.</p></div><div class="formgrid"><div class="field"><label for="destination">Dein Reiseziel</label><select id="destination"></select></div><div class="field"><label for="duration">Reisedauer</label><select id="duration"><option>1 Tag</option><option selected>3 Tage</option><option>7 Tage</option></select></div><div class="field"><label for="interest">Was magst du?</label><select id="interest"><option>Kultur & Geschichte</option><option>Kulinarik & Märkte</option><option>Natur & Abenteuer</option><option>Entspannung & Genuss</option><option>Flusskreuzfahrt & Landgänge</option></select></div><div class="field"><label for="pace">Dein Reisetempo</label><select id="pace"><option>Entspannt</option><option>Ausgewogen</option><option>Aktiv</option></select></div><div class="field"><label for="mobility">Gehhilfe / Mobilität</label><select id="mobility"><option>Keine besondere Angabe</option><option>Rollator</option></select></div></div><div class="planner-actions"><button class="btn" type="button" onclick="makePlan()">✦ Reiseplan erstellen</button><button class="btn outline" type="button" onclick="saveClaraTripPlan()">Reise speichern</button></div><div id="planSaveStatus" class="muted" role="status" aria-live="polite"></div><div id="planResult" aria-live="polite"></div><div class="saved-plans panel-soft"><div><span class="planner-step">02 · DEINE REISEN</span><h3>Gespeicherte Reisepläne</h3><p class="muted">Auf diesem Gerät gespeicherte Pläne sowie – bei aktiver Memory-Zustimmung – dein persönlicher Kontospeicher.</p></div><div class="saved-plan-controls"><select id="savedTripPlans" aria-label="Gespeicherten Reiseplan auswählen"><option value="">Reiseplan auswählen …</option></select><button class="btn outline" type="button" onclick="loadClaraTripPlan()">Öffnen</button><button class="btn ghost" type="button" onclick="deleteClaraTripPlan()">Löschen</button></div></div></div></section>
 <section id="page-map" class="page hidden">
 <div class="heading"><div><div class="eyebrow">DIE DONAU-ROUTE</div><h1>Die Donau entdecken</h1><div class="muted">Von Passau über Österreich, die Slowakei, Ungarn, Serbien und Bulgarien bis zum Donaudelta.</div></div><button class="btn outline" onclick="showPage('locks')">▥ Schleusen-Informationen</button></div>
 <div class="panel" style="padding:16px">
@@ -62,8 +122,16 @@
   <div class="map-composition"><div id="danubeMap" class="danube-map" role="application" aria-label="Interaktive Karte mit Donaustationen von Passau bis zum Donaudelta"></div><aside class="route-side"><h3>Reiseverlauf</h3><div class="muted">In Flussrichtung – von West nach Ost</div><div class="route-list" id="routeList"></div></aside></div>
   <div class="excursion-panel"><div class="excursion-mark">🐎</div><div><strong>Puszta – zusätzlicher Landausflug</strong><p>Die Puszta liegt nicht direkt an der Donau-Hauptlinie. Wir zeigen sie deshalb als separaten Ausflug ab Budapest, nicht als Flussstation.</p></div></div>
   <p class="map-disclaimer">Die Karte zeigt Reiseorte und eine schematische Verbindung der Stationen. Sie ist keine maßstabsgetreue Flussverlaufs- oder Navigationskarte. Kartendaten: © OpenStreetMap-Mitwirkende.</p>
+  <div class="panel" style="margin-top:12px;padding:14px" aria-labelledby="danubeGaugeHeading">
+    <h3 id="danubeGaugeHeading" style="margin:0 0 7px">Aktuelle Donaupegel – externe Messstellenkarte</h3>
+    <p class="muted" style="font-size:13px;margin:0 0 10px">Clara zeigt hier absichtlich noch keine Messzahlen. Erst wenn die Messstelle eindeutig dem jeweiligen Flussabschnitt zugeordnet und Quelle sowie Messzeit geprüft sind, werden Pegelwerte direkt in der App angezeigt. In der externen Karte bitte immer die konkrete Station und ihren Zeitstempel prüfen.</p>
+    <div class="source-links">
+      <a href="https://danubealert.arcm.ro/de/map" target="_blank" rel="noopener noreferrer">DanubeAlert – Karte der Donaupegel (amtliche Messungen)</a>
+      <a href="https://danubealert.arcm.ro/de/developers" target="_blank" rel="noopener noreferrer">DanubeAlert – API, Datenquellen und Zeitstempel</a>
+    </div>
+  </div>
 </div>
-<div class="section-head"><h2>Wähle eine Station</h2></div><div class="destinations" id="mapDestinations"></div>
+<section class="panel map-destination-detail" id="mapDestinationDetail" aria-live="polite"><div class="muted">Wähle einen Kartenmarker oder eine Station rechts aus, um Ortszeit, Wetter und Informationen zu sehen.</div></section>
 </section>
 <section id="page-locks" class="page hidden">
   <div class="heading"><div><div class="eyebrow">TECHNIK & INFRASTRUKTUR</div><h1>Donau-Schleusen</h1><div class="muted">Technische Referenzdaten zu den 18 Schleusen der Donau-Hauptwasserstraße – von Bad Abbach bis zum Eisernen Tor II.</div></div><button class="btn outline" onclick="showPage('clara');setTimeout(()=>{document.getElementById('chatInput').value='Erkläre mir die Schleusen an der Donau und ihre technischen Unterschiede.'},80)">Clara fragen</button></div>
@@ -92,7 +160,7 @@
     <div class="source-links"><a href="https://www.doris.bmimi.gv.at/services/schleusen-an-der-donau" target="_blank" rel="noopener">DoRIS – Schleusen an der Donau</a><a href="https://www.danubecommission.org/dc/de/die-donauschifffahrt/schleusen-an-der-donau/" target="_blank" rel="noopener">Donaukommission – technische Angaben</a><a href="https://www.viadonau.org/en/economy/the-danube-transport-axis/locks" target="_blank" rel="noopener">viadonau – Informationen zu den 18 Schleusen</a></div>
   </div>
 </section>
-<section id="page-clara" class="page hidden"><div class="heading"><div><div class="eyebrow">DEINE DIGITALE BEGLEITERIN</div><h1>Sprich mit Clara</h1><div class="muted">Stell eine Frage zu deiner Reise oder lass dich inspirieren.</div></div></div><div class="cards"><div class="panel" style="text-align:center"><div class="avatar-stage" style="border-radius:17px;min-height:245px"><div class="halo"></div><video id="claraChatVideo" class="clara-welcome-video" muted loop playsinline preload="metadata" poster="/clara-avatar.jpg" aria-label="Claras Videofenster während der Sprachausgabe"><source src="/2026_11_04_11.46.39.mp4" type="video/mp4">Dein Browser unterstützt dieses Video nicht.</video></div><h3 style="margin-top:15px">Clara von Donau</h3><div class="muted" style="font-size:12px">Claras persönliches Begrüßungsvideo · Antworten werden mit Seraphina gesprochen</div><button class="btn soft" style="margin-top:13px" onclick="speakClara('Hallo! Frag mich nach Sehenswürdigkeiten, regionalem Essen oder einem passenden Tagesplan entlang der Donau.')">▶ Begrüßung anhören</button></div><div class="panel"><h3>Dein Gespräch</h3><div class="muted" style="font-size:12px">Clara sendet deine Frage an das geschützte Netlify-Backend. Persönliche Memory-Daten werden nur bei aktiver Zustimmung gelesen.</div><div class="chatbox" id="chatbox"><div class="msg">Hallo! Ich bin Clara. 😊 Wo entlang der Donau möchtest du als Erstes auf Entdeckung gehen?</div></div><form class="chatform" onsubmit="sendChat(event)"><input id="chatInput" placeholder="Schreib Clara oder nutze das Mikrofon …" autocomplete="off"><button type="button" id="micButton" class="btn outline mic-btn" onclick="startClaraListening()" aria-label="Mit Clara sprechen" aria-pressed="false" title="Spracheingabe starten">🎙️</button><button class="btn">Senden</button></form><div id="micStatus" class="muted" role="status" aria-live="polite" style="font-size:12px;margin-top:7px">Du kannst Clara schreiben oder auf das Mikrofon tippen. Die Spracherkennung kann je nach Browser online erfolgen.</div><div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px"><button class="btn outline" onclick="quickAsk('Was sollte ich in Budapest probieren?')">🍲 Lokales Essen</button><button class="btn outline" onclick="quickAsk('Plane einen entspannten Tag in Wien.')">🗺 Tagesplan</button></div><div class="voice-settings"><h3 style="margin:0 0 8px">Claras Stimme</h3><p class="muted" style="font-size:12px;margin:0 0 10px">Claras feste Serverstimme: Microsoft Azure Seraphina Multilingual Neural, Deutsch (Deutschland). Sie wird für jede Antwort einheitlich verwendet.</p><div class="formgrid"><div class="field"><label for="claraVoice">Stimme</label><select id="claraVoice"><option value="">Automatisch (de-DE)</option></select></div><div class="field"><label for="claraRate">Sprechtempo</label><select id="claraRate"><option value="0.88">Ruhig</option><option value="0.94" selected>Natürlich und ruhig (empfohlen)</option><option value="1.00">Etwas schneller</option></select></div></div><div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:10px"><label style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700"><input id="claraAutoSpeak" type="checkbox" checked style="width:18px;height:18px"> Clara spricht jede Antwort automatisch</label><button class="btn soft" onclick="speakClara('Hallo! Ich bin Clara, deine persönliche Reisebegleiterin. Gemeinsam entdecken wir besondere Orte, regionale Spezialitäten und unvergessliche Erlebnisse.')">▶ Stimme testen</button><button class="btn outline" onclick="stopClaraSpeech()">■ Stopp</button></div><span id="voiceStatus" class="muted" style="display:block;font-size:11px;margin-top:7px">Azure Seraphina wird für jede Antwort verwendet.</span></div></div></div></section>
+<section id="page-clara" class="page hidden"><div class="heading"><div><div class="eyebrow">DEINE DIGITALE BEGLEITERIN</div><h1>Sprich mit Clara</h1><div class="muted">Stell eine Frage zu deiner Reise oder lass dich inspirieren.</div></div></div><div class="cards"><div class="panel" style="text-align:center"><div class="avatar-stage" style="border-radius:17px;min-height:245px"><div class="halo"></div><div class="clara-video-frame" id="claraVideoFrame" data-viseme="0"><video id="claraChatVideo" class="clara-welcome-video" muted loop playsinline preload="metadata" poster="/clara-avatar.jpg" aria-label="Clara anklicken, um sie sprechen zu lassen" onclick="speakClara(&quot;Hallo! Ich bin Clara. Frag mich gern nach deiner Reise entlang der Donau.&quot;,true)" style="cursor:pointer"><source src="/assets/clara-welcome.mp4" type="video/mp4">Dein Browser unterstützt dieses Video nicht.</video><span class="clara-viseme-mouth" id="claraVisemeMouth" aria-hidden="true"></span></div></div><h3 style="margin-top:15px">Clara von Donau</h3><div class="muted" style="font-size:12px">Claras Begrüßungsvideo · Antworten werden mit der gewählten Clara-Stimme gesprochen</div><button class="btn soft" style="margin-top:13px" onclick="speakClara('Hallo! Frag mich nach Sehenswürdigkeiten, regionalem Essen oder einem passenden Tagesplan entlang der Donau.')">▶ Begrüßung anhören</button></div><div class="panel"><h3>Dein Gespräch</h3><div class="muted" style="font-size:12px">Clara sendet deine Frage an das geschützte Netlify-Backend. Persönliche Memory-Daten werden nur bei aktiver Zustimmung gelesen.</div><div class="chatbox" id="chatbox"><div class="msg">Hallo! Ich bin Clara. 😊 Wo entlang der Donau möchtest du als Erstes auf Entdeckung gehen?</div></div><form class="chatform" onsubmit="sendChat(event)"><input id="chatInput" placeholder="Schreib Clara oder nutze das Mikrofon …" autocomplete="off"><button type="button" id="micButton" class="btn outline mic-btn" onclick="startClaraListening()" aria-label="Mit Clara sprechen" aria-pressed="false" title="Spracheingabe starten">🎙️</button><button class="btn">Senden</button></form><div id="micStatus" class="muted" role="status" aria-live="polite" style="font-size:12px;margin-top:7px">Du kannst Clara schreiben oder auf das Mikrofon tippen. Die Spracherkennung kann je nach Browser online erfolgen.</div><div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px"><button class="btn outline" onclick="quickAsk('Was sollte ich in Budapest probieren?')">🍲 Lokales Essen</button><button class="btn outline" onclick="quickAsk('Plane einen entspannten Tag in Wien.')">🗺 Tagesplan</button></div><div class="voice-settings"><h3 style="margin:0 0 8px">Claras Stimme</h3><p class="muted" style="font-size:12px;margin:0 0 10px">Claras Azure-Stimme richtet sich nach der ausgewählten App-Sprache. Für Deutsch, Englisch, Niederländisch, Französisch und Rumänisch ist jeweils eine passende Stimme hinterlegt.</p><div class="formgrid"><div class="field"><label for="claraVoice">Stimme</label><select id="claraVoice"><option value="">Automatisch (de-DE)</option></select></div><div class="field"><label for="claraRate">Sprechtempo</label><select id="claraRate"><option value="0.88">Ruhig</option><option value="0.94" selected>Natürlich und ruhig (empfohlen)</option><option value="1.00">Etwas schneller</option></select></div></div><div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:10px"><label style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700"><input id="claraAutoSpeak" type="checkbox" checked style="width:18px;height:18px"> Clara spricht jede Antwort automatisch</label><button class="btn soft" onclick="var s=document.getElementById('voiceStatus');if(s)s.textContent='Stimmtest wird gestartet …';if(typeof window.speakClara==='function'){window.speakClara('Hallo! Ich bin Clara, deine persönliche Reisebegleiterin. Gemeinsam entdecken wir besondere Orte, regionale Spezialitäten und unvergessliche Erlebnisse.',true)}else if(s){s.textContent='Fehler: Claras Sprachmodul wurde nicht geladen. Bitte Seite neu laden.';console.error('speakClara ist nicht verfügbar.');}">▶ Stimme testen</button><button class="btn outline" onclick="stopClaraSpeech()">■ Stopp</button></div><span id="voiceStatus" class="muted" style="display:block;font-size:11px;margin-top:7px">Azure Speech verwendet die zur ausgewählten App-Sprache passende Clara-Stimme.</span></div></div></div></section>
 <section id="page-memory" class="page hidden">
 <div class="heading"><div><div class="eyebrow">CLARA MEMORY 1.0</div><h1>Mein Clara-Gedächtnis</h1><div class="muted">Deine Reisevorlieben und Erinnerungen – nur für dein angemeldetes Konto.</div></div></div>
 <div class="panel" style="margin-bottom:15px"><h3>1. Supabase verbinden</h3><p class="muted" style="font-size:13px">Trage die Projekt-URL und den öffentlichen Publishable-/anon-Key aus deinem Supabase-Projekt ein. Niemals den service_role- oder Secret-Key verwenden.</p>
@@ -114,7 +182,7 @@
 <section id="page-intelligence" class="page hidden">
 <div class="heading"><div><div class="eyebrow">CLARA DESTINATION INTELLIGENCE</div><h1>Claras Donau-Wissen</h1><div class="muted">Ziele, Kulinarik, Kultur, Saison, Landgänge und verlässliche Quellen an einem Ort.</div></div></div>
 <div class="panel" style="margin-bottom:15px"><div class="row"><span class="tag">Wissensbasis · Version 1.0</span><span class="tag">Datenstand-Beispiel: 31.10.2026</span></div><h3>Was Clara bei jeder Empfehlung berücksichtigt</h3><p>Clara ordnet Reiseideen nach Reiseziel, Saison, Interesse, Reisezeit und Erreichbarkeit. Sie unterscheidet dauerhaftes Ortswissen von tagesaktuellen Meldungen. Öffnungszeiten, Preise, Veranstaltungen, Wetter, Verkehr und Schifffahrt gelten nur dann als aktuell, wenn sie mit Datum und Quelle frisch geprüft wurden.</p><div class="cards"><div><b>Sehenswürdigkeiten</b><p class="muted">Kultur, Geschichte, Aussichtspunkte und Spaziergänge.</p></div><div><b>Kulinarik</b><p class="muted">Regionale Gerichte, Märkte, Restaurants, Heurige und Weingüter.</p></div><div><b>Saison & Veranstaltungen</b><p class="muted">Märkte, Festivals, Weinlese, Advent und Naturereignisse.</p></div><div><b>River-Cruise-Modus</b><p class="muted">Liegestelle, Fußwege, verfügbare Zeit, Transfers und Alternativen.</p></div></div></div>
-<div class="panel" id="influencerStudio" style="margin:18px 0"><div class="eyebrow">CLARA CREATOR STUDIO</div><h2 style="margin:6px 0">Clara als Influencerin</h2><p class="muted">Erstelle aus einem Reiseziel oder Erlebnis einen fertigen Social-Media-Entwurf in Claras persönlicher Stimme.</p><div class="formgrid"><div class="field"><label for="creatorPlatform">Plattform</label><select id="creatorPlatform"><option>Instagram</option><option>TikTok</option><option>Facebook</option><option>YouTube</option></select></div><div class="field"><label for="creatorFormat">Format</label><select id="creatorFormat"><option>Reel / Kurzvideo mit Szenen und Voice-over</option><option>Instagram-Story in 4 Slides</option><option>Social-Media-Beitrag mit Caption</option><option>YouTube-Short</option></select></div><div class="field"><label for="creatorLanguage">Sprache</label><select id="creatorLanguage"><option>Deutsch</option><option>English</option><option>Nederlands</option><option>Français</option><option>Română</option></select></div><div class="field"><label for="creatorTopic">Reiseziel / Thema</label><input id="creatorTopic" value="Passau – drei Stunden in der Dreiflüssestadt" placeholder="z. B. Wachau im Herbst"></div></div><div class="field" style="margin-top:12px"><label for="creatorBrief">Besondere Wünsche (optional)</label><textarea id="creatorBrief" rows="3" style="width:100%;padding:12px;border:1px solid var(--line);border-radius:12px" placeholder="z. B. Kreuzfahrtgäste, Geheimtipps, kulinarischer Schwerpunkt …"></textarea></div><div class="panel" style="margin-top:12px;padding:13px;background:#f8f6ef;border:1px solid var(--line);border-radius:12px"><b>✦ Clara Identity Lock – vorläufig aktiv</b><p class="muted" style="margin:6px 0 0;font-size:13px">Claras Gesicht, Augen, Haarfarbe und Frisur bleiben in allen Szenen gleich. Nur Kleidung, Pose und Umgebung dürfen sich ändern. Das Master-Porträt wird nach dem Upload als feste Bildreferenz ergänzt.</p><div style="height:1px;background:var(--line);margin:10px 0"></div><b>♫ Feste Sprecherstimme: Gentle Greta – Friendly</b><p class="muted" style="margin:6px 0 0;font-size:13px">Deutsch (de-DE) · HeyGen Voice-ID: ecb08917b1f348e6a235e85eb0870b68 · Engine: Orca. Für alle zukünftigen Clara-Sprachspuren unverändert verwenden.</p></div><button class="btn gold" style="margin-top:14px" onclick="createInfluencerContent()">✦ Content mit Clara erstellen</button><div id="creatorStatus" class="muted" style="font-size:13px;margin-top:10px" aria-live="polite"></div><div id="creatorResult" class="hidden" style="margin-top:14px;padding:16px;background:#f7faf6;border:1px solid var(--line);border-radius:14px;white-space:pre-wrap"></div></div><div class="section-head"><h2>Reiseziele entlang der Donau</h2></div><div id="intelligenceDestinations" class="cards"></div>
+<div class="panel" id="influencerStudio" style="margin:18px 0"><div class="eyebrow">CLARA CREATOR STUDIO</div><h2 style="margin:6px 0">Clara als Influencerin</h2><p class="muted">Erstelle aus einem Reiseziel oder Erlebnis einen fertigen Social-Media-Entwurf in Claras persönlicher Stimme.</p><div class="formgrid"><div class="field"><label for="creatorPlatform">Plattform</label><select id="creatorPlatform"><option>Instagram</option><option>TikTok</option><option>Facebook</option><option>YouTube</option></select></div><div class="field"><label for="creatorFormat">Format</label><select id="creatorFormat"><option>Reel / Kurzvideo mit Szenen und Voice-over</option><option>Instagram-Story in 4 Slides</option><option>Social-Media-Beitrag mit Caption</option><option>YouTube-Short</option></select></div><div class="field"><label for="creatorLanguage">Sprache</label><select id="creatorLanguage"><option>Deutsch</option><option>English</option><option>Nederlands</option><option>Français</option><option>Română</option></select></div><div class="field"><label for="creatorTopic">Reiseziel / Thema</label><input id="creatorTopic" value="Passau – drei Stunden in der Dreiflüssestadt" placeholder="z. B. Wachau im Herbst"></div></div><div class="field" style="margin-top:12px"><label for="creatorBrief">Besondere Wünsche (optional)</label><textarea id="creatorBrief" rows="3" style="width:100%;padding:12px;border:1px solid var(--line);border-radius:12px" placeholder="z. B. Kreuzfahrtgäste, Geheimtipps, kulinarischer Schwerpunkt …"></textarea></div><div class="panel" style="margin-top:12px;padding:13px;background:#f8f6ef;border:1px solid var(--line);border-radius:12px"><b>✦ Clara Identity Lock – vorläufig aktiv</b><p class="muted" style="margin:6px 0 0;font-size:13px">Claras Gesicht, Augen, Haarfarbe und Frisur bleiben in allen Szenen gleich. Nur Kleidung, Pose und Umgebung dürfen sich ändern. Das Master-Porträt wird nach dem Upload als feste Bildreferenz ergänzt.</p><div style="height:1px;background:var(--line);margin:10px 0"></div><b>♫ Claras bevorzugte deutsche Stimme: Microsoft Seraphina</b><p class="muted" style="margin:6px 0 0;font-size:13px">Deutsch (Deutschland, de-DE) · Microsoft Neural TTS. Die Stimme wird nur verwendet, wenn sie auf der gewählten Plattform verfügbar ist. Veraltete HeyGen-Stimmenprofile sind deaktiviert.</p></div><button class="btn gold" style="margin-top:14px" onclick="createInfluencerContent()">✦ Content mit Clara erstellen</button><div id="creatorStatus" class="muted" style="font-size:13px;margin-top:10px" aria-live="polite"></div><div id="creatorResult" class="hidden" style="margin-top:14px;padding:16px;background:#f7faf6;border:1px solid var(--line);border-radius:14px;white-space:pre-wrap"></div></div><div class="section-head"><h2>Reiseziele entlang der Donau</h2></div><div id="intelligenceDestinations" class="cards"></div>
 <div class="panel" style="margin-top:15px"><h3>River-Cruise-Prüfliste</h3><ul><li>Konkrete Anlegestelle und tatsächliche Liegezeit bei Reederei oder Hafenbetreiber bestätigen.</li><li>Fußweg, Steigung, Barrierefreiheit und Rückkehrzeit zum Schiff berücksichtigen.</li><li>Bei Bauarbeiten, Niedrigwasser oder Sperrungen keine Passierbarkeit vermuten: zuständige Schifffahrtsbehörde und Schiffsführung prüfen.</li><li>Bei Einschränkungen eine fußläufige Alternative im Zentrum oder einen bestätigten Transfer anbieten.</li><li>Keine Navigations- oder Sicherheitsfreigabe geben; maßgeblich sind Schiffsführung und Behörden.</li></ul></div>
 <div class="panel" style="margin-top:15px"><h3>Quellen, Aktualität und Vertrauensregeln</h3><p>Primärquellen haben Vorrang: offizielle Tourismusverbände, Gemeinden, Sehenswürdigkeiten, Veranstalter, Nationalparks, Wetterdienste, Verkehrsunternehmen, Hafenbetreiber und zuständige Schifffahrtsbehörden. Jede wichtige Meldung benötigt Quellenname, direkten Link, Veröffentlichungs-/Prüfdatum, Gültigkeitszeitraum und Abrufdatum.</p><p><b>Qualitätsregeln:</b> Keine erfundenen Öffnungszeiten, Preise, Veranstaltungen, Restaurantverfügbarkeiten oder Wasserstandsmeldungen. Widersprüchliche Angaben offen markieren. Abgelaufene Meldungen als historisch kennzeichnen. Wetter- und Navigationsdaten nie aus älteren Reisebeiträgen ableiten.</p><p class="muted" style="font-size:12px">Der unten angeführte Überblick ist redaktionelles Ortswissen und ein Recherche-Snapshot, kein Live-Datenfeed. Die vorherige Tagesrecherche vom 31.10.2026 muss vor Veröffentlichung jeder Einzelmeldung erneut verifiziert werden.</p></div>
 <div class="panel" style="margin-top:15px"><h3>Claras Content-Studio – drei Formate</h3><ol><li><b>Reel:</b> Goldener Herbst in der Wachau – Melk, Weißenkirchen, Weinberge und regionale Spezialitäten.</li><li><b>Story-Serie:</b> November an der Donau – Linz, Bratislava und Novi Sad mit jeweils einem verifizierten Veranstaltungstipp.</li><li><b>Reisetipp:</b> Melk für Flusskreuzfahrtgäste – Stift, Anlegestelle, Fußweg und saisonale Öffnungszeiten.</li></ol></div>
@@ -125,744 +193,39 @@
 </main></div>
 <nav class="mobile-nav"><button data-page="home" class="active" onclick="showPage('home')"><b>⌂</b>Start</button><button data-page="planner" onclick="showPage('planner')"><b>▤</b>Planen</button><button data-page="map" onclick="showPage('map')"><b>⌖</b>Karte</button><button data-page="locks" onclick="showPage('locks')"><b>▥</b>Schleusen</button><button data-page="clara" onclick="showPage('clara')"><b>☏</b>Clara</button><button data-page="intelligence" onclick="showPage('intelligence')"><b>✦</b>Wissen</button><button data-page="premium" onclick="showPage('premium')"><b>✧</b>Premium</button><button data-page="memory" onclick="showPage('memory')"><b>🧠</b>Memory</button></nav>
 </div><div id="toast" class="toast hidden"></div>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
+<script src="/assets/js/clara-app.js?v=preview10-language-persist-v2-10" defer></script>
 <script>
-const places=[
-{name:'Passau',country:'Deutschland',emoji:'⛪',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Panorama%20Dom%20Passau.jpg',tag:'Drei-Flüsse-Stadt',desc:'Historische Altstadt am Zusammenfluss von Donau, Inn und Ilz.',lat:48.574,lon:13.461,routeType:'river'},
-{name:'Linz',country:'Österreich',emoji:'🎨',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Linz_Ars_Electronica_center-5529.jpg',tag:'Kunst & Donauufer',desc:'Kultur, moderne Kunst und Spaziergänge an der Donau.',lat:48.307,lon:14.286,routeType:'river'},
-{name:'Melk',country:'Österreich',emoji:'🏰',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Melk_Abbey.jpg',tag:'Stift & Wachau',desc:'Barockes Stift und die bezaubernde Wachau entdecken.',lat:48.228,lon:15.332,routeType:'river'},
-{name:'Weißenkirchen',country:'Österreich',emoji:'🍇',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Wei%C3%9Fenkirchen_in_der_Wachau%2C_20210728_1212_0700.jpg',tag:'Wachau & Wein',desc:'Weinorte, Marillen und Spaziergänge durch die Wachauer Landschaft.',lat:48.397,lon:15.469,routeType:'river'},
-{name:'Wien',country:'Österreich',emoji:'🎻',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Wien%20Schoenbrunn.jpg',tag:'Kaiserliche Kultur',desc:'Kaffeehauskultur, Museen und imperiale Geschichte.',lat:48.208,lon:16.374,routeType:'river'},
-{name:'Bratislava',country:'Slowakei',emoji:'🏛️',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Bratislava_Castle.jpg',tag:'Altstadt & Burg',desc:'Gassen der Altstadt und Ausblicke von der Burg.',lat:48.149,lon:17.108,routeType:'river'},
-{name:'Esztergom',country:'Ungarn',emoji:'⛪',image:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Basilica_in_Esztergom%2C_Hungary_01.jpg/960px-Basilica_in_Esztergom%2C_Hungary_01.jpg',tag:'Basilika & Donauknie',desc:'Monumentale Basilika, Burgviertel und Ausblicke am ungarischen Donauknie.<br><small>Foto: <a href="https://commons.wikimedia.org/wiki/File:Basilica_in_Esztergom,_Hungary_01.jpg" target="_blank" rel="noopener">Pudelek · Wikimedia Commons (CC BY-SA 4.0)</a></small>',lat:47.785,lon:18.741,routeType:'river'},
-{name:'Budapest',country:'Ungarn',emoji:'🌉',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Hungarian_Parliament_Budapest.jpg',tag:'Thermen & Kulinarik',desc:'Donaupanorama, Thermalbäder und ungarische Küche.',lat:47.498,lon:19.040,routeType:'river'},
-{name:'Novi Sad',country:'Serbien',emoji:'🎨',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Most%20slobode%20preko%20Dunava%2C%20Novi%20Sad.jpg',tag:'Kultur an der Donau',desc:'Lebendige Plätze und die Festung Petrovaradin.',lat:45.267,lon:19.833,routeType:'river'},
-{name:'Belgrad',country:'Serbien',emoji:'🌆',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Church%20of%20Saint%20Sava%20%2813807900093%29.jpg',tag:'Stadt am Zusammenfluss',desc:'Kalemegdan, Flussblicke und serbische Spezialitäten.',lat:44.787,lon:20.449,routeType:'river'},
-{name:'Russe',country:'Bulgarien',emoji:'🏛️',image:'https://obshtinaruse.bg/upload/images/articles/31425f2a57683a29e74d639b526cd46d.JPG',tag:'Kleines Wien an der Donau',desc:'Architektur, Donauufer und die römische Festung Sexaginta Prista.',lat:43.852656,lon:25.949764,routeType:'river'},
-{name:'Donaudelta',country:'Rumänien',emoji:'🛶',image:'https://commons.wikimedia.org/wiki/Special:FilePath/White_pelicans_(Pelecanus_onocrotalus)_Danube_delta.jpg',tag:'Wildnis & Wasserwege',desc:'Kanäle, Vogelwelt und besondere Naturerlebnisse.',lat:45.180,lon:28.800,routeType:'river'},
-{name:'Puszta',country:'Ungarn',emoji:'🐎',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Hortobagy%20puszta.jpg',tag:'Natur & Tradition · Landausflug',desc:'Weite Landschaften und die Kultur der ungarischen Tiefebene – als separater Ausflug ab Budapest.',lat:47.583,lon:21.150,routeType:'excursion'}
-];
-function placeCard(p){return `<article class="destination"><div class="dest-img" style="background-image:linear-gradient(180deg,#102f2820,#102f2866),url('${p.image}');background-size:cover;background-position:center" role="img" aria-label="Ansicht von ${p.name}"><span>${p.country}</span></div><div class="dest-info"><h3>${p.name}</h3><p>${p.desc}</p><button onclick="selectDestination('${p.name}')">Mit Clara entdecken →</button></div></article>`}
-document.getElementById('destinations').innerHTML=places.map(placeCard).join('');
-document.getElementById('mapDestinations').innerHTML=places.map(placeCard).join('');
-document.getElementById('destination').innerHTML=places.map(p=>`<option>${p.name}</option>`).join('');
-const riverRoutePlaces=places.filter(p=>p.routeType==='river');
-document.getElementById('routeList').innerHTML=riverRoutePlaces.map((p,i)=>`<button type="button" class="route-point" onclick="focusDanubeStop('${p.name}')"><span class="route-number">${i+1}</span><span>${p.name}</span><span class="route-country">${p.country}</span></button>`).join('');
-let danubeMapInstance=null;
-const danubeMarkers={};
-function initDanubeMap(){
-  const host=document.getElementById('danubeMap');
-  if(!host)return;
-  if(!window.L){
-    host.innerHTML='<div style="padding:22px;color:#53645d">Die interaktive Karte konnte nicht geladen werden. Bitte prüfe deine Internetverbindung; die Stationsliste bleibt verfügbar.</div>';
-    return;
+window.addEventListener('load',()=>{
+  if('serviceWorker' in navigator && location.protocol==='https:'){
+    navigator.serviceWorker.register('/sw.js',{scope:'/'})
+      .catch(error=>console.warn('Clara Offline-Modus konnte nicht aktiviert werden:',error));
   }
-  if(danubeMapInstance){setTimeout(()=>danubeMapInstance.invalidateSize(),120);return;}
-  danubeMapInstance=L.map(host,{scrollWheelZoom:false}).setView([46.9,20.0],5);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-    maxZoom:18,
-    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
-  }).addTo(danubeMapInstance);
-  const riverStops=riverRoutePlaces;
-  const routeLine=L.polyline(riverStops.map(p=>[p.lat,p.lon]),{
-    color:'#c79b53',weight:3,opacity:.85,dashArray:'7 8',lineCap:'round'
-  }).addTo(danubeMapInstance);
-  routeLine.bindTooltip('Schematische Verbindung der Reise-Stationen',{sticky:true});
-  riverStops.forEach((p,i)=>{
-    const icon=L.divIcon({className:'route-marker',html:`<span>${i+1}</span>`,iconSize:[29,29],iconAnchor:[14,14]});
-    const marker=L.marker([p.lat,p.lon],{icon}).addTo(danubeMapInstance);
-    marker.bindPopup(`<strong>${p.name}</strong><br><span>${p.tag}</span><br><small>${p.country}</small>`);
-    danubeMarkers[p.name]=marker;
+},{once:true});
+let claraInstallPrompt=null;
+const claraInstallButton=document.getElementById('pwaInstallButton');
+const claraIsStandalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+const claraIsIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+if(claraInstallButton&&!claraIsStandalone){
+  if(claraIsIOS)claraInstallButton.hidden=false;
+  window.addEventListener('beforeinstallprompt',event=>{
+    event.preventDefault();
+    claraInstallPrompt=event;
+    claraInstallButton.hidden=false;
   });
-  const puszta=places.find(p=>p.routeType==='excursion');
-  const budapest=riverStops.find(p=>p.name==='Budapest');
-  if(puszta&&budapest){
-    const excursionIcon=L.divIcon({className:'route-marker excursion',html:'<span>✦</span>',iconSize:[29,29],iconAnchor:[14,14]});
-    const marker=L.marker([puszta.lat,puszta.lon],{icon:excursionIcon}).addTo(danubeMapInstance);
-    marker.bindPopup('<strong>Puszta – Landausflug</strong><br><span>Separater Ausflug, keine Donaustation</span>');
-    danubeMarkers[puszta.name]=marker;
-    L.polyline([[budapest.lat,budapest.lon],[puszta.lat,puszta.lon]],{color:'#4c8c79',weight:2,dashArray:'3 8',opacity:.9}).addTo(danubeMapInstance).bindTooltip('Land-Ausflug ab Budapest');
-  }
-  const allPlaces=places;
-  danubeMapInstance.fitBounds(L.latLngBounds(allPlaces.map(p=>[p.lat,p.lon])),{padding:[24,24]});
-  setTimeout(()=>danubeMapInstance.invalidateSize(),120);
-}
-function focusDanubeStop(name){
-  const marker=danubeMarkers[name];
-  if(!marker||!danubeMapInstance)return;
-  danubeMapInstance.setView(marker.getLatLng(),Math.max(danubeMapInstance.getZoom(),8),{animate:true});
-  marker.openPopup();
-}
-
-let danubeLockRecords=[];
-let danubeLocksMap=null;
-const danubeLockMarkers=[];
-let selectedLockIndex=-1;
-let lockDataLoaded=false;
-let lockLoading=false;
-function escapeLockHtml(value){
-  return String(value===undefined||value===null||value===""?"—":value).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
-}
-async function loadDanubeLocks(){
-  const status=document.getElementById('lockStatus');
-  if(lockLoading)return;
-  if(lockDataLoaded){initDanubeLocksMap();renderLockList();if(selectedLockIndex<0&&danubeLockRecords.length)selectLock(0,false);return;}
-  lockLoading=true;
-  if(status)status.textContent='Lade 18 technische Schleusendatensätze …';
-  try{
-    const response=await fetch('/assets/data/danube-locks.json',{cache:'no-store'});
-    if(!response.ok)throw new Error('Datendatei konnte nicht geladen werden ('+response.status+').');
-    const data=await response.json();
-    if(!Array.isArray(data.records)||!data.records.length)throw new Error('Die Schleusendatenbank ist leer.');
-    danubeLockRecords=data.records;
-    lockDataLoaded=true;
-    if(status)status.textContent=danubeLockRecords.length+' Schleusen · technische Referenzdaten';
-    renderLockList();
-    initDanubeLocksMap();
-    selectLock(0,false);
-  }catch(err){
-    console.error('Donau-Schleusen:',err);
-    if(status)status.textContent='Schleusendaten konnten nicht geladen werden: '+err.message;
-    document.getElementById('lockDetail').innerHTML='<p>Die technische Datenbank ist gerade nicht erreichbar. Bitte später erneut versuchen.</p>';
-  }finally{lockLoading=false;}
-}
-function renderLockList(){
-  const host=document.getElementById('lockList');
-  if(!host||!danubeLockRecords.length)return;
-  const q=(document.getElementById('lockSearch')?.value||'').toLowerCase().trim();
-  const country=document.getElementById('lockCountry')?.value||'';
-  const matches=danubeLockRecords.map((lock,index)=>({lock,index})).filter(({lock})=>{
-    const text=[lock.name,lock.country,lock.countryCode,lock.riverKm,lock.chamberSize].join(' ').toLowerCase();
-    return (!q||text.includes(q))&&(!country||lock.countryCode===country||lock.countryCode.split('/').includes(country));
-  });
-  host.innerHTML=matches.map(({lock,index})=>'<button type="button" class="lock-row '+(index===selectedLockIndex?'active':'')+'" onclick="selectLock('+index+')"><span class="route-number">'+(index+1)+'</span><span><b>'+escapeLockHtml(lock.name)+'</b><small>'+escapeLockHtml(lock.country)+' · km '+escapeLockHtml(lock.riverKm)+'</small></span></button>').join('');
-  const status=document.getElementById('lockStatus');
-  if(status)status.textContent=matches.length+' von '+danubeLockRecords.length+' Schleusen angezeigt';
-}
-function initDanubeLocksMap(){
-  const host=document.getElementById('locksMap');
-  if(!host||!window.L||!danubeLockRecords.length)return;
-  if(danubeLocksMap){setTimeout(()=>danubeLocksMap.invalidateSize(),120);return;}
-  danubeLocksMap=L.map(host,{scrollWheelZoom:false}).setView([48.2,15.5],5);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}).addTo(danubeLocksMap);
-  danubeLockRecords.forEach((lock,index)=>{
-    if(typeof lock.latitude!=='number'||typeof lock.longitude!=='number')return;
-    const icon=L.divIcon({className:'lock-map-marker',html:'<span>'+(index+1)+'</span>',iconSize:[25,25],iconAnchor:[12,12]});
-    const marker=L.marker([lock.latitude,lock.longitude],{icon}).addTo(danubeLocksMap);
-    marker.bindPopup('<b>'+escapeLockHtml(lock.name)+'</b><br>'+escapeLockHtml(lock.country)+'<br>Strom-km '+escapeLockHtml(lock.riverKm));
-    marker.on('click',()=>selectLock(index,false));
-    danubeLockMarkers[index]=marker;
-  });
-  const points=danubeLockRecords.filter(lock=>typeof lock.latitude==='number'&&typeof lock.longitude==='number').map(lock=>[lock.latitude,lock.longitude]);
-  if(points.length)danubeLocksMap.fitBounds(L.latLngBounds(points),{padding:[20,20]});
-  setTimeout(()=>danubeLocksMap.invalidateSize(),120);
-}
-function selectLock(index,focusMap=true){
-  const lock=danubeLockRecords[index];
-  if(!lock)return;
-  selectedLockIndex=index;
-  const detail=document.getElementById('lockDetail');
-  const stats=[
-    ['Schleusenkammern',lock.chambers],
-    ['Kammermaß',lock.chamberSize],
-    ['Max. Haltungsunterschied',lock.maxHead],
-    ['Stromkilometer',lock.riverKm]
-  ];
-  const rows=[
-    ['Land / Zuständigkeit',lock.country],
-    ['Stromkilometer',lock.riverKm],
-    ['Anzahl der Kammern',lock.chambers],
-    ['Kammerabmessungen (Länge × Breite)',lock.chamberSize],
-    ['Drempeltiefe / Referenztiefe',lock.sillDepth],
-    ['Brückendurchfahrtshöhe',lock.bridgeClearance],
-    ['Max. Haltungsunterschied',lock.maxHead],
-    ['Max. Schiffs-/Verbandsabmessung laut Datensatz',lock.maxConvoy],
-    ['UKW-Funkkanal',lock.radio],
-    ['Telefon',lock.phone],
-    ['Betreiber / Zuständigkeit',lock.operator],
-    ['Inbetriebnahme',lock.operationYear]
-  ];
-  detail.innerHTML='<div class="lock-detail-top"><div><div class="eyebrow">SCHLEUSE '+(index+1)+' VON '+danubeLockRecords.length+'</div><h2>'+escapeLockHtml(lock.name)+'</h2><p>'+escapeLockHtml(lock.country)+' · Strom-km '+escapeLockHtml(lock.riverKm)+'</p></div><button class="btn soft" onclick="askClaraAboutLock('+index+')">Clara zu dieser Schleuse fragen</button></div><div class="lock-stats">'+stats.map(([label,value])=>'<div class="lock-stat"><small>'+escapeLockHtml(label)+'</small><b>'+escapeLockHtml(value)+'</b></div>').join('')+'</div><h3>Technische Daten</h3><table class="lock-table"><tbody>'+rows.map(([label,value])=>'<tr><th>'+escapeLockHtml(label)+'</th><td>'+escapeLockHtml(value)+'</td></tr>').join('')+'</tbody></table><div class="lock-note"><b>Hinweis:</b> '+escapeLockHtml(lock.note)+'</div>';
-  renderLockList();
-  danubeLockMarkers.forEach((marker,i)=>{
-    if(!marker)return;
-    const el=marker.getElement();
-    if(el)el.classList.toggle('active',i===index);
-  });
-  if(focusMap&&danubeLocksMap&&danubeLockMarkers[index]){
-    danubeLocksMap.setView(danubeLockMarkers[index].getLatLng(),Math.max(danubeLocksMap.getZoom(),7),{animate:true});
-    danubeLockMarkers[index].openPopup();
-  }
-}
-function askClaraAboutLock(index){
-  const lock=danubeLockRecords[index];
-  if(!lock)return;
-  showPage('clara');
-  setTimeout(()=>{
-    const input=document.getElementById('chatInput');
-    input.value='Gib mir bitte alle technischen Informationen zur Schleuse '+lock.name+' – insbesondere Kammermaß, Anzahl der Kammern, Stromkilometer, Drempeltiefe, Durchfahrtshöhe, maximalen Haltungsunterschied und UKW-Kanal.';
-    document.getElementById('chatbox').scrollTop=document.getElementById('chatbox').scrollHeight;
-    input.focus();
-  },100);
-}
-
-function showPage(page){document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));document.getElementById('page-'+page).classList.remove('hidden');document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page===page));if(page==='intelligence'&&!document.getElementById('intelligenceDestinations').dataset.rendered){renderClaraIntelligence();document.getElementById('intelligenceDestinations').dataset.rendered='true';}if(page==='map'){initDanubeMap();setTimeout(()=>danubeMapInstance&&danubeMapInstance.invalidateSize(),160)}if(page==='locks'){loadDanubeLocks()}window.scrollTo({top:0,behavior:'smooth'})}
-function selectDestination(name){document.getElementById('destination').value=name;showPage('planner');makePlan()}
-function makePlan(){const name=document.getElementById('destination').value,duration=document.getElementById('duration').value,interest=document.getElementById('interest').value,pace=document.getElementById('pace').value,mobility=document.getElementById('mobility')?.value||'Keine besondere Angabe';const p=places.find(x=>x.name===name);let stops={
-'Linz':[['Vormittag','Altstadt & Hauptplatz','Entdecke die historische Innenstadt und die Plätze am Donauufer.'],['Mittag','Regionale Küche','Plane eine Pause für österreichische Klassiker ein.'],['Nachmittag','Ars Electronica oder Donauufer','Wähle ein Museum oder einen entspannten Spaziergang.']],
-'Passau':[['Vormittag','Dreiflüsse-Eck & Altstadt','Erkunde den Zusammenfluss von Donau, Inn und Ilz und die historische Altstadt.'],['Mittag','Niederbayerische Küche','Plane eine Pause mit regionaler Wirtshausküche ein.'],['Nachmittag','Dom St. Stephan oder Veste Oberhaus','Wähle Kultur im Dom oder einen Aussichtspunkt über der Stadt.']],
-'Weißenkirchen':[['Vormittag','Historischer Ortskern','Entdecke Pfarrkirche, Teisenhoferhof und das Donauufer.'],['Mittag','Wachauer Genuss','Probiere saisonale Wachauer Spezialitäten und regionale Küche.'],['Nachmittag','Weinberge und Aussicht','Wähle einen passenden Spaziergang; Verkostungen nur mit bestätigter Öffnungszeit.']],
-'Melk':[['Vormittag','Stift Melk','Prüfe aktuelle Öffnungszeiten und reserviere bei Bedarf vorab.'],['Mittag','Wachauer Spezialitäten','Probiere saisonale Produkte aus der Wachau.'],['Nachmittag','Donau & Wachau','Genieße Aussichtspunkte und einen ruhigen Spaziergang.']],
-'Wien':[['Vormittag','Historisches Zentrum','Erkunde Stephansdom und die Gassen der Innenstadt.'],['Mittag','Wiener Kaffeehaus','Gönn dir eine Pause mit Kaffee und einer Mehlspeise.'],['Nachmittag','Ringstraße oder Museum','Wähle Kultur nach deinem Tempo.']],
-'Bratislava':[['Vormittag','Altstadt','Spaziere durch die Gassen rund um den Hauptplatz.'],['Mittag','Slowakische Küche','Entdecke regionale Gerichte in einem lokalen Lokal.'],['Nachmittag','Burg Bratislava','Genieße den Blick über die Donau.']],
-'Esztergom':[['Vormittag','Basilika von Esztergom','Besichtige eine der markantesten Kirchen Ungarns und genieße den Blick über das Donauknie.'],['Mittag','Ungarische Küche','Probiere regionale ungarische Spezialitäten in der Altstadt.'],['Nachmittag','Burgviertel & Maria-Valeria-Brücke','Erkunde das historische Burgviertel oder den Blick hinüber in die Slowakei.']],
-'Budapest':[['Vormittag','Burgviertel','Erkunde die historische Budaer Seite und ihre Aussichtspunkte.'],['Mittag','Ungarische Spezialitäten','Probiere Gulasch oder Lángos – je nach Geschmack.'],['Nachmittag','Donaupromenade','Spaziere entlang der Donau und bewundere das Panorama.']],
-'Puszta':[['Vormittag','Natur und Landschaft','Plane den Ausflug mit einem lokalen Anbieter und prüfe die Anreise.'],['Mittag','Ungarische Hausmannskost','Entdecke saisonale und regionale Küche.'],['Nachmittag','Tradition und Natur','Wähle eine geführte Natur- oder Kulturerfahrung.']],
-'Novi Sad':[['Vormittag','Stadtzentrum','Erkunde die Plätze und Fußgängerzonen im Zentrum.'],['Mittag','Serbische Küche','Probiere lokale Spezialitäten in einem Restaurant.'],['Nachmittag','Petrovaradin','Entdecke die Festung und den Blick auf die Donau.']],
-'Belgrad':[['Vormittag','Kalemegdan','Erkunde die Festungsanlage und die Flussblicke.'],['Mittag','Serbische Spezialitäten','Entdecke regionale Küche und lokale Cafés.'],['Nachmittag','Altstadt und Flusspromenade','Passe den Spaziergang an Wetter und Energie an.']],
-'Russe':[['Vormittag','Historisches Stadtzentrum','Entdecke die elegante Architektur des Zentrums und die Plätze rund um die Freiheitsstatue.'],['Mittag','Bulgarische Küche','Probiere Banitsa, Shopska-Salat oder regionale Fischgerichte.'],['Nachmittag','Donauufer und Sexaginta Prista','Genieße den Blick auf die Donau und besuche die römische Festungsanlage.']],
-'Donaudelta':[['Vormittag','Bootstour mit Guide','Wähle einen seriösen lokalen Anbieter und beachte Naturschutzregeln.'],['Mittag','Regionale Küche','Entdecke lokale Fischgerichte, wenn du sie magst.'],['Nachmittag','Naturbeobachtung','Plane Zeit für Vögel und Wasserwege ein.']]
-}[name];const days=duration==='1 Tag'?1:duration==='7 Tage'?7:3;const safeStops=stops||[['Vormittag','Ortszentrum entdecken',`Erkunde die wichtigsten Orte in ${name}.`],['Mittag','Regional genießen','Plane eine Pause mit regionalen Spezialitäten ein.'],['Nachmittag','Natur und Kultur','Wähle ein Erlebnis passend zu deinen Interessen.']];let out=`<div class="itinerary"><h3>Claras Vorschlag: ${name} · ${duration}</h3><p class="muted" style="margin:0">Schwerpunkt: ${interest} · Tempo: ${pace} · Mobilität: ${mobility}</p>`;for(let d=1;d<=days;d++){out+=`<div class="stop"><div class="num">${d}</div><div><h4>${days===1?'Dein Tag':`Tag ${d}`}: ${d===1?safeStops[0][1]:d===2?(safeStops[1][1]):safeStops[2][1]}</h4><p>${d===1?safeStops[0][2]:d===2?safeStops[1][2]:safeStops[2][2]}</p></div></div>`}if(mobility==='Rollator'){out+=`<div class="stop"><div class="num">i</div><div><h4>Hinweis für Gäste mit Rollator</h4><p>${claraRollatorNotice}</p></div></div>`;}out+=`<div class="stop"><div class="num">✦</div><div><h4>Claras persönlicher Tipp</h4><p>${p.desc} Öffnungszeiten, Wetter, Tickets und lokale Bedingungen bitte vor der Abreise aktuell prüfen.</p></div></div><button class="btn soft" onclick="speakClara('Willkommen in ${name}! Ich habe dir einen ${duration} langen Vorschlag mit Schwerpunkt ${interest} vorbereitet. Passe ihn jederzeit an deine Wünsche an.')">▶ Clara stellt deinen Plan vor</button></div>`;document.getElementById('planResult').innerHTML=out}
-function loadClaraVoices(){
-  if(!('speechSynthesis'in window))return;
-  const select=document.getElementById('claraVoice');
-  if(!select)return;
-  const voices=speechSynthesis.getVoices().filter(v=>/^de(-|_)/i.test(v.lang));
-  let savedVoice='';
-  try{savedVoice=localStorage.getItem('clara.voiceName')||'';}catch(_){}
-  const previous=select.value;
-  select.innerHTML='<option value="">Automatisch – natürliche deutsche Stimme</option>'+
-    voices.map(v=>'<option value="'+encodeURIComponent(v.name)+'">'+v.name+' · '+v.lang+'</option>').join('');
-  const savedMatch=savedVoice&&voices.find(v=>v.name===savedVoice);
-  const previousMatch=previous&&voices.find(v=>encodeURIComponent(v.name)===previous);
-  const seraphina=voices.find(v=>/seraphina/i.test(v.name||'')&&/^de(-|_)de/i.test(v.lang));
-  const preferred=preferredGermanVoice(voices);
-  if(savedMatch){
-    select.value=encodeURIComponent(savedMatch.name);
-  }else if(previousMatch){
-    select.value=previous;
-  }else if(seraphina){
-    select.value=encodeURIComponent(seraphina.name);
-    try{localStorage.setItem('clara.voiceName',seraphina.name);}catch(_){}
-  }else if(preferred){
-    select.value=encodeURIComponent(preferred.name);
-  }
-  if(!select.dataset.voicePreferenceBound){
-    select.addEventListener('change',()=>{
-      const chosen=voices.find(v=>encodeURIComponent(v.name)===select.value);
-      try{
-        if(chosen)localStorage.setItem('clara.voiceName',chosen.name);
-        else localStorage.removeItem('clara.voiceName');
-      }catch(_){}
-    });
-    select.dataset.voicePreferenceBound='true';
-  }
-  const status=document.getElementById('voiceStatus');
-  if(status){
-    if(!voices.length){
-      status.textContent='Keine deutsche Systemstimme gefunden. Bitte Edge oder eine deutsche Sprachausgabe aktivieren.';
-    }else{
-      const active=voices.find(v=>encodeURIComponent(v.name)===select.value);
-      status.textContent=active
-        ? (active.name+' ist ausgewählt. Claras Stimmeinstellung wird auf diesem Gerät gespeichert.')
-        : 'Clara verwendet die verfügbare deutsche Browser-Stimme.';
-    }
-  }
-}
-if('speechSynthesis'in window){loadClaraVoices();speechSynthesis.onvoiceschanged=loadClaraVoices;}
-function claraSpeechText(value){
-  // German number words for measurements read aloud by the browser voice.
-  const numberWords = input => {
-    const n = Math.floor(Number(input));
-    if (!Number.isFinite(n) || n < 0 || n > 999999) return String(input);
-    const ones = ["null","eins","zwei","drei","vier","fünf","sechs","sieben","acht","neun"];
-    const teens = ["zehn","elf","zwölf","dreizehn","vierzehn","fünfzehn","sechzehn","siebzehn","achtzehn","neunzehn"];
-    const tens = ["","","zwanzig","dreißig","vierzig","fünfzig","sechzig","siebzig","achtzig","neunzig"];
-    const underHundred = x => {
-      if (x < 10) return ones[x];
-      if (x < 20) return teens[x-10];
-      const unit=x%10, decade=Math.floor(x/10);
-      return (unit ? (unit===1?"ein":ones[unit])+"und" : "")+tens[decade];
-    };
-    const underThousand = x => {
-      const hundred=Math.floor(x/100), rest=x%100;
-      return (hundred ? (hundred===1?"ein":ones[hundred])+"hundert" : "")+(rest?underHundred(rest):"");
-    };
-    if(n===0)return "null";
-    if(n===1)return "ein";
-    if(n<100)return underHundred(n);
-    if(n<1000)return underThousand(n);
-    const thousand=Math.floor(n/1000), rest=n%1000;
-    return (thousand===1?"eintausend":underThousand(thousand)+"tausend")+(rest?underThousand(rest):"");
-  };
-  let spoken=String(value||'')
-    // Example: 2 h 30 min -> zwei Stunden und dreißig Minuten.
-    .replace(/(\d+(?:[.,]\d+)?)\s*(?:h|std\.?|stunden?)\s*(\d+(?:[.,]\d+)?)\s*(?:min\.?|minuten?)\b/gi,(_,hours,minutes)=>{
-      const hourLabel=Number(hours.replace(',','.'))===1?'Stunde':'Stunden';
-      const minuteLabel=Number(minutes.replace(',','.'))===1?'Minute':'Minuten';
-      return hours+' '+hourLabel+' und '+minutes+' '+minuteLabel;
-    })
-    .replace(/(\d+)\s*[-‐‑‒–—]\s*(\d+)\s*(?:min\.?|minuten?)\b/gi,'$1 bis $2 Minuten')
-    .replace(/(\d+)\s*[-‐‑‒–—]\s*(\d+)\s*(?:h|std\.?|stunden?)\b/gi,'$1 bis $2 Stunden')
-    .replace(/(\d+(?:[.,]\d+)?)\s*(?:min\.?|minuten?)\b/gi,(_,n)=>n+' '+(Number(n.replace(',','.'))===1?'Minute':'Minuten'))
-    .replace(/(\d+(?:[.,]\d+)?)\s*(?:h|std\.?|stunden?)\b/gi,(_,n)=>n+' '+(Number(n.replace(',','.'))===1?'Stunde':'Stunden'));
-
-  // Preserve comparison signs before reading measurement values aloud.
-  spoken=spoken.replace(/(?:>|≥)\s*(?=\d+(?:[.,]\d+)?\s*(?:m|meter|metern)\b)/gi,'mehr als ');
-  spoken=spoken.replace(/(?:<|≤)\s*(?=\d+(?:[.,]\d+)?\s*(?:m|meter|metern)\b)/gi,'weniger als ');
-
-  // Dimensions such as 230 × 24 m: both values refer to metres.
-  spoken=spoken.replace(/(\d+)\s*[×x]\s*(\d+(?:[.,]\d{1,2})?)\s*(?:m|meter|metern)\b/gi,(_,length,width)=>
-    numberWords(length)+' mal '+numberWords(width.replace(',','.').split('.')[0])+
-    (width.match(/[.,](\d{1,2})$/)?' Komma '+numberWords(width.match(/[.,](\d{1,2})$/)[1]):'')+' Meter'
-  );
-  // Two decimal places are rendered as metres and centimetres, e.g. 2,50 m.
-  spoken=spoken.replace(/(\d+)[,.](\d{2})\s*(?:m|meter|metern)\b/gi,(_,metres,centimetres)=>{
-    const m=Number(metres), cm=Number(centimetres);
-    if(m===0&&cm===0)return 'null Meter';
-    if(m===0)return numberWords(cm)+' Zentimeter';
-    if(cm===0)return numberWords(m)+' '+(m===1?'Meter':'Meter');
-    return numberWords(m)+' Meter und '+numberWords(cm)+' Zentimeter';
-  });
-  // One decimal place stays a decimal reading; whole values are spelled out too.
-  spoken=spoken.replace(/(\d+)[,.](\d)\s*(?:m|meter|metern)\b/gi,(_,metres,decimal)=>
-    numberWords(metres)+' Komma '+numberWords(decimal)+' Meter'
-  );
-  spoken=spoken.replace(/(\d+)\s*(?:m|meter|metern)\b/gi,(_,metres)=>
-    numberWords(metres)+' '+(Number(metres)===1?'Meter':'Meter')
-  );
-
-  return spoken
-    .replace(/\x60\x60\x60[\s\S]*?\x60\x60\x60/g,' ')
-    .replace(/<[^>]*>/g,' ')
-    .replace(/!?\[([^\]]+)\]\([^)]*\)/g,'$1')
-    .replace(/^\s*\|?\s*:?-{3,}.*$/gm,' ')
-    .replace(/\r\n?/g,'\n')
-    .replace(/^\s*#{1,6}\s*/gm,'')
-    .replace(/^\s*>+\s*/gm,'')
-    .replace(/([.!?])\n(?=\s*(?:[-*+•▪◦‣]|\d+[.)])\s+)/g,'$1 ')
-    .replace(/\n(?=\s*(?:[-*+•▪◦‣]|\d+[.)])\s+)/g,'. ')
-    .replace(/([.!?])\n{2,}/g,'$1 ')
-    .replace(/\n{2,}/g,'. ')
-    .replace(/\n+/g,' ')
-    .replace(/(^|[.!?;:]\s+)(?:[-*+•▪◦‣]|\d+[.)])\s+/g,'$1')
-    .replace(/\*\*(.*?)\*\*/g,'$1')
-    .replace(/__(.*?)__/g,'$1')
-    .replace(/\*(.*?)\*/g,'$1')
-    .replace(/_(.*?)_/g,'$1')
-    .replace(/\x60([^\x60]*)\x60/g,'$1')
-    .replace(/[~#*_>\x60]/g,' ')
-    .replace(/[{}\[\]<>]/g,' ')
-    .replace(/\s*([,;:])\s*/g,'$1 ')
-    .replace(/\s+([.!?])\s*/g,'$1 ')
-    .replace(/\s+/g,' ')
-    .trim();
-}
-function setClaraSpeaking(active){['avatarHome','avatarChat'].forEach(id=>document.getElementById(id)?.classList.toggle('speaking',active));}
-function startClaraVideo(){
-  const video=document.getElementById('claraChatVideo');
-  if(!video)return;
-  video.muted=true;
-  const playPromise=video.play();
-  if(playPromise&&typeof playPromise.catch==='function')playPromise.catch(error=>console.warn('Clara-Video konnte nicht starten:',error));
-}
-function stopClaraVideo(){
-  const video=document.getElementById('claraChatVideo');
-  if(!video)return;
-  video.pause();
-  try{video.currentTime=0;}catch(_){}
-}
-function stopClaraSpeech(){
-  stopClaraVideo();
-  if('speechSynthesis'in window)speechSynthesis.cancel();
-  if(claraAudioElement){claraAudioElement.pause();claraAudioElement.currentTime=0;claraAudioElement=null;}
-  if(claraAudioObjectUrl){URL.revokeObjectURL(claraAudioObjectUrl);claraAudioObjectUrl=null;}
-  setClaraSpeaking(false);
-}
-let claraRecognition = null;
-let claraListening = false;
-function setClaraMicStatus(message){
-  const status=document.getElementById('micStatus');
-  if(status)status.textContent=message;
-}
-function setClaraMicButton(active){
-  const button=document.getElementById('micButton');
-  if(!button)return;
-  button.classList.toggle('listening',active);
-  button.setAttribute('aria-pressed',String(active));
-  button.textContent=active?'⏹️':'🎙️';
-  button.title=active?'Sprachaufnahme beenden':'Spracheingabe starten';
-}
-function stopClaraListening(){
-  if(!claraRecognition||!claraListening)return;
-  try{claraRecognition.stop();}catch(error){console.warn('Clara Mikrofon stoppen:',error);}
-}
-function startClaraListening(){
-  const Recognition=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(window.isSecureContext===false&&location.hostname!=='localhost'&&location.hostname!=='127.0.0.1'){
-    setClaraMicStatus('Die Mikrofonfunktion benötigt eine sichere HTTPS-Verbindung.');
-    return;
-  }
-  if(!Recognition){
-    setClaraMicStatus('Dieser Browser unterstützt keine integrierte Spracherkennung. Bitte nutze Chrome oder schreibe Clara eine Nachricht.');
-    return;
-  }
-  if(claraListening){
-    stopClaraListening();
-    setClaraMicStatus('Sprachaufnahme wird beendet …');
-    return;
-  }
-  const input=document.getElementById('chatInput');
-  const recognition=new Recognition();
-  claraRecognition=recognition;
-  recognition.lang='de-DE';
-  recognition.interimResults=false;
-  recognition.maxAlternatives=1;
-  recognition.onstart=()=>{
-    if(claraRecognition!==recognition)return;
-    claraListening=true;
-    setClaraMicButton(true);
-    setClaraMicStatus('Clara hört zu … Sprich jetzt deine Frage.');
-  };
-  recognition.onresult=(event)=>{
-    if(claraRecognition!==recognition)return;
-    const result=event.results?.[event.resultIndex]||event.results?.[0];
-    const transcript=String(result?.[0]?.transcript||'').trim();
-    if(!transcript){
-      setClaraMicStatus('Ich habe nichts verstanden. Bitte versuche es erneut oder schreibe deine Frage.');
+  claraInstallButton.addEventListener('click',async()=>{
+    if(claraInstallPrompt){
+      claraInstallPrompt.prompt();
+      const choice=await claraInstallPrompt.userChoice;
+      if(choice.outcome==='accepted')claraInstallButton.hidden=true;
+      claraInstallPrompt=null;
       return;
     }
-    if(input){
-      input.value=transcript;
-      input.focus();
-    }
-    setClaraMicStatus('Erkannt: „'+transcript+'“ – ich sende deine Frage an Clara.');
-    if(result?.isFinal!==false)document.querySelector('.chatform')?.requestSubmit();
-  };
-  recognition.onerror=(event)=>{
-    const messages={
-      'not-allowed':'Mikrofonzugriff verweigert. Bitte erlaube den Zugriff in den Browser-Einstellungen.',
-      'service-not-allowed':'Der Spracherkennungsdienst ist in diesem Browser nicht freigegeben.',
-      'no-speech':'Keine Sprache erkannt. Bitte sprich etwas lauter und versuche es erneut.',
-      'audio-capture':'Kein Mikrofon gefunden. Prüfe die Mikrofonverbindung.',
-      'network':'Die Online-Spracherkennung ist nicht erreichbar. Prüfe deine Internetverbindung.',
-      'aborted':'Sprachaufnahme abgebrochen.',
-      'language-not-supported':'Deutsch wird von diesem Spracherkennungsdienst nicht unterstützt.'
-    };
-    setClaraMicStatus(messages[event.error]||('Spracherkennung: '+String(event.error||'unbekannter Fehler')));
-  };
-  recognition.onend=()=>{
-    if(claraRecognition!==recognition)return;
-    claraListening=false;
-    setClaraMicButton(false);
-    const status=document.getElementById('micStatus');
-    if(status&&status.textContent==='Clara hört zu … Sprich jetzt deine Frage.')status.textContent='Aufnahme beendet. Du kannst erneut auf das Mikrofon tippen.';
-    claraRecognition=null;
-  };
-  try{
-    recognition.start();
-  }catch(error){
-    claraListening=false;
-    setClaraMicButton(false);
-    claraRecognition=null;
-    setClaraMicStatus('Das Mikrofon konnte nicht gestartet werden. Prüfe die Browser-Berechtigung und versuche es erneut.');
-    console.warn('Clara Spracherkennung starten:',error);
-  }
+    const status=document.getElementById('claraWelcomeStatus');
+    if(status)status.textContent=claraIsIOS
+      ? 'Clara installieren: Tippe in Safari auf „Teilen“ und wähle „Zum Home-Bildschirm“.'
+      : 'Clara kann über das Installieren-Symbol deines Browsers zum Startbildschirm hinzugefügt werden.';
+  });
+  window.addEventListener('appinstalled',()=>{claraInstallButton.hidden=true;claraInstallPrompt=null;});
 }
-
-function preferredGermanVoice(voices){
-  const german=(voices||[]).filter(v=>/^de(-|_)/i.test(v.lang));
-  if(!german.length)return null;
-  // Clara's chosen standard voice: Microsoft Seraphina Online (Natural), German (Germany).
-  const seraphina=german.find(v=>/seraphina/i.test(v.name||'')&&/^de(-|_)de/i.test(v.lang));
-  if(seraphina)return seraphina;
-  const score=v=>{
-    const n=(v.name||'').toLowerCase();
-    let s=0;
-    if(/online|natural|neural/.test(n))s+=100;
-    if(/microsoft/.test(n))s+=25;
-    if(/katja|hedda|amala|anna|marlene|vicki|sara|sarah|julia|petra|sophie|eva/.test(n))s+=20;
-    if(/google/.test(n))s+=5;
-    if(v.localService===false)s+=3;
-    return s;
-  };
-  return german.slice().sort((a,b)=>score(b)-score(a))[0];
-}
-let claraAudioObjectUrl=null;
-let claraAudioElement=null;
-async function speakClara(value,force=false){
-  const auto=document.getElementById('claraAutoSpeak');
-  if(!force&&auto&&!auto.checked)return;
-  const text=claraSpeechText(value);
-  if(!text)return;
-  stopClaraSpeech();
-  const status=document.getElementById('voiceStatus');
-  try{
-    if(status)status.textContent='Clara bereitet ihre Antwort mit der Seraphina-Stimme vor …';
-    const response=await fetch('/.netlify/functions/clara-speech',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({text:text.slice(0,1800)})
-    });
-    if(!response.ok){
-      let detail={};try{detail=await response.json();}catch(_){}
-      throw new Error(detail.error||('Sprachausgabe fehlgeschlagen ('+response.status+')'));
-    }
-    const audioBlob=await response.blob();
-    if(!audioBlob.size)throw new Error('Azure hat eine leere Audiodatei geliefert.');
-    claraAudioObjectUrl=URL.createObjectURL(audioBlob);
-    claraAudioElement=new Audio(claraAudioObjectUrl);
-    claraAudioElement.onplay=()=>{setClaraSpeaking(true);startClaraVideo();if(status)status.textContent='Clara spricht mit ihrer Seraphina-Stimme.';};
-    claraAudioElement.onended=()=>{setClaraSpeaking(false);stopClaraVideo();if(status)status.textContent='Sprachausgabe abgeschlossen.';URL.revokeObjectURL(claraAudioObjectUrl);claraAudioObjectUrl=null;claraAudioElement=null;};
-    claraAudioElement.onerror=()=>{setClaraSpeaking(false);stopClaraVideo();if(status)status.textContent='Die Audiodatei konnte nicht abgespielt werden.';};
-    await claraAudioElement.play();
-  }catch(error){
-    console.error('Clara Azure Speech:',error);
-    if(status)status.textContent='Seraphina-Sprachausgabe nicht verfügbar: '+(error.message||'Verbindungsfehler')+'. Bitte später erneut versuchen.';
-  }
-}
-function addMsg(text,who,sources=[],research=null){
-  const box=document.getElementById('chatbox');
-  const el=document.createElement('div');
-  el.className='msg '+(who==='user'?'user':'');
-  el.textContent=text;
-  if(who!=='user'&&Array.isArray(sources)&&sources.length){
-    const sourceBox=document.createElement('div');
-    sourceBox.style.marginTop='10px';
-    sourceBox.style.paddingTop='8px';
-    sourceBox.style.borderTop='1px solid var(--line)';
-    const heading=document.createElement('div');
-    heading.textContent='Quellen aus Claras Live-Recherche'+(research?.searchedAt?' · '+new Date(research.searchedAt).toLocaleString('de-DE'):'');
-    heading.style.fontWeight='700';
-    heading.style.fontSize='12px';
-    heading.style.marginBottom='5px';
-    sourceBox.appendChild(heading);
-    sources.forEach((source,index)=>{
-      try{
-        const url=new URL(source.url);
-        if(url.protocol!=='https:'&&url.protocol!=='http:')return;
-        const line=document.createElement('div');
-        line.style.margin='4px 0';
-        const link=document.createElement('a');
-        link.href=url.href;
-        link.target='_blank';
-        link.rel='noopener noreferrer';
-        link.textContent='['+(index+1)+'] '+String(source.title||source.domain||url.hostname);
-        link.style.color='var(--green)';
-        link.style.textDecoration='underline';
-        link.style.fontSize='12px';
-        line.appendChild(link);
-        if(source.publishedDate){
-          const date=document.createElement('span');
-          date.textContent=' · '+String(source.publishedDate);
-          date.style.fontSize='11px';
-          date.style.color='var(--muted)';
-          line.appendChild(date);
-        }
-        sourceBox.appendChild(line);
-      }catch(_){}
-    });
-    if(sourceBox.children.length>1)el.appendChild(sourceBox);
-  }
-  box.appendChild(el);
-  box.scrollTop=box.scrollHeight;
-}
-
-const claraDestinationKnowledge={
-'Linz':{focus:'Kunst, Musik, moderne Kultur und Donauufer',see:'Hauptplatz, Altstadt, Ars Electronica Center, Lentos und Pöstlingberg.',food:'Linzer Torte, Knödelgerichte und oberösterreichische Wirtshausküche.',season:'Herbstliche Kulturveranstaltungen und ab November Adventmärkte; konkrete Termine jährlich prüfen.',cruise:'Anlegestelle und Baustellenumfeld tagesaktuell prüfen; fußläufige Altstadt- und Donauuferoptionen nach Liegeplatz wählen.',source:'Linz Tourismus, Stadt Linz, Ars Electronica, Hafen-/Schifffahrtsmeldungen'},
-'Passau':{focus:'Drei-Flüsse-Stadt, Altstadt und barocke Architektur',see:'Dom St. Stephan, Ortspitze, Veste Oberhaus und historische Altstadt.',food:'Niederbayerische Wirtshausküche und regionale Süßspeisen.',season:'Stadtführungen, Kulturprogramm und saisonale Märkte aktuell prüfen.',cruise:'Liegeplatz entscheidet über Fußweg in die Altstadt; Rückkehrzeit großzügig planen.',source:'Tourismus Passau, Stadt Passau, Dom St. Stephan'},
-'Melk':{focus:'Stift, Barock, Kultur und Wachau',see:'Stift Melk, Altstadt, Donauufer und Wachauer Landschaft.',food:'Wachauer Marille, regionale Küche, Weine und saisonale Produkte.',season:'Stiftsöffnungszeiten und Führungszeiten ändern sich saisonal; immer die offizielle Stiftsseite prüfen.',cruise:'Anlegestelle am Donauufer; Fußweg in die Altstadt und der Anstieg zum Stift hängen vom Liegeplatz und Mobilitätsbedarf ab.',source:'Stift Melk, Stadt Melk, Donau Niederösterreich, Hafen-/Schifffahrtsmeldungen'},
-'Weißenkirchen':{focus:'Wachauer Weinort, Weinberge und historische Ortsmitte',see:'Pfarrkirche, Teisenhoferhof, Weinbergwege und Donauufer.',food:'Grüner Veltliner, Riesling, Wachauer Marille und Heurigenküche.',season:'Heurigenkalender, Weinverkostungen und Adventmarkt nur mit aktuellen Gastgeber-/Gemeindeangaben nennen.',cruise:'Fußläufige Ortsbesichtigung und Wein-Erlebnisse nur passend zur Liegezeit; Verkostungen nicht ohne Rückkehrplanung empfehlen.',source:'Wachau-Nibelungengau-Kremstal Tourismus, Marktgemeinde Weißenkirchen, Weingüter'},
-'Wien':{focus:'Kaiserliche Geschichte, Museen, Musik und Kaffeehauskultur',see:'Stephansdom, Hofburg, Ringstraße, Schloss Schönbrunn und Museen.',food:'Wiener Schnitzel, Tafelspitz, Gulasch, Sachertorte und Kaffeehausklassiker.',season:'Ausstellungen, Konzertprogramm und Weihnachtsmärkte mit offiziellen Terminen prüfen.',cruise:'Anlegestelle/Schiffsstation und Transfer in die Innenstadt exakt prüfen; nicht jede Station liegt direkt im Zentrum.',source:'WienTourismus, Stadt Wien, Wiener Linien, DDSG Blue Danube und Hafeninformationen'},
-'Bratislava':{focus:'Historische Altstadt, Burg und Donaulandschaft',see:'Burg Bratislava, Altstadt, Martinsdom und Donaupromenade.',food:'Bryndzové halušky, Kapustnica, Langoš und lokale Weine.',season:'Alte Markthalle, Wein- und Jungweinfeste sowie Weihnachtsmärkte mit Veranstalterterminen prüfen.',cruise:'Altstadt ist von zentralen Anlegestellen häufig zu Fuß erreichbar; genaue Anlegestelle und Baustellen prüfen.',source:'Visit Bratislava, Stadt Bratislava, Alte Markthalle, Veranstalter'},
-'Esztergom':{focus:'Basilika, Burgviertel und das ungarische Donauknie',see:'Basilika von Esztergom, Burgmuseum, Maria-Valeria-Brücke und Aussichtspunkte über die Donau.',food:'Ungarische Hausmannskost, Fischsuppe und regionale Mehlspeisen.',season:'Besichtigungszeiten der Basilika und Sonderausstellungen vor dem Besuch auf offiziellen Seiten prüfen.',cruise:'Liegeplatz und Steigung zur Basilika beachten; den Fußweg und die Rückkehrzeit an die tatsächliche Liegezeit anpassen.',source:'Visit Esztergom, Basilika von Esztergom, Stadt Esztergom und offizielle Besucherinformationen'},
-'Budapest':{focus:'Donaupanorama, Architektur, Thermen und Kulinarik',see:'Parlament, Burgviertel, Fischerbastei, Kettenbrücke und Thermalbäder.',food:'Gulyás, Lángos, Paprikás csirke und ungarische Mehlspeisen.',season:'Kulturprogramm, Märkte und Thermenöffnungszeiten über offizielle Betreiber prüfen.',cruise:'Liegeplatz auf Buda- oder Pester Seite beachten; Distanzen zum Zentrum und Transfers nicht pauschal annehmen.',excursion:'Das Donauknie (Dunakanyar) ist eine eigene Ausflugsregion nördlich von Budapest. Sehenswert sind Szentendre mit seiner Künstler- und Altstadt, Visegrád mit der Burganlage und Esztergom mit seiner Basilika. Bitte nicht mit dem Budapester Stadtgebiet verwechseln; aktuelle Verbindungen, Zeiten und Besuchsmöglichkeiten müssen separat geprüft werden.',source:'Visit Hungary, Budapestinfo, BKK, Betreiber der Sehenswürdigkeiten'},
-'Puszta':{focus:'Ungarische Tiefebene, Reitkultur, Weite und Vogelwelt',see:'Hortobágy-Nationalpark, traditionelle Gehöfte, Fischteiche und Naturbeobachtung.',food:'Ungarische Hausmannskost, Gulasch, Pörkölt und regionale Produkte.',season:'Kranichzug im Herbst; Tageszählungen und Führungen nur mit aktuellen Nationalparkdaten belegen.',cruise:'Meist organisierter Landausflug mit Transfer erforderlich; Fahrzeit, Anbieter und Rückkehr zum Schiff bestätigen.',source:'Hortobágyi Nemzeti Park, Visit Hungary, lokale Veranstalter'},
-'Novi Sad':{focus:'Kulturstadt, Petrovaradin und Vojvodina-Kulinarik',see:'Petrovaradin-Festung, Altstadt, Donauufer und Stadtplätze.',food:'Fischsuppe, Ćevapi, Gibanica und Spezialitäten der Vojvodina.',season:'Night Market, regionale Märkte und Festivals über die Tourismusorganisation bestätigen.',cruise:'Von zentralen Liegestellen kann die Innenstadt erreichbar sein; Festung mit Steigung und zusätzlicher Zeit kalkulieren.',source:'Tourism Organization of Novi Sad, Stadt Novi Sad, Veranstalter'},
-'Belgrad':{focus:'Geschichte, Musik, urbane Kultur und Zusammenfluss von Save und Donau',see:'Kalemegdan, Festung, Knez Mihailova und Flusspromenaden.',food:'Ćevapi, Pljeskavica, Sarma und serbische Hausmannskost.',season:'Konzerte und Kulturveranstaltungen mit Veranstalter- und Ticketquelle prüfen.',cruise:'Liegeplatz und Distanz zur Festung prüfen; Wege können Steigungen und Kopfsteinpflaster enthalten.',source:'Tourist Organization of Belgrade, Stadt Belgrad, Veranstalter'},
-'Russe':{focus:'Bulgarische Donau-Stadt mit Architektur, Geschichte und Flusshafen',see:'Donaupromenade, Freiheitsplatz, Regionales Historisches Museum und römische Festung Sexaginta Prista.',food:'Banitsa, Shopska-Salat, Tarator und regionale Fischgerichte.',season:'Kulturprogramm und Veranstaltungen über die Gemeinde und das Tourismus-Informationszentrum prüfen.',cruise:'Russe ist ein bedeutender bulgarischer Donauhafen. Die tatsächliche Anlegestelle und der Fußweg zum Zentrum hängen vom Liegeplatz ab.',source:'Gemeinde Russe, bulgarisches Tourismusministerium, Donaukommission – Hafeninformationen'},
-'Donaudelta':{focus:'Biosphärenreservat, Kanäle, Vogelwelt und Naturtourismus',see:'Bootstouren mit zugelassenen lokalen Guides, Lagunen, Schilfgebiete und Vogelbeobachtung.',food:'Regionale Fischgerichte und lokale Küche.',season:'Wasserstände, Schutzgebietsregeln, Genehmigungen und saisonale Naturbeobachtung prüfen.',cruise:'Bootsausflüge sind abhängig von Wasserstand, Wetter, Schutzgebietsregeln und lokalen Genehmigungen; keine pauschale Befahrbarkeit versprechen.',source:'ARBDD, Danube FIS, Romanian Waters, lokale zugelassene Anbieter'}
-};
-const claraRollatorNotice='Zu Wegen mit Rollator möchte ich nichts vermuten. Ich kann die konkrete Strecke in dieser Version noch nicht zuverlässig anhand aktueller Quellen prüfen. Deshalb gebe ich keine Eignungsaussage ab.';
-function renderClaraIntelligence(){const host=document.getElementById('intelligenceDestinations');if(!host)return;const orderedNames=places.map(p=>p.name).filter(name=>claraDestinationKnowledge[name]);host.innerHTML=orderedNames.map(name=>[name,claraDestinationKnowledge[name]]).map(([name,d])=>`<article class="panel"><span class="tag">${name}</span><h3>${d.focus}</h3><p><b>Entdecken:</b> ${d.see}</p><p><b>Probieren:</b> ${d.food}</p><p><b>Saison:</b> ${d.season}</p><p><b>Flusskreuzfahrt:</b> ${d.cruise}</p><p><b>Hinweis für Rollator-Gäste:</b> ${claraRollatorNotice}</p><p class="muted" style="font-size:11px"><b>Vorrangige Quellen:</b> ${d.source}</p><button class="btn soft" onclick="quickAsk('Was empfiehlst du mir in ${name}?')">Clara zu ${name} fragen</button></article>`).join('')}
-function answerFor(q){
-  const s=String(q||'').toLowerCase();
-  const wantsRollator=/rollator|gehwagen|gehstock|gehstütze|gehstuetze|rollatornutz|gehilfe/.test(s);
-  if(wantsRollator){
-    return claraRollatorNotice;
-  }
-  for(const [name,d] of Object.entries(claraDestinationKnowledge)){
-    if(s.includes(name.toLowerCase())||(name==='Weißenkirchen'&&s.includes('weissenkirchen'))){
-      return `Für ${name} habe ich einen gespeicherten redaktionellen Überblick: ${d.focus}. Zu den bekannten Sehenswürdigkeiten zählen: ${d.see} Regionale Spezialitäten: ${d.food} ${d.season} Hinweis für Flusskreuzfahrtgäste: ${d.cruise} ${d.excursion ? 'Als Ausflug in der Umgebung: '+d.excursion+' ' : ''}Dieser Überblick ist nicht live geprüft. Aktuelle Öffnungszeiten, Eintrittspreise, Veranstaltungstermine, Verkehrslage und Anlegestellen kann ich mit dieser lokalen Antwort nicht bestätigen. Mögliche offizielle Anlaufstellen für eine spätere Prüfung: ${d.source}. Diese Quellen wurden in dieser Antwort nicht live abgerufen.`;
-    }
-  }
-  if(/heurig|wein|weingut/.test(s))return 'Für Wein und Heurige ist besonders die Wachau mit Weißenkirchen und den umliegenden Weinorten interessant. Ich berücksichtige Grüner Veltliner, Riesling, regionale Heurigenküche und veröffentlichte Aussteckzeiten. Konkrete Öffnungstermine müssen aktuell beim Betrieb bestätigt werden.';
-  if(/schiff|kreuzfahrt|anleg|niedrigwasser|fahrwasser|pegel/.test(s))return 'Im Flusskreuzfahrt-Modus prüfe ich zuerst die konkrete Anlegestelle, Liegezeit, Fußwege, Steigungen, Transfers und Rückkehrzeit. Niedrigwasser, Baggerarbeiten und Sperrungen übernehme ich nur aus aktuellen Meldungen der zuständigen Schifffahrtsbehörden. Ich erteile keine nautische Freigabe; maßgeblich bleiben Schiffsführung und Behörden.';
-  if(/veranstalt|markt|festival|advent/.test(s))return 'Ich ordne Veranstaltungen nach Ort und Reisedatum. Eine Veranstaltung nenne ich nur mit Veranstalter- oder offizieller Tourismusquelle, konkretem Datum und geprüftem Aktualitätsstand. Sag mir bitte, welche Donau-Stadt dich interessiert.';
-  if(/aktuell|heute|neuigkeit|update|wetter/.test(s))return 'Für aktuelle Meldungen brauche ich eine frische Quellenprüfung. Mein gespeichertes Ortswissen enthält Sehenswürdigkeiten, regionale Küche und saisonale Schwerpunkte; Wetter, Öffnungszeiten, Verkehr und Schifffahrt markiere ich erst nach erneuter Prüfung als aktuell.';
-  return 'Ich kann dir zu den Donau-Reisezielen, Sehenswürdigkeiten, regionaler Küche, Saison und Flusskreuzfahrt-Ausflügen helfen. Nenne mir einen Ort oder öffne „Donau-Wissen“ für Claras gesamten Reiseüberblick.';
-}
-async function getClaraMemoryContext(){if(!claraSupabase||!claraUser)return null;let profile=null,memories=[];try{const p=await claraSupabase.from('clara_profiles').select('display_name,interests,travel_pace,budget_level,preferences,consent_memory').eq('user_id',claraUser.id).maybeSingle();if(p.error)throw p.error;profile=p.data;if(!profile||profile.consent_memory!==true)return {profile:null,memories:[],consent:false};const m=await claraSupabase.from('clara_memories').select('memory_type,content,created_at').eq('user_id',claraUser.id).order('created_at',{ascending:false}).limit(30);if(m.error)throw m.error;memories=m.data||[];return {profile,memories,consent:true};}catch(e){console.warn('Memory-Abruf:',e);return null}}
-function memoryAnswer(ctx){if(!ctx)return 'Ich kann dein persönliches Clara-Gedächtnis gerade nicht abrufen. Bitte prüfe im Bereich „Mein Clara-Gedächtnis“, ob du angemeldet bist.';if(ctx.consent===false)return 'Dein Clara-Gedächtnis ist derzeit nicht zur persönlichen Nutzung freigegeben. Du kannst die Zustimmung im Bereich „Mein Clara-Gedächtnis“ selbst aktivieren.';const p=ctx.profile||{};const facts=[];if(p.display_name)facts.push(`Name: ${p.display_name}`);if(Array.isArray(p.interests)&&p.interests.length)facts.push(`Interessen: ${p.interests.join(', ')}`);if(p.travel_pace)facts.push(`Reisetempo: ${p.travel_pace}`);if(p.budget_level)facts.push(`Budget: ${p.budget_level}`);for(const m of ctx.memories||[]){const c=m.content;if(c&&typeof c==='object'){if(c.interests?.length&&!facts.some(x=>x.startsWith('Interessen:')))facts.push(`Interessen: ${c.interests.join(', ')}`);if(c.budget_level&&!facts.some(x=>x.startsWith('Budget:')))facts.push(`Budget: ${c.budget_level}`);if(c.display_name&&!facts.some(x=>x.startsWith('Name:')))facts.push(`Name: ${c.display_name}`);if(c.favorite_destination)facts.push(`Lieblingsreiseziel: ${c.favorite_destination}`);}}return facts.length?'Das habe ich in deinem persönlichen Clara-Gedächtnis gefunden: '+facts.join(' · ')+'.':'Ich bin angemeldet, finde aber noch kein gespeichertes Reiseprofil. Bitte prüfe deine Angaben unter „Mein Clara-Gedächtnis“. '}
-async function createInfluencerContent(){
-  const platform=document.getElementById('creatorPlatform').value;
-  const format=document.getElementById('creatorFormat').value;
-  const language=document.getElementById('creatorLanguage').value;
-  const topic=document.getElementById('creatorTopic').value.trim();
-  const brief=document.getElementById('creatorBrief').value.trim();
-  const status=document.getElementById('creatorStatus');
-  const result=document.getElementById('creatorResult');
-  if(!topic){toast('Bitte gib zuerst ein Reiseziel oder Thema ein.');return;}
-  status.textContent='Clara entwickelt deinen Content …';
-  result.classList.add('hidden');
-  try{
-    const CLARA_VOICE_PROFILE = Object.freeze({name:'Gentle Greta - Friendly',voiceId:'ecb08917b1f348e6a235e85eb0870b68',engine:'orca',language:'de',locale:'de-DE'});
-    const voiceLock='\n\nVERBINDLICHES SPRECHERPROFIL – CLARA VOICE LOCK:\nFür jede zukünftige Sprachproduktion ausschließlich dieselbe festgelegte deutsche Frauenstimme verwenden: '+CLARA_VOICE_PROFILE.name+'; Voice-ID '+CLARA_VOICE_PROFILE.voiceId+'; Engine '+CLARA_VOICE_PROFILE.engine+'; Sprache '+CLARA_VOICE_PROFILE.language+'; Locale '+CLARA_VOICE_PROFILE.locale+'. Stimme niemals automatisch austauschen oder eine andere Stimme vorschlagen.';
-    const identityLock='\n\nVERBINDLICHE VISUELLE IDENTITÄT – CLARA IDENTITY LOCK:\nClara ist in jeder Szene dieselbe virtuelle Frau. Verwende für alle Bildideen und Bildprompts dieselbe erwachsene Frau mit dem bereits festgelegten Erscheinungsbild: etwa 35 Jahre, braune Augen, lange dunkelbraune wellige Haare und ein freundlicher, natürlicher Gesichtsausdruck. Gesichtszüge, Augen, Haarfarbe, Haarlänge und Frisur dürfen zwischen Szenen niemals wechseln. Erzeuge keine zweite Person, keine neue Interpretation und keine wechselnden Gesichter. Variieren dürfen ausschließlich Kleidung passend zum Reiseziel, Pose, Kameraperspektive, Licht und Hintergrund. Sobald das Master-Porträt als Referenz bereitgestellt ist, muss es bei jeder einzelnen Szene als feste Identitätsreferenz verwendet werden; bis dahin die Bildprompts ausdrücklich als vorläufig markieren und keine angebliche Referenznutzung behaupten.\nFür jedes Reel: gib je Szene eine konkrete Bildidee plus einen Bildprompt aus, der ausdrücklich dieselbe Clara wie in der Master-Referenz verlangt. Füge am Ende eine kurze Kontinuitätsprüfung hinzu: Gesicht, Augen und Haare in allen Szenen identisch?';
-    const message='Du bist Clara von Donau, eine sympathische virtuelle Reise- und Kulinarik-Influencerin mit eigener, warmer und authentischer Persönlichkeit. Erstelle einen veröffentlichungsfertigen Social-Media-Entwurf. Plattform: '+platform+'. Format: '+format+'. Sprache: '+language+'. Thema: '+topic+'. Zusatzwünsche: '+(brief||'keine')+'. Bei einem Reel liefere Hook, Szenenfolge mit Bildideen und Zeitangaben, pro Szene einen konkreten Bildprompt, gesprochenen Voice-over-Text, Texteinblendungen, Caption, passende Hashtags und einen Community-Aufruf. Bei Storys liefere vier einzelne Slides mit Bildidee und Text. Bei Beiträgen liefere Caption, Bildidee und Hashtags. Schreibe lebendig, nicht aufdringlich werblich und in Claras Ich-Stimme. Erfinde keine aktuellen Öffnungszeiten, Preise, Veranstaltungen oder persönlichen Erlebnisse. Kennzeichne Fakten, die vor Veröffentlichung geprüft werden müssen.'+voiceLock+identityLock;
-    const response=await fetch('/.netlify/functions/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message})});
-    let data={};
-    try{data=await response.json()}catch(_){throw new Error('Ungültige Serverantwort.')}
-    if(!response.ok)throw new Error(data.error||('Backend-Fehler '+response.status));
-    const text=String(data.reply||data.response||'').trim();
-    if(!text)throw new Error('Clara hat keinen Entwurf geliefert.');
-    result.textContent=text;
-    result.classList.remove('hidden');
-    status.textContent='Textentwurf erstellt. Die feste Bildreferenz wird nach dem Upload des Master-Porträts ergänzt. Fakten und Bildrechte vor Veröffentlichung prüfen.';
-  }catch(err){
-    console.error('Clara Creator Studio:',err);
-    status.textContent='Der Entwurf konnte nicht erstellt werden: '+(err.message||'Verbindungsfehler');
-  }
-}
-async function sendChat(e){
-  e.preventDefault();
-  const input=document.getElementById('chatInput');
-  const q=input.value.trim();
-  if(!q)return;
-  addMsg(q,'user');
-  input.value='';
-  const asksMemory=/\b(was weißt du|was weisst du|was erinnerst du|mein(e|en)? (interessen|budget|profil|lieblingsziel)|gedächtnis|gedaechtnis|erinnerst du dich)\b/i.test(q);
-  let a='';
-  let sources=[];
-  let research=null;
-  if(asksMemory){
-    addMsg('Ich prüfe deine freigegebenen persönlichen Angaben …','clara');
-    const ctx=await getClaraMemoryContext();
-    const box=document.getElementById('chatbox');
-    if(box.lastChild?.textContent==='Ich prüfe deine freigegebenen persönlichen Angaben …')box.removeChild(box.lastChild);
-    a=memoryAnswer(ctx);
-  }else{
-    try{
-      const response=await fetch('/.netlify/functions/chat',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({message:q})
-      });
-      let data={};
-      try{data=await response.json();}catch(_){throw new Error('Das Backend hat keine gültige Antwort geliefert.');}
-      if(!response.ok)throw new Error(data.error||('Backend-Fehler '+response.status));
-      a=String(data.reply||data.response||'').trim();
-      sources=Array.isArray(data.sources)?data.sources:[];
-      research=data.research||null;
-      if(!a)throw new Error('Clara hat eine leere Antwort erhalten.');
-    }catch(err){
-      console.error('Clara KI-Verbindung:',err);
-      a='Die Verbindung zu Clara ist gerade nicht verfügbar ('+(err.message||'Verbindungsfehler')+'). '+answerFor(q);
-    }
-  }
-  addMsg(a,'clara',sources,research);
-  speakClara(a);
-}
-function quickAsk(q){showPage('clara');document.getElementById('chatInput').value=q;document.querySelector('.chatform').requestSubmit()}
-let toastTimer;function toast(s){let el=document.getElementById('toast');el.textContent=s;el.classList.remove('hidden');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.add('hidden'),2800)}
-
-// Clara Memory 1.0 – Supabase integration. Uses only the public anon/publishable key with RLS.
-let claraSupabase = null;
-let claraUser = null;
-let claraRecoveryTokenHash = null;
-let claraRecoveryCode = null;
-const CLARA_CONFIG_KEY = 'clara.travel.supabase.public.v1';
-// Public browser configuration only. Never place a Supabase Secret/service_role key here.
-const CLARA_DEFAULT_SUPABASE_URL = 'https://ufsglnhebhbmadwzftau.supabase.co';
-const CLARA_DEFAULT_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_5B9FYMgDQ0SJjCYEeJgPgA_4DD4o3rN'; // Public publishable key only; RLS remains the authorization boundary.
-function memoryStatus(id,msg,isError=false){const el=document.getElementById(id);if(el){el.textContent=msg;el.style.color=isError?'#a33':'var(--muted)';}}
-function connectSupabase(){
-  const url=document.getElementById('sbUrl').value.trim();
-  const key=document.getElementById('sbKey').value.trim();
-  if(!url || !key){memoryStatus('sbStatus','Bitte Projekt-URL und öffentlichen Key eintragen.',true);return;}
-  if(!/^https:\/\/[a-zA-Z0-9-]+\.supabase\.co$/.test(url)){memoryStatus('sbStatus','Die Projekt-URL sieht nicht korrekt aus. Erwartet wird https://….supabase.co',true);return;}
-  if(!window.supabase || !window.supabase.createClient){memoryStatus('sbStatus','Supabase-Bibliothek konnte nicht geladen werden. Bitte Internetverbindung prüfen.',true);return;}
-  try{
-    localStorage.setItem(CLARA_CONFIG_KEY,JSON.stringify({url,key}));
-    claraSupabase=window.supabase.createClient(url,key);
-    claraSupabase.auth.onAuthStateChange((event,session)=>{
-      if(event==='PASSWORD_RECOVERY'){
-        document.getElementById('passwordRecoveryPanel')?.classList.remove('hidden');
-        memoryStatus('passwordRecoveryStatus','Wiederherstellung bestätigt. Bitte gib dein neues Passwort zweimal ein.');
-      }
-    });
-    claraSupabase.auth.getSession().then(({data,error})=>{
-      if(error) throw error;
-      claraUser=data.session?.user||null;
-      memoryStatus('sbStatus','Supabase ist verbunden. '+(claraUser?'Du bist angemeldet.':'Bitte melde dich an.'),false);
-      memoryStatus('authStatus',claraUser?'Angemeldet als '+claraUser.email:'Nicht angemeldet.');
-      detectClaraRecovery();
-    }).catch(e=>memoryStatus('sbStatus','Verbindung fehlgeschlagen: '+e.message,true));
-  }catch(e){memoryStatus('sbStatus','Verbindung fehlgeschlagen: '+e.message,true);}
-}
-function restoreClaraConnection(){
-  try{
-    const saved=JSON.parse(localStorage.getItem(CLARA_CONFIG_KEY)||'null');
-    const url=saved?.url||CLARA_DEFAULT_SUPABASE_URL;
-    const key=saved?.key||CLARA_DEFAULT_SUPABASE_PUBLISHABLE_KEY;
-    document.getElementById('sbUrl').value=url;
-    document.getElementById('sbKey').value=key;
-    if(url&&key) connectSupabase();
-  }catch(e){memoryStatus('sbStatus','Verbindung konnte nicht vorbereitet werden: '+e.message,true);}
-}
-function toggleClaraPasswordVisibility(){const input=document.getElementById('authPassword'),button=document.getElementById('toggleAuthPassword');if(!input||!button)return;const show=input.type==='password';input.type=show?'text':'password';button.textContent=show?'🙈 Verbergen':'👁 Anzeigen';button.setAttribute('aria-label',show?'Passwort verbergen':'Passwort anzeigen');button.setAttribute('aria-pressed',String(show));}
-async function detectClaraRecovery(){
-  const search=new URLSearchParams(window.location.search),hash=new URLSearchParams(window.location.hash.replace(/^#/, ''));
-  const tokenHash=search.get('token_hash'),code=search.get('code');
-  const isRecovery=search.get('type')==='recovery'||hash.get('type')==='recovery'||!!tokenHash||!!code;
-  if(!isRecovery)return;
-  document.getElementById('passwordRecoveryPanel')?.classList.remove('hidden');
-  if(tokenHash){
-    claraRecoveryTokenHash=tokenHash;
-    memoryStatus('passwordRecoveryStatus','Wiederherstellungslink erkannt. Bitte gib dein neues Passwort zweimal ein.');
-    return;
-  }
-  if(code && code!==claraRecoveryCode){
-    claraRecoveryCode=code;
-    memoryStatus('passwordRecoveryStatus','Wiederherstellungslink wird geprüft …');
-    const {error}=await claraSupabase.auth.exchangeCodeForSession(code);
-    if(error){
-      memoryStatus('passwordRecoveryStatus','Der Wiederherstellungslink konnte nicht bestätigt werden. Bitte fordere eine neue E-Mail an.',true);
-      return;
-    }
-    try{history.replaceState(null,document.title,window.location.pathname);}catch(_){}
-    memoryStatus('passwordRecoveryStatus','Wiederherstellung bestätigt. Bitte gib dein neues Passwort zweimal ein.');
-    return;
-  }
-  memoryStatus('passwordRecoveryStatus','Wiederherstellungsprozess erkannt. Bitte gib dein neues Passwort zweimal ein.');
-}
-async function signInClara(){if(!claraSupabase){memoryStatus('authStatus','Bitte zuerst Supabase verbinden.',true);return;}const email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value;if(!email||!password){memoryStatus('authStatus','Bitte E-Mail und Passwort eingeben.',true);return;}const {data,error}=await claraSupabase.auth.signInWithPassword({email,password});if(error){memoryStatus('authStatus',error.message,true);return;}claraUser=data.user;memoryStatus('authStatus','Angemeldet als '+claraUser.email);await loadClaraProfile();}
-async function requestClaraPasswordReset(){if(!claraSupabase){memoryStatus('authStatus','Bitte zuerst Supabase verbinden.',true);return;}const email=document.getElementById('authEmail').value.trim();if(!email){memoryStatus('authStatus','Bitte trage zuerst deine E-Mail-Adresse ein.',true);return;}const redirectTo=window.location.origin+window.location.pathname;const {error}=await claraSupabase.auth.resetPasswordForEmail(email,{redirectTo});if(error){memoryStatus('authStatus','Die Passwort-Wiederherstellung konnte nicht gestartet werden: '+error.message,true);return;}document.getElementById('passwordRecoveryPanel').classList.remove('hidden');memoryStatus('authStatus','Die Wiederherstellungs-E-Mail wurde angefordert. Bitte prüfe deinen Posteingang und Spam-Ordner.');memoryStatus('passwordRecoveryStatus','Öffne den speziellen Clara-Link in der E-Mail oder gib den Code ein, falls deine E-Mail einen solchen enthält.');}
-async function saveClaraNewPassword(){if(!claraSupabase){memoryStatus('passwordRecoveryStatus','Supabase ist noch nicht verbunden. Bitte Seite neu laden.',true);return;}const password=document.getElementById('recoveryPassword').value,confirmPassword=document.getElementById('recoveryPasswordConfirm').value;if(password.length<8){memoryStatus('passwordRecoveryStatus','Bitte verwende mindestens 8 Zeichen.',true);return;}if(password!==confirmPassword){memoryStatus('passwordRecoveryStatus','Die beiden Passwörter stimmen nicht überein.',true);return;}let verifiedUser=null;if(claraRecoveryTokenHash){const {data,error}=await claraSupabase.auth.verifyOtp({token_hash:claraRecoveryTokenHash,type:'recovery'});if(error){memoryStatus('passwordRecoveryStatus','Der Wiederherstellungslink ist ungültig oder abgelaufen. Bitte fordere eine neue E-Mail an.',true);return;}verifiedUser=data.user||null;}else{const code=document.getElementById('recoveryToken').value.trim(),email=document.getElementById('authEmail').value.trim();if(code){if(!email){memoryStatus('passwordRecoveryStatus','Bitte trage auch deine E-Mail-Adresse ein.',true);return;}const {data,error}=await claraSupabase.auth.verifyOtp({email,token:code,type:'recovery'});if(error){memoryStatus('passwordRecoveryStatus','Der Sicherheitscode ist ungültig oder abgelaufen. Bitte fordere einen neuen an.',true);return;}verifiedUser=data.user||null;}else{const {data,error}=await claraSupabase.auth.getSession();if(error||!data.session||!data.session.user){memoryStatus('passwordRecoveryStatus','Bitte öffne den persönlichen Clara-Link aus der E-Mail oder gib den Sicherheitscode ein.',true);return;}verifiedUser=data.session.user;}}
-const {data,error}=await claraSupabase.auth.updateUser({password});if(error){memoryStatus('passwordRecoveryStatus','Das Passwort konnte nicht geändert werden: '+error.message,true);return;}claraUser=data.user||verifiedUser;document.getElementById('recoveryPassword').value='';document.getElementById('recoveryPasswordConfirm').value='';document.getElementById('recoveryToken').value='';document.getElementById('passwordRecoveryPanel').classList.add('hidden');claraRecoveryTokenHash=null;try{history.replaceState(null,document.title,window.location.pathname);}catch(_){}memoryStatus('authStatus','Dein Passwort wurde erfolgreich geändert. Du bist jetzt angemeldet.');await loadClaraProfile();}
-async function signUpClara(){if(!claraSupabase){memoryStatus('authStatus','Bitte zuerst Supabase verbinden.',true);return;}const email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value;if(!email||password.length<6){memoryStatus('authStatus','Bitte E-Mail und ein Passwort mit mindestens 6 Zeichen eingeben.',true);return;}const {data,error}=await claraSupabase.auth.signUp({email,password});if(error){memoryStatus('authStatus',error.message,true);return;}if(data.session){claraUser=data.user;memoryStatus('authStatus','Konto erstellt und angemeldet.');}else{memoryStatus('authStatus','Konto erstellt. Bitte bestätige zuerst die E-Mail, falls Supabase eine Bestätigung verlangt.');}}
-async function signOutClara(){if(claraSupabase)await claraSupabase.auth.signOut();claraUser=null;memoryStatus('authStatus','Abgemeldet.');memoryStatus('memoryStatus','Nicht angemeldet – deine Daten wurden nicht verändert.');}
-async function saveClaraProfile(){
-  if(!claraSupabase||!claraUser){memoryStatus('memoryStatus','Bitte zuerst Supabase verbinden und anmelden.',true);return;}
-  const consent=document.getElementById('memoryConsent').checked;
-  const payload={user_id:claraUser.id,display_name:document.getElementById('memoryName').value.trim(),interests:document.getElementById('memoryInterests').value.split(',').map(x=>x.trim()).filter(Boolean),travel_pace:document.getElementById('memoryPace').value,budget_level:document.getElementById('memoryBudget').value,preferences:{source:'Clara Travel AI MVP 0.2'},consent_memory:consent,updated_at:new Date().toISOString()};
-  const {error}=await claraSupabase.from('clara_profiles').upsert(payload,{onConflict:'user_id'});
-  if(error){memoryStatus('memoryStatus','Speichern fehlgeschlagen: '+error.message,true);return;}
-  if(consent){const {error:memError}=await claraSupabase.from('clara_memories').insert({user_id:claraUser.id,memory_type:'travel_profile',content:{display_name:payload.display_name,interests:payload.interests,travel_pace:payload.travel_pace,budget_level:payload.budget_level}});if(memError){memoryStatus('memoryStatus','Profil gespeichert, aber Erinnerungs-Eintrag fehlgeschlagen: '+memError.message,true);return;}memoryStatus('memoryStatus','Dein Profil und deine Reisevorlieben wurden gespeichert.');}
-  else{memoryStatus('memoryStatus','Profil gespeichert. Memory-Zustimmung ist nicht aktiv; Clara speichert keine neue Erinnerung.');}
-}
-async function loadClaraProfile(){if(!claraSupabase||!claraUser){memoryStatus('memoryStatus','Bitte zuerst anmelden.',true);return;}const {data,error}=await claraSupabase.from('clara_profiles').select('*').eq('user_id',claraUser.id).maybeSingle();if(error){memoryStatus('memoryStatus','Laden fehlgeschlagen: '+error.message,true);return;}if(!data){memoryStatus('memoryStatus','Noch kein Profil gespeichert.');return;}document.getElementById('memoryName').value=data.display_name||'';document.getElementById('memoryInterests').value=(data.interests||[]).join(', ');document.getElementById('memoryPace').value=data.travel_pace||'';document.getElementById('memoryBudget').value=data.budget_level||'';document.getElementById('memoryConsent').checked=!!data.consent_memory;memoryStatus('memoryStatus','Deine gespeicherten Angaben wurden geladen.');}
-async function deleteClaraMemory(){if(!claraSupabase||!claraUser){memoryStatus('memoryStatus','Bitte zuerst anmelden.',true);return;}if(!confirm('Möchtest du wirklich dein Clara-Profil und alle gespeicherten Erinnerungen löschen?'))return;const a=await claraSupabase.from('clara_memories').delete().eq('user_id',claraUser.id);if(a.error){memoryStatus('memoryStatus','Löschen fehlgeschlagen: '+a.error.message,true);return;}const b=await claraSupabase.from('clara_feedback').delete().eq('user_id',claraUser.id);if(b.error){memoryStatus('memoryStatus','Erinnerungen gelöscht; Feedback konnte nicht gelöscht werden: '+b.error.message,true);return;}const c=await claraSupabase.from('clara_profiles').delete().eq('user_id',claraUser.id);if(c.error){memoryStatus('memoryStatus','Erinnerungen gelöscht; Profil konnte nicht gelöscht werden: '+c.error.message,true);return;}['memoryName','memoryInterests','memoryPace','memoryBudget'].forEach(id=>document.getElementById(id).value='');document.getElementById('memoryConsent').checked=false;memoryStatus('memoryStatus','Dein Clara-Profil und deine gespeicherten Erinnerungen wurden gelöscht.');}
-window.addEventListener('load',()=>{restoreClaraConnection();const auto=document.getElementById('claraAutoSpeak');if(auto){try{auto.checked=localStorage.getItem('clara.autoSpeak')!=='false';}catch(_){auto.checked=true;}auto.addEventListener('change',()=>{try{localStorage.setItem('clara.autoSpeak',String(auto.checked));}catch(_){}if(!auto.checked)stopClaraSpeech();});}const rate=document.getElementById('claraRate');if(rate){rate.disabled=true;rate.title='Das Tempo wird derzeit durch Azure vorgegeben.';}});
-
 </script></body></html>

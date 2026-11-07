@@ -1,0 +1,30 @@
+name: Clara Preview regression tests
+
+on:
+  push:
+    branches:
+      - preview-10-einheitliches-design
+    paths:
+      - "package.json"
+      - "tests/**"
+      - "assets/js/clara-app.js"
+      - "netlify/functions/chat.js"
+      - "netlify/functions/clara-speech-visemes.js"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  speech-viseme-tests:
+    name: Azure viseme endpoint tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+      - name: Node.js einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Regressionstests ausführen
+        run: npm test

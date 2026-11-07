@@ -2,32 +2,71 @@
 // Keeps AZURE_SPEECH_KEY on Netlify's server; never expose it to the browser.
 
 exports.handler = async (event) => {
+  // Match the origin policy used by the timestamped-viseme endpoint.
+  // Requests without an Origin header remain usable for same-origin/server calls;
+  // browser cross-origin requests are limited to Clara's own domains.
+  const origin = event.headers?.origin || event.headers?.Origin || "";
+  const allowedOrigin = !origin ||
+    origin === "https://clara-travel-ai.netlify.app" ||
+    origin === "https://deploy-preview-10--clara-travel-ai.netlify.app";
+  const corsHeaders = {
+    "Content-Type": "application/json; charset=utf-8",
+    "Cache-Control": "no-store",
+    "X-Content-Type-Options": "nosniff",
+    "Vary": "Origin",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS"
+  };
+  if (origin && allowedOrigin) corsHeaders["Access-Control-Allow-Origin"] = origin;
+
   if (event.httpMethod === "OPTIONS") {
     return {
-      statusCode: 204,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "Content-Type",
-        "Access-Control-Allow-Methods": "POST, OPTIONS"
-      },
+      statusCode: allowedOrigin ? 204 : 403,
+      headers: corsHeaders,
       body: ""
+    };
+  }
+  if (!allowedOrigin) {
+    return {
+      statusCode: 403,
+      headers: corsHeaders,
+      body: JSON.stringify({ error: "Ursprung nicht freigegeben." })
+    };
+  }
+
+  const speechKey = process.env.AZURE_SPEECH_KEY;
+  // The existing Azure Speech resource is hosted in Germany West Central.
+  // Keep that known-good region as a safe fallback if the Netlify variable
+  // was accidentally removed; an explicitly configured region always wins.
+  const rawRegion = (process.env.AZURE_SPEECH_REGION || "").trim().toLowerCase();
+  const configuredRegion = rawRegion.replace(/[\s_-]/g, "");
+  const region = configuredRegion || "germanywestcentral";
+
+  // Safe diagnostic endpoint: confirms configuration without exposing secrets.
+  if (event.httpMethod === "GET") {
+    return {
+      statusCode: 200,
+      headers: { ...corsHeaders, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" },
+      body: JSON.stringify({
+        service: "clara-speech",
+        ready: Boolean(speechKey && region),
+        keyConfigured: Boolean(speechKey),
+        regionConfigured: Boolean(configuredRegion),
+        regionFallbackActive: !configuredRegion
+      })
     };
   }
 
   if (event.httpMethod !== "POST") {
-    return { statusCode: 405, headers: { "Allow": "POST" }, body: "Method not allowed" };
+    return { statusCode: 405, headers: { ...corsHeaders, "Allow": "GET, POST, OPTIONS" }, body: "Method not allowed" };
   }
-
-  const speechKey = process.env.AZURE_SPEECH_KEY;
-  const region = (process.env.AZURE_SPEECH_REGION || "").trim().toLowerCase();
 
   if (!speechKey || !region) {
     const missing = [];
     if (!speechKey) missing.push("AZURE_SPEECH_KEY");
-    if (!region) missing.push("AZURE_SPEECH_REGION");
     return {
       statusCode: 500,
-      headers: { "Content-Type": "application/json; charset=utf-8" },
+      headers: { ...corsHeaders, "Content-Type": "application/json; charset=utf-8" },
       body: JSON.stringify({
         error: "Azure Speech-Konfiguration unvollständig.",
         missing
@@ -36,13 +75,15 @@ exports.handler = async (event) => {
   }
 
   let text;
+  let language = "de";
   try {
     const payload = JSON.parse(event.body || "{}");
     text = typeof payload.text === "string" ? payload.text.trim() : "";
+    language = typeof payload.language === "string" ? payload.language.toLowerCase() : "de";
   } catch {
     return {
       statusCode: 400,
-      headers: { "Content-Type": "application/json; charset=utf-8" },
+      headers: { ...corsHeaders, "Content-Type": "application/json; charset=utf-8" },
       body: JSON.stringify({ error: "Ungültige JSON-Anfrage." })
     };
   }
@@ -50,14 +91,14 @@ exports.handler = async (event) => {
   if (!text) {
     return {
       statusCode: 400,
-      headers: { "Content-Type": "application/json; charset=utf-8" },
+      headers: { ...corsHeaders, "Content-Type": "application/json; charset=utf-8" },
       body: JSON.stringify({ error: "Bitte gib einen Text ein." })
     };
   }
   if (text.length > 1800) {
     return {
       statusCode: 413,
-      headers: { "Content-Type": "application/json; charset=utf-8" },
+      headers: { ...corsHeaders, "Content-Type": "application/json; charset=utf-8" },
       body: JSON.stringify({ error: "Der Text ist zu lang. Bitte maximal 1.800 Zeichen verwenden." })
     };
   }
@@ -69,18 +110,32 @@ exports.handler = async (event) => {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&apos;");
 
+  language = String(language || "de").toLowerCase();
+  const voices = {
+    de: { locale: "de-DE", name: "de-DE-SeraphinaMultilingualNeural" },
+    en: { locale: "en-GB", name: "en-GB-SoniaNeural" },
+    nl: { locale: "nl-NL", name: "nl-NL-FennaNeural" },
+    fr: { locale: "fr-FR", name: "fr-FR-DeniseNeural" },
+    ro: { locale: "ro-RO", name: "ro-RO-AlinaNeural" }
+  };
+  const selectedVoice = voices[language] || voices.de;
   const ssml = `<?xml version="1.0" encoding="UTF-8"?>
-<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="de-DE">
-  <voice name="de-DE-SeraphinaMultilingualNeural">
-    <prosody rate="0%" pitch="0%">${escapeXml(text)}</prosody>
+<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="${selectedVoice.locale}">
+  <voice name="${selectedVoice.name}">
+    <prosody rate="-4%" pitch="+1%"><break time="120ms"/>${escapeXml(text)}</prosody>
   </voice>
 </speak>`;
 
   const azureUrl = `https://${region}.tts.speech.microsoft.com/cognitiveservices/v1`;
 
   try {
-    const azureResponse = await fetch(azureUrl, {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 12000);
+    let azureResponse;
+    try {
+      azureResponse = await fetch(azureUrl, {
       method: "POST",
+      signal: controller.signal,
       headers: {
         "Ocp-Apim-Subscription-Key": speechKey,
         "Content-Type": "application/ssml+xml",
@@ -88,14 +143,17 @@ exports.handler = async (event) => {
         "User-Agent": "ClaraTravelAI"
       },
       body: ssml
-    });
+      });
+    } finally {
+      clearTimeout(timeout);
+    }
 
     if (!azureResponse.ok) {
       const detail = await azureResponse.text();
       console.error("Azure Speech error", azureResponse.status, detail.slice(0, 1200));
       return {
         statusCode: 502,
-        headers: { "Content-Type": "application/json; charset=utf-8" },
+        headers: { ...corsHeaders, "Content-Type": "application/json; charset=utf-8" },
         body: JSON.stringify({
           error: "Azure Speech konnte die Stimme nicht erzeugen.",
           azureStatus: azureResponse.status,
@@ -108,6 +166,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       headers: {
+        ...corsHeaders,
         "Content-Type": "audio/wav",
         "Cache-Control": "no-store",
         "X-Content-Type-Options": "nosniff"
@@ -119,8 +178,12 @@ exports.handler = async (event) => {
     console.error("Clara Speech function failed", error);
     return {
       statusCode: 502,
-      headers: { "Content-Type": "application/json; charset=utf-8" },
-      body: JSON.stringify({ error: "Verbindung zu Azure Speech fehlgeschlagen." })
+      headers: { ...corsHeaders, "Content-Type": "application/json; charset=utf-8" },
+      body: JSON.stringify({
+        error: error && error.name === "AbortError"
+          ? "Azure Speech hat nach 12 Sekunden nicht geantwortet."
+          : "Verbindung zu Azure Speech fehlgeschlagen."
+      })
     };
   }
 };
