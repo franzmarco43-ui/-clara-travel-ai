@@ -21,7 +21,7 @@ test('loads current Open-Meteo weather for all visible destinations with their o
   const timezoneStart = app.indexOf('const cityTimeZones=');
   const timezoneEnd = app.indexOf('};', timezoneStart);
   assert.notEqual(timezoneStart, -1, 'Destination time zones must exist');
-  const cityTimeZones = vm.runInNewContext(app.slice(app.indexOf('=', timezoneStart) + 1, timezoneEnd + 1));
+  const cityTimeZones = vm.runInNewContext('(' + app.slice(app.indexOf('=', timezoneStart) + 1, timezoneEnd + 1) + ')');
 
   const cards = places.map(place => {
     const weather = { textContent: 'Wird geladen …' };
