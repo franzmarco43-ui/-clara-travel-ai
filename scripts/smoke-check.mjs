@@ -129,6 +129,46 @@ const explicitFrench = runLanguagePreference({
 });
 assert.equal(explicitFrench.language, 'fr', 'An explicit language choice after migration must remain persistent');
 assert.equal(explicitFrench.documentLanguage, 'fr', 'The document language must follow the saved explicit choice');
+
+const currentTripPlanStart = app.indexOf('function currentClaraTripPlan(){');
+const currentTripPlanEnd = app.indexOf('\\nasync function saveClaraTripPlan()', currentTripPlanStart);
+assert.notEqual(currentTripPlanStart, -1, 'Trip-plan save must use the current planner form');
+assert.ok(currentTripPlanEnd > currentTripPlanStart, 'Current trip-plan builder must be isolated for regression testing');
+const currentTripPlanSource = app.slice(currentTripPlanStart, currentTripPlanEnd).trim();
+const tripPlanControls = {
+  destination: { value: 'Wien' },
+  duration: { value: '3 Tage' },
+  interest: { value: 'Kultur & Geschichte' },
+  pace: { value: 'Ausgewogen' },
+  mobility: { value: 'Rollator' },
+  planResult: { innerHTML: '<div>Veralteter Reiseplan</div>' }
+};
+let tripPlanRenderCount = 0;
+let renderedTripPlanInputs = null;
+const createCurrentTripPlan = vm.runInNewContext('(' + currentTripPlanSource + ')', {
+  document: { getElementById: id => tripPlanControls[id] || null },
+  makePlan: () => {
+    tripPlanRenderCount += 1;
+    renderedTripPlanInputs = {
+      destination: tripPlanControls.destination.value,
+      duration: tripPlanControls.duration.value,
+      interest: tripPlanControls.interest.value,
+      pace: tripPlanControls.pace.value,
+      mobility: tripPlanControls.mobility.value
+    };
+  },
+  toast: message => { throw new Error('Unexpected planner validation message: ' + message); }
+});
+const currentTripPlan = createCurrentTripPlan();
+assert.equal(tripPlanRenderCount, 1, 'Saving after changing planner controls must regenerate a previously rendered itinerary');
+assert.equal(currentTripPlan.destination, 'Wien', 'Saved trip plan must use the current destination');
+assert.equal(currentTripPlan.duration, '3 Tage', 'Saved trip plan must use the current duration');
+assert.equal(renderedTripPlanInputs.destination, currentTripPlan.destination, 'Rendered itinerary and saved destination must match');
+assert.equal(renderedTripPlanInputs.duration, currentTripPlan.duration, 'Rendered itinerary and saved duration must match');
+assert.equal(renderedTripPlanInputs.interest, currentTripPlan.interest, 'Rendered itinerary and saved interest must match');
+assert.equal(renderedTripPlanInputs.pace, currentTripPlan.pace, 'Rendered itinerary and saved pace must match');
+assert.equal(renderedTripPlanInputs.mobility, currentTripPlan.mobility, 'Rendered itinerary and saved mobility choice must match');
+
 assert.ok(html.includes('assets/clara-welcome.mp4'), 'The welcome video source must be wired into the homepage');
 assert.ok(existsSync('assets/clara-welcome.mp4'), 'The configured welcome video file must exist');
 assert.doesNotMatch(html + app, /(?:SUPABASE_SERVICE_ROLE_KEY|service_role)\s*[:=]\s*['"][^'"]{8,}['"]/i, 'Browser code must never contain a Supabase service-role credential');
