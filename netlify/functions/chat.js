@@ -281,25 +281,40 @@ exports.handler = async function (event) {
         const user = await authResponse.json();
 
         if (user && user.id) {
-          const profileUrl =
+          // Check the consent flag in isolation before requesting any personal fields.
+          const consentUrl =
             `${supabaseUrl}/rest/v1/clara_profiles` +
-            `?select=display_name,interests,travel_pace,budget_level,consent_memory` +
-            `&user_id=eq.${encodeURIComponent(user.id)}&limit=1`;
+            `?select=consent_memory&user_id=eq.${encodeURIComponent(user.id)}&limit=1`;
 
-          const profileResponse = await fetch(profileUrl, {
+          const consentResponse = await fetch(consentUrl, {
             headers: {
               "apikey": supabaseKey,
               "Authorization": `Bearer ${accessToken}`
             }
           });
 
-          if (profileResponse.ok) {
-            const profiles = await profileResponse.json();
-            const profile = profiles[0];
+          if (consentResponse.ok) {
+            const consentProfiles = await consentResponse.json();
+            const consentProfile = consentProfiles[0];
 
-            // Ohne ausdrückliche Zustimmung keine persönlichen Daten laden.
-            if (profile && profile.consent_memory === true) {
+            // Personal profile fields and saved memories are requested only after explicit consent.
+            if (consentProfile && consentProfile.consent_memory === true) {
+              const profileUrl =
+                `${supabaseUrl}/rest/v1/clara_profiles` +
+                `?select=display_name,interests,travel_pace,budget_level` +
+                `&user_id=eq.${encodeURIComponent(user.id)}&limit=1`;
+
+              const profileResponse = await fetch(profileUrl, {
+                headers: {
+                  "apikey": supabaseKey,
+                  "Authorization": `Bearer ${accessToken}`
+                }
+              });
+              const profiles = profileResponse.ok ? await profileResponse.json() : [];
+              const profile = profiles[0] || {};
+
               const memoryUrl =
+
                 `${supabaseUrl}/rest/v1/clara_memories` +
                 `?select=memory_type,content,created_at` +
                 `&user_id=eq.${encodeURIComponent(user.id)}` +

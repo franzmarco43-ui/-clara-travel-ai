@@ -8,6 +8,7 @@ on:
       - "package.json"
       - "tests/**"
       - "assets/js/clara-app.js"
+      - "netlify/functions/chat.js"
       - "netlify/functions/clara-speech-visemes.js"
   workflow_dispatch:
 

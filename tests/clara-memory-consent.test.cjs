@@ -361,3 +361,25 @@ test('Clara chat reads profile fields and memories only after explicit Memory co
   ]);
   assert.deepEqual(result, { profile, memories, consent: true });
 });
+
+const chatFunctionPath = path.join(__dirname, '..', 'netlify', 'functions', 'chat.js');
+const chatFunction = fs.readFileSync(chatFunctionPath, 'utf8');
+
+test('server chat checks Memory consent before requesting personal profile fields or saved memories', () => {
+  const consentRead = chatFunction.indexOf('const consentUrl =');
+  const consentGuard = chatFunction.indexOf('if (consentProfile && consentProfile.consent_memory === true)', consentRead);
+  const profileRead = chatFunction.indexOf('const profileUrl =', consentGuard);
+  const memoryRead = chatFunction.indexOf('const memoryUrl =', profileRead);
+
+  assert.ok(consentRead >= 0, 'Server chat must have a separate consent-only query');
+  assert.ok(consentGuard > consentRead, 'Server chat must positively confirm consent before continuing');
+  assert.ok(profileRead > consentGuard, 'Personal profile fields must be requested only after consent');
+  assert.ok(memoryRead > profileRead, 'Saved memories must be requested only after consent and the profile query');
+
+  const consentQuery = chatFunction.slice(consentRead, consentGuard);
+  assert.match(consentQuery, /select=consent_memory/);
+  assert.doesNotMatch(consentQuery, /display_name|interests|travel_pace|budget_level/);
+  const profileQuery = chatFunction.slice(profileRead, memoryRead);
+  assert.match(profileQuery, /select=display_name,interests,travel_pace,budget_level/);
+  assert.doesNotMatch(profileQuery, /consent_memory/);
+});
