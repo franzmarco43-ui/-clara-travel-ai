@@ -1291,7 +1291,39 @@ function answerFor(q){
   if(/aktuell|heute|neuigkeit|update|wetter/.test(s))return 'Für aktuelle Meldungen brauche ich eine frische Quellenprüfung. Mein gespeichertes Ortswissen enthält Sehenswürdigkeiten, regionale Küche und saisonale Schwerpunkte; Wetter, Öffnungszeiten, Verkehr und Schifffahrt markiere ich erst nach erneuter Prüfung als aktuell.';
   return 'Ich kann dir zu den Donau-Reisezielen, Sehenswürdigkeiten, regionaler Küche, Saison und Flusskreuzfahrt-Ausflügen helfen. Nenne mir einen Ort oder öffne „Donau-Wissen“ für Claras gesamten Reiseüberblick.';
 }
-async function getClaraMemoryContext(){if(!window.claraSupabase||!claraUser)return null;let profile=null,memories=[];try{const p=await window.claraSupabase.from('clara_profiles').select('display_name,interests,travel_pace,budget_level,preferences,consent_memory').eq('user_id',claraUser.id).maybeSingle();if(p.error)throw p.error;profile=p.data;if(!profile||profile.consent_memory!==true)return {profile:null,memories:[],consent:false};const m=await window.claraSupabase.from('clara_memories').select('memory_type,content,created_at').eq('user_id',claraUser.id).order('created_at',{ascending:false}).limit(30);if(m.error)throw m.error;memories=m.data||[];return {profile,memories,consent:true};}catch(e){console.warn('Memory-Abruf:',e);return null}}
+async function getClaraMemoryContext(){
+ if(!window.claraSupabase||!claraUser)return null;
+ try{
+  // Read only the consent flag first. Personal profile columns and memories
+  // must not be requested from Supabase until consent is positively confirmed.
+  const consentResult=await window.claraSupabase.from('clara_profiles')
+   .select('consent_memory')
+   .eq('user_id',claraUser.id)
+   .maybeSingle();
+  if(consentResult.error)throw consentResult.error;
+  if(consentResult.data?.consent_memory!==true){
+   return {profile:null,memories:[],consent:false};
+  }
+
+  const profileResult=await window.claraSupabase.from('clara_profiles')
+   .select('display_name,interests,travel_pace,budget_level,preferences')
+   .eq('user_id',claraUser.id)
+   .maybeSingle();
+  if(profileResult.error)throw profileResult.error;
+  if(!profileResult.data)return {profile:null,memories:[],consent:false};
+
+  const memoryResult=await window.claraSupabase.from('clara_memories')
+   .select('memory_type,content,created_at')
+   .eq('user_id',claraUser.id)
+   .order('created_at',{ascending:false})
+   .limit(30);
+  if(memoryResult.error)throw memoryResult.error;
+  return {profile:profileResult.data,memories:memoryResult.data||[],consent:true};
+ }catch(error){
+  console.warn('Memory-Abruf:',error);
+  return null;
+ }
+}
 function memoryAnswer(ctx){if(!ctx)return 'Ich kann dein persönliches Clara-Gedächtnis gerade nicht abrufen. Bitte prüfe im Bereich „Mein Clara-Gedächtnis“, ob du angemeldet bist.';if(ctx.consent===false)return 'Dein Clara-Gedächtnis ist derzeit nicht zur persönlichen Nutzung freigegeben. Du kannst die Zustimmung im Bereich „Mein Clara-Gedächtnis“ selbst aktivieren.';const p=ctx.profile||{};const facts=[];if(p.display_name)facts.push(`Name: ${p.display_name}`);if(Array.isArray(p.interests)&&p.interests.length)facts.push(`Interessen: ${p.interests.join(', ')}`);if(p.travel_pace)facts.push(`Reisetempo: ${p.travel_pace}`);if(p.budget_level)facts.push(`Budget: ${p.budget_level}`);for(const m of ctx.memories||[]){const c=m.content;if(c&&typeof c==='object'){if(c.interests?.length&&!facts.some(x=>x.startsWith('Interessen:')))facts.push(`Interessen: ${c.interests.join(', ')}`);if(c.budget_level&&!facts.some(x=>x.startsWith('Budget:')))facts.push(`Budget: ${c.budget_level}`);if(c.display_name&&!facts.some(x=>x.startsWith('Name:')))facts.push(`Name: ${c.display_name}`);if(c.favorite_destination)facts.push(`Lieblingsreiseziel: ${c.favorite_destination}`);}}return facts.length?'Das habe ich in deinem persönlichen Clara-Gedächtnis gefunden: '+facts.join(' · ')+'.':'Ich bin angemeldet, finde aber noch kein gespeichertes Reiseprofil. Bitte prüfe deine Angaben unter „Mein Clara-Gedächtnis“. '}
 async function createInfluencerContent(){
   const platform=document.getElementById('creatorPlatform').value;
