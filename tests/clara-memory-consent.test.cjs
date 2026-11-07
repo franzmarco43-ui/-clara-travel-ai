@@ -17,6 +17,7 @@ const handlerSource = app.slice(start, end).trim();
 function createHarness(consent) {
   const calls = [];
   const insertedMemories = [];
+  const profilePayloads = [];
   const statuses = [];
   const controls = {
     memoryConsent: { checked: consent },
@@ -31,7 +32,7 @@ function createHarness(consent) {
       if (table === 'clara_profiles') {
         return {
           upsert(payload) {
-            calls.push({ operation: 'profile_upsert', payload });
+            profilePayloads.push(payload);
             return Promise.resolve({ error: null });
           }
         };
@@ -63,7 +64,7 @@ function createHarness(consent) {
     (id, message, isError) => statuses.push({ id, message, isError: !!isError }),
     async () => {}
   );
-  return { save, calls, insertedMemories, statuses };
+  return { save, calls, profilePayloads, insertedMemories, statuses };
 }
 
 test('does not read or write Clara memories when consent is withdrawn', async () => {
@@ -71,6 +72,7 @@ test('does not read or write Clara memories when consent is withdrawn', async ()
   await harness.save();
 
   assert.deepEqual(harness.calls, ['clara_profiles']);
+  assert.equal(harness.profilePayloads[0].consent_memory, false);
   assert.equal(harness.insertedMemories.length, 0);
   assert.equal(harness.statuses.at(-1).id, 'memoryStatus');
   assert.match(harness.statuses.at(-1).message, /Memory-Zustimmung ist aus/);
@@ -80,7 +82,8 @@ test('writes a travel-profile memory only after explicit consent', async () => {
   const harness = createHarness(true);
   await harness.save();
 
-  assert.ok(harness.calls.includes('clara_memories'));
+  assert.deepEqual(harness.calls, ['clara_profiles', 'clara_memories']);
+  assert.equal(harness.profilePayloads[0].consent_memory, true);
   assert.equal(harness.insertedMemories.length, 1);
   assert.equal(harness.insertedMemories[0].user_id, 'test-user-1');
   assert.equal(harness.insertedMemories[0].memory_type, 'travel_profile');
