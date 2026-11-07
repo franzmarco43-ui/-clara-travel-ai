@@ -8,7 +8,7 @@ const vm = require('node:vm');
 
 const app = fs.readFileSync(path.join(__dirname, '..', 'assets', 'js', 'clara-app.js'), 'utf8');
 const start = app.indexOf('async function loadCityWeather(){');
-const end = app.indexOf('\\nfunction placeCard(', start);
+const end = app.indexOf(String.fromCharCode(10) + 'function placeCard(', start);
 
 test('loads current Open-Meteo weather for all visible destinations with their own time zones', async () => {
   assert.notEqual(start, -1, 'Open-Meteo weather loader must exist');
@@ -18,9 +18,10 @@ test('loads current Open-Meteo weather for all visible destinations with their o
   const placesEnd = app.indexOf('];', placesStart);
   assert.notEqual(placesStart, -1, 'Destination coordinates must exist');
   const places = vm.runInNewContext(app.slice(app.indexOf('=', placesStart) + 1, placesEnd + 1));
-  const timezoneMatch = app.match(/const cityTimeZones\\s*=\\s*(\\{[\\s\\S]*?\\});/);
-  assert.ok(timezoneMatch, 'Destination time zones must exist');
-  const cityTimeZones = vm.runInNewContext('(' + timezoneMatch[1] + ')');
+  const timezoneStart = app.indexOf('const cityTimeZones=');
+  const timezoneEnd = app.indexOf('};', timezoneStart);
+  assert.notEqual(timezoneStart, -1, 'Destination time zones must exist');
+  const cityTimeZones = vm.runInNewContext(app.slice(app.indexOf('=', timezoneStart) + 1, timezoneEnd + 1));
 
   const cards = places.map(place => {
     const weather = { textContent: 'Wird geladen …' };
@@ -53,7 +54,7 @@ test('loads current Open-Meteo weather for all visible destinations with their o
     Date,
     encodeURIComponent
   };
-  vm.runInNewContext(app.slice(start, end) + '\\nglobalThis.__loadCityWeather = loadCityWeather;', sandbox);
+  vm.runInNewContext(app.slice(start, end) + String.fromCharCode(10) + 'globalThis.__loadCityWeather = loadCityWeather;', sandbox);
   await sandbox.__loadCityWeather();
 
   assert.equal(requests.length, 13, 'Every visible destination must receive a weather request');
@@ -68,19 +69,18 @@ test('loads current Open-Meteo weather for all visible destinations with their o
   }
   for (const card of cards) {
     assert.equal(card.weather.textContent, 'Klar · 12 °C');
+    assert.match(card.updated.textContent, /13:00/);
     assert.match(card.updated.textContent, /Open-Meteo/);
     assert.match(card.updated.textContent, /Abruf/);
   }
 });
 
 test('aborts a stalled Open-Meteo request and displays a useful unavailable state', async () => {
-  const sourceStart = app.indexOf('async function loadCityWeather(){');
-  const sourceEnd = app.indexOf('\\nfunction placeCard(', sourceStart);
-  assert.notEqual(sourceStart, -1, 'Open-Meteo weather loader must exist');
-  assert.ok(sourceEnd > sourceStart, 'Open-Meteo weather loader must be isolated for testing');
-  const source = app.slice(sourceStart, sourceEnd).replace('15000', '10');
-  assert.match(source, /new AbortController\\(\\)/, 'Weather requests must use AbortController');
-  assert.match(source, /clearTimeout\\(timeout\\)/, 'Weather timeout must always be cleared');
+  assert.notEqual(start, -1, 'Open-Meteo weather loader must exist');
+  assert.ok(end > start, 'Open-Meteo weather loader must be isolated for testing');
+  const source = app.slice(start, end).replace('15000', '10');
+  assert.ok(source.includes('new AbortController()'), 'Weather requests must use AbortController');
+  assert.ok(source.includes('clearTimeout(timeout)'), 'Weather timeout must always be cleared');
 
   const card = {
     dataset: { cityLive: 'Passau' },
@@ -113,7 +113,7 @@ test('aborts a stalled Open-Meteo request and displays a useful unavailable stat
     Date,
     encodeURIComponent
   };
-  vm.runInNewContext(source + '\\nglobalThis.__loadCityWeather = loadCityWeather;', sandbox);
+  vm.runInNewContext(source + String.fromCharCode(10) + 'globalThis.__loadCityWeather = loadCityWeather;', sandbox);
   await sandbox.__loadCityWeather();
 
   assert.equal(aborted, true, 'A stalled request must be aborted after the deadline');
@@ -146,7 +146,7 @@ test('reports an Open-Meteo HTTP error instead of leaving a destination in loadi
     Date,
     encodeURIComponent
   };
-  vm.runInNewContext(source + '\\nglobalThis.__loadCityWeather = loadCityWeather;', sandbox);
+  vm.runInNewContext(source + String.fromCharCode(10) + 'globalThis.__loadCityWeather = loadCityWeather;', sandbox);
   await sandbox.__loadCityWeather();
 
   assert.equal(card.weather.textContent, 'Aktuell nicht verfügbar');

@@ -133,7 +133,7 @@ async function loadCityWeather(){
    const weatherLabel=(weatherLabels[language]||weatherLabels.de)[current.weather_code]||labels.weatherUnavailable;
    weatherElement.textContent=weatherLabel+' · '+Math.round(current.temperature_2m)+' °C';
    const stamp=card.querySelector('[data-live-updated]');
-   const localWeatherTime=String(current.time||'').match(/T(\\d{2}:\\d{2})/)?.[1];
+   const localWeatherTime=String(current.time||'').match(/T(\d{2}:\d{2})/)?.[1];
    if(stamp){
     const retrievedAt=new Intl.DateTimeFormat(currentClaraLocale(),{timeZone:cityTimeZones[place.name]||'auto',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(new Date());
     stamp.textContent=labels.weather+': '+(localWeatherTime||labels.weatherUnavailable)+(labels.clock?' '+labels.clock:'')+' · '+labels.retrieved+' '+retrievedAt+' · Open-Meteo';
