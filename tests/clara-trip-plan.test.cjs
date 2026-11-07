@@ -258,8 +258,8 @@ function createCloudHarness({ consent = true, selectedId = '', memories = [] } =
     console: { warn() {}, error() {} }
   };
   vm.runInNewContext(
-    'let claraUser = { id: "user-1" };\\n' + persistenceSource +
-    '\\nglobalThis.__tripPlanApi = { saveClaraTripPlan, renderClaraTripPlans, loadClaraTripPlan, deleteClaraTripPlan };',
+    'let claraUser = { id: "user-1" };' + String.fromCharCode(10) + persistenceSource +
+    String.fromCharCode(10) + 'globalThis.__tripPlanApi = { saveClaraTripPlan, renderClaraTripPlans, loadClaraTripPlan, deleteClaraTripPlan };',
     sandbox
   );
   return { api: sandbox.__tripPlanApi, storage, rows, controls, select, profileReads, memoryOperations };
