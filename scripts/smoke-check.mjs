@@ -131,7 +131,7 @@ assert.equal(explicitFrench.language, 'fr', 'An explicit language choice after m
 assert.equal(explicitFrench.documentLanguage, 'fr', 'The document language must follow the saved explicit choice');
 
 const currentTripPlanStart = app.indexOf('function currentClaraTripPlan(){');
-const currentTripPlanEnd = app.indexOf('\\nasync function saveClaraTripPlan()', currentTripPlanStart);
+const currentTripPlanEnd = app.indexOf('\nasync function saveClaraTripPlan()', currentTripPlanStart);
 assert.notEqual(currentTripPlanStart, -1, 'Trip-plan save must use the current planner form');
 assert.ok(currentTripPlanEnd > currentTripPlanStart, 'Current trip-plan builder must be isolated for regression testing');
 const currentTripPlanSource = app.slice(currentTripPlanStart, currentTripPlanEnd).trim();
