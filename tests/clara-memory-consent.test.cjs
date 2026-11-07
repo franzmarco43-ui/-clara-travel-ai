@@ -8,7 +8,7 @@ const path = require('node:path');
 const appPath = path.join(__dirname, '..', 'assets', 'js', 'clara-app.js');
 const app = fs.readFileSync(appPath, 'utf8');
 const start = app.indexOf('async function saveClaraProfile(){');
-const end = app.indexOf('\\nasync function loadClaraProfile()', start);
+const end = app.indexOf(String.fromCharCode(10) + 'async function loadClaraProfile()', start);
 
 assert.notEqual(start, -1, 'The Clara profile save handler must exist');
 assert.ok(end > start, 'The profile save handler must be isolated for consent tests');
