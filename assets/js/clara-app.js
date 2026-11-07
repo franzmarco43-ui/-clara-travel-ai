@@ -1461,7 +1461,59 @@ async function saveClaraProfile(){
   memoryStatus('memoryStatus','Dein Profil und deine Reisevorlieben wurden mit deiner Zustimmung gespeichert.');
   await renderClaraTripPlans();
 }
-async function loadClaraProfile(){if(!window.claraSupabase||!claraUser){memoryStatus('memoryStatus','Bitte zuerst anmelden.',true);return;}const {data,error}=await window.claraSupabase.from('clara_profiles').select('*').eq('user_id',claraUser.id).maybeSingle();if(error){memoryStatus('memoryStatus','Laden fehlgeschlagen: '+error.message,true);return;}if(!data){memoryStatus('memoryStatus','Noch kein Profil gespeichert.');return;}document.getElementById('memoryName').value=data.display_name||'';document.getElementById('memoryInterests').value=(data.interests||[]).join(', ');document.getElementById('memoryPace').value=data.travel_pace||'';document.getElementById('memoryBudget').value=data.budget_level||'';document.getElementById('memoryConsent').checked=!!data.consent_memory;memoryStatus('memoryStatus','Deine gespeicherten Angaben wurden geladen.');}
+async function loadClaraProfile(){
+  if(!window.claraSupabase||!claraUser){
+    memoryStatus('memoryStatus','Bitte zuerst anmelden.',true);
+    return;
+  }
+
+  const fields=['memoryName','memoryInterests','memoryPace','memoryBudget'];
+  const clearPersonalFields=()=>{
+    fields.forEach(id=>{
+      const control=document.getElementById(id);
+      if(control)control.value='';
+    });
+  };
+  const consentControl=document.getElementById('memoryConsent');
+  if(consentControl)consentControl.checked=false;
+  clearPersonalFields();
+
+  // Read the consent flag first. Do not select personal profile columns until
+  // the account has an explicit, currently active Memory consent.
+  const consentResult=await window.claraSupabase.from('clara_profiles')
+    .select('consent_memory')
+    .eq('user_id',claraUser.id)
+    .maybeSingle();
+  if(consentResult.error){
+    memoryStatus('memoryStatus','Die Memory-Zustimmung konnte nicht geprüft werden: '+consentResult.error.message,true);
+    return;
+  }
+  if(consentResult.data?.consent_memory!==true){
+    memoryStatus('memoryStatus','Memory-Zustimmung ist deaktiviert. Deine gespeicherten Reisevorlieben werden nicht geladen. Vorhandene Daten kannst du über „Meine Clara-Daten löschen“ entfernen.');
+    return;
+  }
+
+  if(consentControl)consentControl.checked=true;
+  const {data,error}=await window.claraSupabase.from('clara_profiles')
+    .select('display_name,interests,travel_pace,budget_level')
+    .eq('user_id',claraUser.id)
+    .maybeSingle();
+  if(error){
+    memoryStatus('memoryStatus','Laden fehlgeschlagen: '+error.message,true);
+    return;
+  }
+  if(!data){
+    if(consentControl)consentControl.checked=false;
+    memoryStatus('memoryStatus','Noch keine persönlichen Angaben gespeichert.');
+    return;
+  }
+
+  document.getElementById('memoryName').value=data.display_name||'';
+  document.getElementById('memoryInterests').value=(data.interests||[]).join(', ');
+  document.getElementById('memoryPace').value=data.travel_pace||'';
+  document.getElementById('memoryBudget').value=data.budget_level||'';
+  memoryStatus('memoryStatus','Deine gespeicherten Angaben wurden mit aktiver Zustimmung geladen.');
+}
 async function deleteClaraMemory(){if(!window.claraSupabase||!claraUser){memoryStatus('memoryStatus','Bitte zuerst anmelden.',true);return;}if(!confirm('Möchtest du wirklich dein Clara-Profil und alle gespeicherten Erinnerungen löschen?'))return;const a=await window.claraSupabase.from('clara_memories').delete().eq('user_id',claraUser.id);if(a.error){memoryStatus('memoryStatus','Löschen fehlgeschlagen: '+a.error.message,true);return;}const b=await window.claraSupabase.from('clara_feedback').delete().eq('user_id',claraUser.id);if(b.error){memoryStatus('memoryStatus','Erinnerungen gelöscht; Feedback konnte nicht gelöscht werden: '+b.error.message,true);return;}const c=await window.claraSupabase.from('clara_profiles').delete().eq('user_id',claraUser.id);if(c.error){memoryStatus('memoryStatus','Erinnerungen gelöscht; Profil konnte nicht gelöscht werden: '+c.error.message,true);return;}['memoryName','memoryInterests','memoryPace','memoryBudget'].forEach(id=>document.getElementById(id).value='');document.getElementById('memoryConsent').checked=false;memoryStatus('memoryStatus','Dein Clara-Profil und deine gespeicherten Erinnerungen wurden gelöscht.');await renderClaraTripPlans();}
 
 const CLARA_I18N={
