@@ -169,6 +169,27 @@ assert.equal(renderedTripPlanInputs.interest, currentTripPlan.interest, 'Rendere
 assert.equal(renderedTripPlanInputs.pace, currentTripPlan.pace, 'Rendered itinerary and saved pace must match');
 assert.equal(renderedTripPlanInputs.mobility, currentTripPlan.mobility, 'Rendered itinerary and saved mobility choice must match');
 
+const profileLoadStart = app.indexOf('async function loadClaraProfile(){');
+const profileLoadEnd = app.indexOf(String.fromCharCode(10) + 'async function deleteClaraMemory()', profileLoadStart);
+assert.notEqual(profileLoadStart, -1, 'Clara profile loading must exist');
+assert.ok(profileLoadEnd > profileLoadStart, 'Clara profile loading must be isolated for consent checks');
+const profileLoadSource = app.slice(profileLoadStart, profileLoadEnd);
+const profileConsentRead = profileLoadSource.indexOf(".select('consent_memory')");
+const personalProfileRead = profileLoadSource.indexOf(".select('display_name,interests,travel_pace,budget_level')");
+assert.ok(profileConsentRead >= 0, 'Profile loading must read the consent flag');
+assert.ok(personalProfileRead > profileConsentRead, 'Profile loading must check Memory consent before selecting personal fields');
+assert.ok(profileLoadSource.includes('consentResult.data?.consent_memory!==true'), 'Profile loading must stop when Memory consent is not active');
+
+const cloudTripLoadStart = app.indexOf('async function loadClaraTripPlan(){');
+const cloudTripLoadEnd = app.indexOf('async function deleteClaraTripPlan()', cloudTripLoadStart);
+assert.notEqual(cloudTripLoadStart, -1, 'Saved trip-plan loading must exist');
+assert.ok(cloudTripLoadEnd > cloudTripLoadStart, 'Saved trip-plan loading must be isolated for consent checks');
+const cloudTripLoadSource = app.slice(cloudTripLoadStart, cloudTripLoadEnd);
+const tripConsentRead = cloudTripLoadSource.indexOf(".select('consent_memory')");
+const tripMemoryRead = cloudTripLoadSource.indexOf("from('clara_memories')");
+assert.ok(tripConsentRead >= 0 && tripMemoryRead > tripConsentRead, 'Cloud trip-plan loading must check Memory consent before reading saved memories');
+assert.ok(cloudTripLoadSource.includes('consent.data?.consent_memory!==true'), 'Cloud trip-plan loading must stop when Memory consent is not active');
+
 assert.ok(html.includes('assets/clara-welcome.mp4'), 'The welcome video source must be wired into the homepage');
 assert.ok(existsSync('assets/clara-welcome.mp4'), 'The configured welcome video file must exist');
 assert.doesNotMatch(html + app, /(?:SUPABASE_SERVICE_ROLE_KEY|service_role)\s*[:=]\s*['"][^'"]{8,}['"]/i, 'Browser code must never contain a Supabase service-role credential');
