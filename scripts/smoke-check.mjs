@@ -225,7 +225,7 @@ assert.ok(manifest.icons?.length, 'PWA manifest must define an icon');
 assert.ok(manifest.icons.every(icon => existsSync('.' + icon.src)), 'Every PWA icon path must exist');
 assert.ok(html.includes('href="/manifest.webmanifest"'), 'HTML must link the PWA manifest');
 assert.ok(html.includes("navigator.serviceWorker.register('/sw.js'"), 'HTML must register the service worker');
-const appScriptUrl = html.match(/<script[^>]+src="([^"]*clara-app\\.js[^"]*)"/i)?.[1];
+const appScriptUrl = html.match(/<script[^>]+src="([^"]*clara-app\.js[^"]*)"/i)?.[1];
 assert.ok(appScriptUrl, 'Homepage must load the versioned Clara app script');
 assert.ok(sw.includes(appScriptUrl), 'Service worker must cache the exact versioned Clara app script used by the homepage');
 assert.ok(html.includes('id="pwaInstallButton"'), 'Install action must be present');
