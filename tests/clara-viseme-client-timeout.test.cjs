@@ -8,7 +8,7 @@ const vm = require('node:vm');
 
 const app = fs.readFileSync(path.join(__dirname, '..', 'assets', 'js', 'clara-app.js'), 'utf8');
 const start = app.indexOf('async function fetchClaraSpeechChunkWithVisemes');
-const end = app.indexOf('\\nfunction clearClaraVisemeTimers()', start);
+const end = app.indexOf('\nfunction clearClaraVisemeTimers()', start);
 
 test('keeps the Azure viseme timeout active while the response body is being read', async () => {
   assert.notEqual(start, -1, 'Viseme speech client must exist');
