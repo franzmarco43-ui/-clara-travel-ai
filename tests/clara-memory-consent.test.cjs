@@ -1,0 +1,90 @@
+'use strict';
+
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+
+const appPath = path.join(__dirname, '..', 'assets', 'js', 'clara-app.js');
+const app = fs.readFileSync(appPath, 'utf8');
+const start = app.indexOf('async function saveClaraProfile(){');
+const end = app.indexOf('\\nasync function loadClaraProfile()', start);
+
+assert.notEqual(start, -1, 'The Clara profile save handler must exist');
+assert.ok(end > start, 'The profile save handler must be isolated for consent tests');
+const handlerSource = app.slice(start, end).trim();
+
+function createHarness(consent) {
+  const calls = [];
+  const insertedMemories = [];
+  const statuses = [];
+  const controls = {
+    memoryConsent: { checked: consent },
+    memoryName: { value: 'Reisegast' },
+    memoryInterests: { value: 'Kultur, Natur' },
+    memoryPace: { value: 'Entspannt' },
+    memoryBudget: { value: 'Mittel' }
+  };
+  const supabase = {
+    from(table) {
+      calls.push(table);
+      if (table === 'clara_profiles') {
+        return {
+          upsert(payload) {
+            calls.push({ operation: 'profile_upsert', payload });
+            return Promise.resolve({ error: null });
+          }
+        };
+      }
+      if (table === 'clara_memories') {
+        const query = {
+          select() { return query; },
+          eq() { return query; },
+          order() { return query; },
+          limit() { return query; },
+          maybeSingle() { return Promise.resolve({ data: null, error: null }); },
+          insert(payload) {
+            insertedMemories.push(payload);
+            return Promise.resolve({ error: null });
+          }
+        };
+        return query;
+      }
+      throw new Error('Unexpected Supabase table: ' + table);
+    }
+  };
+  const save = new Function(
+    'window', 'claraUser', 'document', 'memoryStatus', 'renderClaraTripPlans',
+    'return (' + handlerSource + ');'
+  )(
+    { claraSupabase: supabase },
+    { id: 'test-user-1' },
+    { getElementById: id => controls[id] || null },
+    (id, message, isError) => statuses.push({ id, message, isError: !!isError }),
+    async () => {}
+  );
+  return { save, calls, insertedMemories, statuses };
+}
+
+test('does not read or write Clara memories when consent is withdrawn', async () => {
+  const harness = createHarness(false);
+  await harness.save();
+
+  assert.deepEqual(harness.calls, ['clara_profiles']);
+  assert.equal(harness.insertedMemories.length, 0);
+  assert.equal(harness.statuses.at(-1).id, 'memoryStatus');
+  assert.match(harness.statuses.at(-1).message, /Memory-Zustimmung ist aus/);
+});
+
+test('writes a travel-profile memory only after explicit consent', async () => {
+  const harness = createHarness(true);
+  await harness.save();
+
+  assert.ok(harness.calls.includes('clara_memories'));
+  assert.equal(harness.insertedMemories.length, 1);
+  assert.equal(harness.insertedMemories[0].user_id, 'test-user-1');
+  assert.equal(harness.insertedMemories[0].memory_type, 'travel_profile');
+  assert.deepEqual(harness.insertedMemories[0].content.interests, ['Kultur', 'Natur']);
+  assert.equal(harness.statuses.at(-1).id, 'memoryStatus');
+  assert.match(harness.statuses.at(-1).message, /Profil und deine Reisevorlieben wurden gespeichert/);
+});
