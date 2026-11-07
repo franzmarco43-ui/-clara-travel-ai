@@ -39,7 +39,7 @@ function claraLang(){
  try{
   // One-time migration: old preview sessions that remained stuck in French
   // return to German once; later explicit language choices remain persistent.
-  const defaultLanguageMigration='clara.language-default-de-v1';
+  const defaultLanguageMigration='clara.language-default-de-v2';
   if(localStorage.getItem(defaultLanguageMigration)!=='1'){
     if(localStorage.getItem('clara.language')==='fr')localStorage.setItem('clara.language','de');
     localStorage.setItem(defaultLanguageMigration,'1');
