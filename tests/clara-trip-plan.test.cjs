@@ -154,3 +154,185 @@ test('supports local trip-plan save, load, and delete without a signed-in accoun
   assert.deepEqual(JSON.parse(storage.get(key)), []);
   assert.match(controls.planSaveStatus.textContent, /gelöscht/);
 });
+
+
+function createCloudHarness({ consent = true, selectedId = '', memories = [] } = {}) {
+  const storage = new Map();
+  const rows = memories.map(row => ({ ...row }));
+  const profileReads = [];
+  const memoryOperations = [];
+  const controls = {
+    destination: { value: 'Wien' },
+    duration: { value: '3 Tage' },
+    interest: { value: 'Kultur & Geschichte' },
+    pace: { value: 'Ausgewogen' },
+    mobility: { value: 'Keine besondere Angabe' },
+    planResult: { innerHTML: '' },
+    planSaveStatus: { textContent: '' }
+  };
+  const select = {
+    value: selectedId,
+    _innerHTML: '',
+    options: [],
+    set innerHTML(value) { this._innerHTML = value; this.options = []; },
+    get innerHTML() { return this._innerHTML; },
+    appendChild(option) { this.options.push(option); }
+  };
+  const matches = (row, filters) => filters.every(([key, value]) => row[key] === value);
+  const supabase = {
+    from(table) {
+      if (table === 'clara_profiles') {
+        return {
+          select() {
+            const query = {
+              eq() { return query; },
+              maybeSingle() {
+                profileReads.push(true);
+                return Promise.resolve({ data: { consent_memory: consent }, error: null });
+              }
+            };
+            return query;
+          }
+        };
+      }
+      if (table === 'clara_memories') {
+        let operation = 'select';
+        let filters = [];
+        const query = {
+          select(columns) {
+            if (operation === 'delete') {
+              const deleted = rows.filter(row => matches(row, filters));
+              deleted.forEach(row => rows.splice(rows.indexOf(row), 1));
+              memoryOperations.push({ operation: 'delete', filters });
+              return Promise.resolve({ data: deleted.map(row => ({ id: row.id })), error: null });
+            }
+            memoryOperations.push({ operation: 'select', columns, filters });
+            return query;
+          },
+          eq(key, value) { filters.push([key, value]); return query; },
+          order() { return query; },
+          limit() {
+            return Promise.resolve({ data: rows.filter(row => matches(row, filters)).slice(), error: null });
+          },
+          maybeSingle() {
+            const row = rows.find(item => matches(item, filters));
+            return Promise.resolve({ data: row ? { content: row.content } : null, error: null });
+          },
+          insert(payload) {
+            const row = {
+              id: 'cloud-' + (rows.length + 1),
+              user_id: payload.user_id,
+              memory_type: payload.memory_type,
+              content: payload.content,
+              created_at: '2026-11-07T00:00:00.000Z'
+            };
+            rows.push(row);
+            memoryOperations.push({ operation: 'insert', payload });
+            return Promise.resolve({ error: null });
+          },
+          delete() { operation = 'delete'; filters = []; return query; }
+        };
+        return query;
+      }
+      throw new Error('Unexpected Supabase table: ' + table);
+    }
+  };
+  const blockStart = app.indexOf('const CLARA_TRIP_STORAGE_KEY=');
+  const blockEnd = app.indexOf(String.fromCharCode(10) + 'function loadClaraVoices()', blockStart);
+  assert.notEqual(blockStart, -1, 'Local and cloud trip-plan persistence must exist');
+  assert.ok(blockEnd > blockStart, 'Trip-plan persistence block must be isolated for cloud tests');
+  const persistenceSource = app.slice(blockStart, blockEnd);
+  const sandbox = {
+    document: {
+      getElementById(id) { return id === 'savedTripPlans' ? select : controls[id] || null; },
+      createElement() { return { value: '', textContent: '' }; }
+    },
+    localStorage: {
+      getItem(key) { return storage.has(key) ? storage.get(key) : null; },
+      setItem(key, value) { storage.set(key, String(value)); }
+    },
+    window: { claraSupabase: supabase },
+    confirm: () => true,
+    toast() {},
+    makePlan() { controls.planResult.innerHTML = '<div>Aktueller Reiseplan</div>'; },
+    console: { warn() {}, error() {} }
+  };
+  vm.runInNewContext(
+    'let claraUser = { id: "user-1" };\\n' + persistenceSource +
+    '\\nglobalThis.__tripPlanApi = { saveClaraTripPlan, renderClaraTripPlans, loadClaraTripPlan, deleteClaraTripPlan };',
+    sandbox
+  );
+  return { api: sandbox.__tripPlanApi, storage, rows, controls, select, profileReads, memoryOperations };
+}
+
+test('saves a trip plan to the signed-in account only with explicit Memory consent', async () => {
+  const harness = createCloudHarness({ consent: true });
+  await harness.api.saveClaraTripPlan();
+
+  assert.equal(harness.rows.length, 1);
+  assert.equal(harness.rows[0].user_id, 'user-1');
+  assert.equal(harness.rows[0].memory_type, 'saved_trip_plan');
+  assert.equal(harness.rows[0].content.destination, 'Wien');
+  assert.equal(harness.rows[0].content.duration, '3 Tage');
+  assert.equal(JSON.parse(harness.storage.get('clara.travel.savedTrips.v1.user-1')).length, 1);
+  assert.match(harness.controls.planSaveStatus.textContent, /auf diesem Gerät und in deinem Clara-Konto gespeichert/);
+  assert.ok(harness.select.options.some(option => option.value === 'cloud:cloud-1'));
+});
+
+test('keeps a trip plan local and does not write cloud memories without consent', async () => {
+  const harness = createCloudHarness({ consent: false });
+  await harness.api.saveClaraTripPlan();
+
+  assert.equal(harness.rows.length, 0);
+  assert.equal(JSON.parse(harness.storage.get('clara.travel.savedTrips.v1.user-1')).length, 1);
+  assert.match(harness.controls.planSaveStatus.textContent, /Memory freigeben/);
+  assert.equal(harness.memoryOperations.some(item => item.operation === 'insert'), false);
+});
+
+test('loads a saved trip plan from the signed-in account', async () => {
+  const plan = {
+    id: 'trip-cloud-42',
+    destination: 'Budapest',
+    duration: '7 Tage',
+    interest: 'Kulinarik & Märkte',
+    pace: 'Entspannt',
+    mobility: 'Rollator',
+    savedAt: '2026-11-07T00:00:00.000Z'
+  };
+  const harness = createCloudHarness({
+    memories: [{ id: 'cloud-42', user_id: 'user-1', memory_type: 'saved_trip_plan', content: plan, created_at: plan.savedAt }],
+    selectedId: 'cloud:cloud-42'
+  });
+  await harness.api.loadClaraTripPlan();
+
+  assert.equal(harness.controls.destination.value, 'Budapest');
+  assert.equal(harness.controls.duration.value, '7 Tage');
+  assert.equal(harness.controls.interest.value, 'Kulinarik & Märkte');
+  assert.equal(harness.controls.pace.value, 'Entspannt');
+  assert.equal(harness.controls.mobility.value, 'Rollator');
+  assert.match(harness.controls.planSaveStatus.textContent, /wurde geladen/);
+});
+
+test('deletes a selected cloud trip plan using its user and memory-type filters', async () => {
+  const harness = createCloudHarness({
+    memories: [{
+      id: 'cloud-42',
+      user_id: 'user-1',
+      memory_type: 'saved_trip_plan',
+      content: { destination: 'Budapest', duration: '7 Tage' },
+      created_at: '2026-11-07T00:00:00.000Z'
+    }],
+    selectedId: 'cloud:cloud-42'
+  });
+  await harness.api.deleteClaraTripPlan();
+
+  assert.equal(harness.rows.length, 0);
+  const deletion = harness.memoryOperations.find(item => item.operation === 'delete');
+  assert.ok(deletion, 'Cloud plan deletion must execute');
+  assert.deepEqual(deletion.filters, [
+    ['id', 'cloud-42'],
+    ['user_id', 'user-1'],
+    ['memory_type', 'saved_trip_plan']
+  ]);
+  assert.match(harness.controls.planSaveStatus.textContent, /aus deinem Clara-Konto gelöscht/);
+});
