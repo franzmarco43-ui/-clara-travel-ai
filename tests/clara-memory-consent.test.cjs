@@ -264,3 +264,100 @@ test('clears stale form values when no consent record exists', async () => {
   assert.equal(harness.controls.memoryBudget.value, '');
   assert.match(harness.statuses.at(-1).message, /Zustimmung ist deaktiviert/);
 });
+
+
+const memoryContextStart = app.indexOf('async function getClaraMemoryContext(){');
+const memoryContextEnd = app.indexOf(String.fromCharCode(10) + 'function memoryAnswer', memoryContextStart);
+assert.notEqual(memoryContextStart, -1, 'Clara chat Memory context loader must exist');
+assert.ok(memoryContextEnd > memoryContextStart, 'Clara chat Memory context loader must be isolated for consent tests');
+const memoryContextSource = app.slice(memoryContextStart, memoryContextEnd).trim();
+
+function createMemoryContextHarness({ consent = false, profile = null, memories = [] } = {}) {
+  const calls = [];
+  const supabase = {
+    from(table) {
+      return {
+        select(columns) {
+          calls.push({ table, columns });
+          const query = {
+            eq(column, value) {
+              assert.equal(column, 'user_id');
+              assert.equal(value, 'test-user-1');
+              return query;
+            },
+            maybeSingle() {
+              if (table === 'clara_profiles' && columns === 'consent_memory') {
+                return Promise.resolve({ data: { consent_memory: consent }, error: null });
+              }
+              if (table === 'clara_profiles') {
+                return Promise.resolve({ data: profile, error: null });
+              }
+              throw new Error('Unexpected maybeSingle query: ' + table + ' / ' + columns);
+            },
+            order(column, options) {
+              assert.equal(table, 'clara_memories');
+              assert.equal(column, 'created_at');
+              assert.deepEqual(options, { ascending: false });
+              return query;
+            },
+            limit(value) {
+              assert.equal(table, 'clara_memories');
+              assert.equal(value, 30);
+              return Promise.resolve({ data: memories, error: null });
+            }
+          };
+          return query;
+        }
+      };
+    }
+  };
+  const load = new Function(
+    'window', 'claraUser',
+    'return (' + memoryContextSource + ');'
+  )(
+    { claraSupabase: supabase },
+    { id: 'test-user-1' }
+  );
+  return { load, calls };
+}
+
+test('Clara chat does not request personal profile fields or memories without Memory consent', async () => {
+  const harness = createMemoryContextHarness({
+    consent: false,
+    profile: {
+      display_name: 'Privater Name',
+      interests: ['Privates Interesse'],
+      travel_pace: 'Entspannt',
+      budget_level: 'Komfort'
+    },
+    memories: [{ memory_type: 'saved_trip_plan', content: { destination: 'Wien' } }]
+  });
+
+  const result = await harness.load();
+
+  assert.deepEqual(harness.calls, [
+    { table: 'clara_profiles', columns: 'consent_memory' }
+  ]);
+  assert.deepEqual(result, { profile: null, memories: [], consent: false });
+});
+
+test('Clara chat reads profile fields and memories only after explicit Memory consent', async () => {
+  const profile = {
+    display_name: 'Reisegast',
+    interests: ['Kultur'],
+    travel_pace: 'Ausgewogen',
+    budget_level: 'Mittel',
+    preferences: {}
+  };
+  const memories = [{ memory_type: 'saved_trip_plan', content: { destination: 'Wien' } }];
+  const harness = createMemoryContextHarness({ consent: true, profile, memories });
+
+  const result = await harness.load();
+
+  assert.deepEqual(harness.calls, [
+    { table: 'clara_profiles', columns: 'consent_memory' },
+    { table: 'clara_profiles', columns: 'display_name,interests,travel_pace,budget_level,preferences' },
+    { table: 'clara_memories', columns: 'memory_type,content,created_at' }
+  ]);
+  assert.deepEqual(result, { profile, memories, consent: true });
+});
