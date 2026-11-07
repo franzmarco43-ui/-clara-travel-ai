@@ -38,6 +38,22 @@ assert.ok(destinations.records.every(item => item.name && item.country && Array.
 assert.ok(locks.records.every(item => item.name && Number.isFinite(item.latitude) && Number.isFinite(item.longitude) && item.latitude >= -90 && item.latitude <= 90 && item.longitude >= -180 && item.longitude <= 180), 'Every lock needs valid geographic coordinates');
 assert.equal(new Set(locks.records.map(item => item.name)).size, 18, 'Lock names must be unique');
 assert.deepEqual(publicLocks, locks, 'Public lock data and the chat knowledge-base copy must stay identical');
+const validatorStart = app.indexOf('function validateDanubeLockData(data)');
+const validatorEnd = app.indexOf('\\nasync function loadDanubeLocks()', validatorStart);
+assert.notEqual(validatorStart, -1, 'Runtime lock-data validator must exist');
+assert.ok(validatorEnd > validatorStart, 'Runtime lock-data validator must be isolated for tests');
+const validateDanubeLockData = vm.runInNewContext('(' + app.slice(validatorStart, validatorEnd).trim() + ')');
+assert.equal(validateDanubeLockData(locks).length, 18, 'Runtime validator must accept the verified 18-lock dataset');
+const shortLockData = structuredClone(locks);
+shortLockData.records.pop();
+shortLockData.count = 17;
+assert.throws(() => validateDanubeLockData(shortLockData), /genau 18/, 'Runtime validator must reject incomplete lock data');
+const duplicateLockData = structuredClone(locks);
+duplicateLockData.records[1].name = duplicateLockData.records[0].name;
+assert.throws(() => validateDanubeLockData(duplicateLockData), /doppelte Schleusennamen/, 'Runtime validator must reject duplicate lock names');
+const invalidLockData = structuredClone(locks);
+invalidLockData.records[0].latitude = 91;
+assert.throws(() => validateDanubeLockData(invalidLockData), /ungültige geografische Koordinaten/, 'Runtime validator must reject out-of-range coordinates');
 
 const placesStart = app.indexOf('const places=[');
 assert.notEqual(placesStart, -1, 'App destination list must exist');
