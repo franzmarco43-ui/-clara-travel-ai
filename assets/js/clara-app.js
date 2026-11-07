@@ -233,6 +233,20 @@ let lockLoading=false;
 function escapeLockHtml(value){
   return String(value===undefined||value===null||value===""?"—":value).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
 }
+function validateDanubeLockData(data){
+  const records=data?.records;
+  if(!Array.isArray(records)||records.length!==18||data.count!==18){
+    throw new Error('Die Schleusendatenbank muss genau 18 Datensätze enthalten.');
+  }
+  const names=records.map(lock=>typeof lock?.name==='string'?lock.name.trim():'');
+  if(names.some(name=>!name)||new Set(names).size!==18){
+    throw new Error('Die Schleusendatenbank enthält fehlende oder doppelte Schleusennamen.');
+  }
+  if(records.some(lock=>!Number.isFinite(lock.latitude)||!Number.isFinite(lock.longitude)||lock.latitude < -90||lock.latitude > 90||lock.longitude < -180||lock.longitude > 180)){
+    throw new Error('Mindestens eine Schleuse hat ungültige geografische Koordinaten.');
+  }
+  return records;
+}
 async function loadDanubeLocks(){
   const status=document.getElementById('lockStatus');
   if(lockLoading)return;
@@ -243,8 +257,7 @@ async function loadDanubeLocks(){
     const response=await fetch('/assets/data/danube-locks.json',{cache:'no-store'});
     if(!response.ok)throw new Error('Datendatei konnte nicht geladen werden ('+response.status+').');
     const data=await response.json();
-    if(!Array.isArray(data.records)||!data.records.length)throw new Error('Die Schleusendatenbank ist leer.');
-    danubeLockRecords=data.records;
+    danubeLockRecords=validateDanubeLockData(data);
     lockDataLoaded=true;
     if(status)status.textContent=danubeLockRecords.length+' Schleusen · technische Referenzdaten';
     renderLockList();
