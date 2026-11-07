@@ -12,6 +12,7 @@ const css = read('assets/css/clara.css');
 const manifest = JSON.parse(read('manifest.webmanifest'));
 const destinations = JSON.parse(read('netlify/functions/data/danube-destinations.json'));
 const locks = JSON.parse(read('netlify/functions/data/danube-locks.json'));
+const publicLocks = JSON.parse(read('assets/data/danube-locks.json'));
 
 for (const path of [
   'assets/js/clara-app.js',
@@ -34,8 +35,9 @@ assert.equal(destinations.records.length, 13, 'Destination knowledge base must c
 assert.equal(locks.records.length, 18, 'Lock knowledge base must contain 18 records');
 assert.equal(locks.count, 18, 'Declared lock count must match');
 assert.ok(destinations.records.every(item => item.name && item.country && Array.isArray(item.sources) && item.sources.length), 'Every destination needs a name, country, and sources');
-assert.ok(locks.records.every(item => item.name && Number.isFinite(item.latitude) && Number.isFinite(item.longitude)), 'Every lock needs valid coordinates');
+assert.ok(locks.records.every(item => item.name && Number.isFinite(item.latitude) && Number.isFinite(item.longitude) && item.latitude >= -90 && item.latitude <= 90 && item.longitude >= -180 && item.longitude <= 180), 'Every lock needs valid geographic coordinates');
 assert.equal(new Set(locks.records.map(item => item.name)).size, 18, 'Lock names must be unique');
+assert.deepEqual(publicLocks, locks, 'Public lock data and the chat knowledge-base copy must stay identical');
 
 const placesStart = app.indexOf('const places=[');
 assert.notEqual(placesStart, -1, 'App destination list must exist');
@@ -43,6 +45,11 @@ const placesEnd = app.indexOf('];', placesStart);
 assert.ok(placesEnd > placesStart, 'App destination list must close');
 const placeBlock = app.slice(placesStart, placesEnd);
 const appPlaces = placeBlock.split("name:'").slice(1).map(part => part.split("'")[0]);
+const appPlaceRecords = vm.runInNewContext(app.slice(app.indexOf('=', placesStart) + 1, placesEnd + 1));
+assert.equal(appPlaceRecords.length, 13, 'App must define all 13 destination records');
+assert.ok(appPlaceRecords.every(item => Number.isFinite(item.lat) && Number.isFinite(item.lon) && item.lat >= -90 && item.lat <= 90 && item.lon >= -180 && item.lon <= 180), 'Every destination must have valid weather/map coordinates');
+assert.equal(appPlaceRecords.filter(item => item.routeType === 'river').length, 12, 'Exactly 12 destinations must belong to the Danube route');
+assert.equal(appPlaceRecords.filter(item => item.routeType === 'excursion').length, 1, 'Puszta must remain a separate land excursion');
 assert.equal(appPlaces.length, 13, 'App must define all 13 destinations');
 assert.equal(new Set(appPlaces).size, 13, 'App destination names must be unique');
 
