@@ -142,3 +142,125 @@ test('writes a travel-profile memory only after explicit consent', async () => {
   assert.equal(harness.statuses.at(-1).id, 'memoryStatus');
   assert.match(harness.statuses.at(-1).message, /mit deiner Zustimmung gespeichert/);
 });
+
+
+const loadStart = app.indexOf('async function loadClaraProfile(){');
+const loadEnd = app.indexOf(String.fromCharCode(10) + 'async function deleteClaraMemory()', loadStart);
+assert.notEqual(loadStart, -1, 'The Clara profile load handler must exist');
+assert.ok(loadEnd > loadStart, 'The profile load handler must be isolated for consent tests');
+const loadHandlerSource = app.slice(loadStart, loadEnd).trim();
+
+function createLoadHarness({ consent = false, profile = null, hasProfile = true } = {}) {
+  const calls = [];
+  const statuses = [];
+  const controls = {
+    memoryConsent: { checked: true },
+    memoryName: { value: 'Alter Name' },
+    memoryInterests: { value: 'Alte Interessen' },
+    memoryPace: { value: 'Viel entdecken' },
+    memoryBudget: { value: 'Luxus' }
+  };
+  const supabase = {
+    from(table) {
+      assert.equal(table, 'clara_profiles');
+      return {
+        select(columns) {
+          calls.push({ table, columns });
+          const query = {
+            eq(column, value) {
+              assert.equal(column, 'user_id');
+              assert.equal(value, 'test-user-1');
+              return query;
+            },
+            maybeSingle() {
+              if (columns === 'consent_memory') {
+                return Promise.resolve({
+                  data: hasProfile ? { consent_memory: consent } : null,
+                  error: null
+                });
+              }
+              return Promise.resolve({ data: profile, error: null });
+            }
+          };
+          return query;
+        }
+      };
+    }
+  };
+  const load = new Function(
+    'window', 'claraUser', 'document', 'memoryStatus',
+    'return (' + loadHandlerSource + ');'
+  )(
+    { claraSupabase: supabase },
+    { id: 'test-user-1' },
+    { getElementById: id => controls[id] || null },
+    (id, message, isError) => statuses.push({ id, message, isError: !!isError })
+  );
+  return { load, calls, statuses, controls };
+}
+
+test('does not select or expose personal profile fields after Memory consent is withdrawn', async () => {
+  const harness = createLoadHarness({
+    consent: false,
+    profile: {
+      display_name: 'Privater Name',
+      interests: ['Privates Interesse'],
+      travel_pace: 'Entspannt',
+      budget_level: 'Komfort'
+    }
+  });
+
+  await harness.load();
+
+  assert.deepEqual(harness.calls, [
+    { table: 'clara_profiles', columns: 'consent_memory' }
+  ]);
+  assert.equal(harness.controls.memoryConsent.checked, false);
+  assert.equal(harness.controls.memoryName.value, '');
+  assert.equal(harness.controls.memoryInterests.value, '');
+  assert.equal(harness.controls.memoryPace.value, '');
+  assert.equal(harness.controls.memoryBudget.value, '');
+  assert.match(harness.statuses.at(-1).message, /Zustimmung ist deaktiviert/);
+  assert.match(harness.statuses.at(-1).message, /werden nicht geladen/);
+});
+
+test('loads personal profile fields only after explicit Memory consent is confirmed', async () => {
+  const harness = createLoadHarness({
+    consent: true,
+    profile: {
+      display_name: 'Reisegast',
+      interests: ['Kultur', 'Natur'],
+      travel_pace: 'Ausgewogen',
+      budget_level: 'Mittel'
+    }
+  });
+
+  await harness.load();
+
+  assert.deepEqual(harness.calls, [
+    { table: 'clara_profiles', columns: 'consent_memory' },
+    { table: 'clara_profiles', columns: 'display_name,interests,travel_pace,budget_level' }
+  ]);
+  assert.equal(harness.controls.memoryConsent.checked, true);
+  assert.equal(harness.controls.memoryName.value, 'Reisegast');
+  assert.equal(harness.controls.memoryInterests.value, 'Kultur, Natur');
+  assert.equal(harness.controls.memoryPace.value, 'Ausgewogen');
+  assert.equal(harness.controls.memoryBudget.value, 'Mittel');
+  assert.match(harness.statuses.at(-1).message, /mit aktiver Zustimmung geladen/);
+});
+
+test('clears stale form values when no consent record exists', async () => {
+  const harness = createLoadHarness({ hasProfile: false });
+
+  await harness.load();
+
+  assert.deepEqual(harness.calls, [
+    { table: 'clara_profiles', columns: 'consent_memory' }
+  ]);
+  assert.equal(harness.controls.memoryConsent.checked, false);
+  assert.equal(harness.controls.memoryName.value, '');
+  assert.equal(harness.controls.memoryInterests.value, '');
+  assert.equal(harness.controls.memoryPace.value, '');
+  assert.equal(harness.controls.memoryBudget.value, '');
+  assert.match(harness.statuses.at(-1).message, /Zustimmung ist deaktiviert/);
+});
