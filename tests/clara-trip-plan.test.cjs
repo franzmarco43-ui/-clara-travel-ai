@@ -123,7 +123,7 @@ test('supports local trip-plan save, load, and delete without a signed-in accoun
     localStorage: localStorageMock,
     window: {},
     confirm: () => true,
-    toast() {},
+    toast(message) { toastMessages.push(message); },
     makePlan() {},
     console: { warn() {}, error() {} }
   };
@@ -161,6 +161,7 @@ function createCloudHarness({ consent = true, selectedId = '', memories = [] } =
   const rows = memories.map(row => ({ ...row }));
   const profileReads = [];
   const memoryOperations = [];
+  const toastMessages = [];
   const controls = {
     destination: { value: 'Wien' },
     duration: { value: '3 Tage' },
@@ -262,7 +263,7 @@ function createCloudHarness({ consent = true, selectedId = '', memories = [] } =
     String.fromCharCode(10) + 'globalThis.__tripPlanApi = { saveClaraTripPlan, renderClaraTripPlans, loadClaraTripPlan, deleteClaraTripPlan };',
     sandbox
   );
-  return { api: sandbox.__tripPlanApi, storage, rows, controls, select, profileReads, memoryOperations };
+  return { api: sandbox.__tripPlanApi, storage, rows, controls, select, profileReads, memoryOperations, toastMessages };
 }
 
 test('saves a trip plan to the signed-in account only with explicit Memory consent', async () => {
@@ -335,4 +336,27 @@ test('deletes a selected cloud trip plan using its user and memory-type filters'
     ['memory_type', 'saved_trip_plan']
   ]);
   assert.match(harness.controls.planSaveStatus.textContent, /aus deinem Clara-Konto gelöscht/);
+});
+
+
+test('does not load cloud trip plans after Memory consent is withdrawn', async () => {
+  const harness = createCloudHarness({
+    consent: false,
+    memories: [{
+      id: 'cloud-42',
+      user_id: 'user-1',
+      memory_type: 'saved_trip_plan',
+      content: { destination: 'Budapest', duration: '7 Tage' },
+      created_at: '2026-11-07T00:00:00.000Z'
+    }],
+    selectedId: 'cloud:cloud-42'
+  });
+
+  await harness.api.loadClaraTripPlan();
+
+  assert.equal(harness.profileReads.length, 1, 'The consent flag must be checked first');
+  assert.equal(harness.memoryOperations.length, 0, 'Cloud memories must not be read after consent is withdrawn');
+  assert.equal(harness.controls.destination.value, 'Wien', 'The planner must remain unchanged');
+  assert.equal(harness.controls.duration.value, '3 Tage');
+  assert.match(harness.toastMessages.at(-1), /Memory ist deaktiviert/);
 });
