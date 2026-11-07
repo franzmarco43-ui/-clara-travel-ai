@@ -99,7 +99,36 @@ assert.ok(/function updateCityClocks\s*\(/.test(app), 'Local clocks must be upda
 assert.ok(/async function loadCityWeather\s*\(/.test(app), 'Current weather must be loaded asynchronously');
 
 assert.match(html, /<html lang="de">/, 'German must be the initial document language');
-assert.ok(app.includes('clara.language-default-de'), 'The app must migrate first-visit language to German');
+const htmlLanguageMigration = html.match(/var migration=["']([^"']+)["']/)?.[1];
+const appLanguageMigration = app.match(/const defaultLanguageMigration=["']([^"']+)["']/)?.[1];
+assert.ok(htmlLanguageMigration && appLanguageMigration, 'Homepage and app must both declare the German-default migration');
+assert.equal(appLanguageMigration, htmlLanguageMigration, 'Homepage and app must share one language migration key');
+const claraLangStart = app.indexOf('function claraLang(){');
+const claraLangEnd = app.indexOf('\nfunction claraCardText', claraLangStart);
+assert.notEqual(claraLangStart, -1, 'Clara language preference resolver must exist');
+assert.ok(claraLangEnd > claraLangStart, 'Clara language resolver must be isolated for preference tests');
+const claraLangSource = app.slice(claraLangStart, claraLangEnd).trim();
+function runLanguagePreference(initialValues) {
+  const values = new Map(Object.entries(initialValues));
+  const storage = {
+    getItem(key) { return values.has(key) ? values.get(key) : null; },
+    setItem(key, value) { values.set(key, String(value)); }
+  };
+  const documentMock = { documentElement: { lang: 'de' }, querySelectorAll: () => [] };
+  const resolveLanguage = vm.runInNewContext('(' + claraLangSource + ')', {
+    localStorage: storage,
+    document: documentMock
+  });
+  return { language: resolveLanguage(), values, documentLanguage: documentMock.documentElement.lang };
+}
+assert.equal(runLanguagePreference({}).language, 'de', 'A first visit must default to German');
+assert.equal(runLanguagePreference({ 'clara.language': 'fr' }).language, 'de', 'A legacy French default must migrate to German once');
+const explicitFrench = runLanguagePreference({
+  [htmlLanguageMigration]: '1',
+  'clara.language': 'fr'
+});
+assert.equal(explicitFrench.language, 'fr', 'An explicit language choice after migration must remain persistent');
+assert.equal(explicitFrench.documentLanguage, 'fr', 'The document language must follow the saved explicit choice');
 assert.ok(html.includes('assets/clara-welcome.mp4'), 'The welcome video source must be wired into the homepage');
 assert.ok(existsSync('assets/clara-welcome.mp4'), 'The configured welcome video file must exist');
 assert.doesNotMatch(html + app, /(?:SUPABASE_SERVICE_ROLE_KEY|service_role)\s*[:=]\s*['"][^'"]{8,}['"]/i, 'Browser code must never contain a Supabase service-role credential');
