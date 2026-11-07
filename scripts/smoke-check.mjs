@@ -189,6 +189,20 @@ const tripConsentRead = cloudTripLoadSource.indexOf(".select('consent_memory')")
 const tripMemoryRead = cloudTripLoadSource.indexOf("from('clara_memories')");
 assert.ok(tripConsentRead >= 0 && tripMemoryRead > tripConsentRead, 'Cloud trip-plan loading must check Memory consent before reading saved memories');
 assert.ok(cloudTripLoadSource.includes('consent.data?.consent_memory!==true'), 'Cloud trip-plan loading must stop when Memory consent is not active');
+ 
+const memoryContextStart = app.indexOf('async function getClaraMemoryContext(){');
+const memoryContextEnd = app.indexOf(String.fromCharCode(10) + 'function memoryAnswer', memoryContextStart);
+assert.notEqual(memoryContextStart, -1, 'Clara chat Memory context loader must exist');
+assert.ok(memoryContextEnd > memoryContextStart, 'Clara chat Memory context loader must be isolated for consent checks');
+const memoryContextSource = app.slice(memoryContextStart, memoryContextEnd);
+const chatConsentRead = memoryContextSource.indexOf(".select('consent_memory')");
+const chatProfileRead = memoryContextSource.indexOf(".select('display_name,interests,travel_pace,budget_level,preferences')");
+const chatMemoryRead = memoryContextSource.indexOf("from('clara_memories')");
+assert.ok(chatConsentRead >= 0, 'Clara chat must read only the consent flag first');
+assert.ok(chatProfileRead > chatConsentRead, 'Clara chat must read personal profile fields only after consent');
+assert.ok(chatMemoryRead > chatProfileRead, 'Clara chat must read saved memories only after consent and profile checks');
+assert.doesNotMatch(memoryContextSource, /select\('display_name,interests,travel_pace,budget_level,preferences,consent_memory'\)/, 'Clara chat must not combine personal profile fields with the initial consent read');
+
 
 assert.ok(html.includes('assets/clara-welcome.mp4'), 'The welcome video source must be wired into the homepage');
 assert.ok(existsSync('assets/clara-welcome.mp4'), 'The configured welcome video file must exist');
