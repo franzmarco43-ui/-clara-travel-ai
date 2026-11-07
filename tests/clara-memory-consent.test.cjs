@@ -82,7 +82,7 @@ test('writes a travel-profile memory only after explicit consent', async () => {
   const harness = createHarness(true);
   await harness.save();
 
-  assert.deepEqual(harness.calls, ['clara_profiles', 'clara_memories']);
+  assert.deepEqual(harness.calls, ['clara_profiles', 'clara_memories', 'clara_memories']);
   assert.equal(harness.profilePayloads[0].consent_memory, true);
   assert.equal(harness.insertedMemories.length, 1);
   assert.equal(harness.insertedMemories[0].user_id, 'test-user-1');
