@@ -123,7 +123,7 @@ test('supports local trip-plan save, load, and delete without a signed-in accoun
     localStorage: localStorageMock,
     window: {},
     confirm: () => true,
-    toast(message) { toastMessages.push(message); },
+    toast() {},
     makePlan() {},
     console: { warn() {}, error() {} }
   };
@@ -254,7 +254,7 @@ function createCloudHarness({ consent = true, selectedId = '', memories = [] } =
     },
     window: { claraSupabase: supabase },
     confirm: () => true,
-    toast() {},
+    toast(message) { toastMessages.push(message); },
     makePlan() { controls.planResult.innerHTML = '<div>Aktueller Reiseplan</div>'; },
     console: { warn() {}, error() {} }
   };
