@@ -1422,29 +1422,43 @@ async function signOutClara(){if(window.claraSupabase)await window.claraSupabase
 async function saveClaraProfile(){
   if(!window.claraSupabase||!claraUser){memoryStatus('memoryStatus','Bitte zuerst Supabase verbinden und anmelden.',true);return;}
   const consent=document.getElementById('memoryConsent').checked;
-  const payload={user_id:claraUser.id,display_name:document.getElementById('memoryName').value.trim(),interests:document.getElementById('memoryInterests').value.split(',').map(x=>x.trim()).filter(Boolean),travel_pace:document.getElementById('memoryPace').value,budget_level:document.getElementById('memoryBudget').value,preferences:{source:'Clara Travel AI MVP 0.2'},consent_memory:consent,updated_at:new Date().toISOString()};
+  const updatedAt=new Date().toISOString();
+
+  // The checkbox is an explicit consent boundary: without consent, persist
+  // only the withdrawal state. Do not write new personal preference fields.
+  if(!consent){
+    const existing=await window.claraSupabase.from('clara_profiles').select('user_id')
+      .eq('user_id',claraUser.id).maybeSingle();
+    if(existing.error){memoryStatus('memoryStatus','Die Zustimmung konnte nicht aktualisiert werden: '+existing.error.message,true);return;}
+    const result=existing.data?.user_id
+      ? await window.claraSupabase.from('clara_profiles').update({consent_memory:false,updated_at:updatedAt}).eq('user_id',claraUser.id)
+      : await window.claraSupabase.from('clara_profiles').insert({user_id:claraUser.id,consent_memory:false,updated_at:updatedAt});
+    if(result.error){memoryStatus('memoryStatus','Die Zustimmung konnte nicht gespeichert werden: '+result.error.message,true);return;}
+    memoryStatus('memoryStatus','Deine Memory-Zustimmung ist deaktiviert. Neue Reisevorlieben werden nicht gespeichert oder für persönliche Empfehlungen geladen. Bereits gespeicherte Angaben bleiben bis zur Nutzung der Löschfunktion in deinem Konto.');
+    await renderClaraTripPlans();
+    return;
+  }
+
+  const payload={user_id:claraUser.id,display_name:document.getElementById('memoryName').value.trim(),interests:document.getElementById('memoryInterests').value.split(',').map(x=>x.trim()).filter(Boolean),travel_pace:document.getElementById('memoryPace').value,budget_level:document.getElementById('memoryBudget').value,preferences:{source:'Clara Travel AI MVP 0.2'},consent_memory:true,updated_at:updatedAt};
   const {error}=await window.claraSupabase.from('clara_profiles').upsert(payload,{onConflict:'user_id'});
   if(error){memoryStatus('memoryStatus','Speichern fehlgeschlagen: '+error.message,true);return;}
-  if(consent){
-    const memoryContent={display_name:payload.display_name,interests:payload.interests,travel_pace:payload.travel_pace,budget_level:payload.budget_level};
-    const existing=await window.claraSupabase.from('clara_memories').select('id')
-      .eq('user_id',claraUser.id).eq('memory_type','travel_profile')
-      .order('created_at',{ascending:false}).limit(1).maybeSingle();
-    if(existing.error){memoryStatus('memoryStatus','Profil gespeichert, aber die vorhandene Erinnerung konnte nicht geprüft werden: '+existing.error.message,true);await renderClaraTripPlans();return;}
-    let memoryError=null;
-    if(existing.data?.id){
-      const updated=await window.claraSupabase.from('clara_memories').update({content:memoryContent})
-        .eq('id',existing.data.id).eq('user_id',claraUser.id).eq('memory_type','travel_profile').select('id');
-      memoryError=updated.error||(!updated.data?.length?new Error('Die vorhandene Erinnerung wurde nicht aktualisiert.'):null);
-    }else{
-      const inserted=await window.claraSupabase.from('clara_memories').insert({user_id:claraUser.id,memory_type:'travel_profile',content:memoryContent});
-      memoryError=inserted.error;
-    }
-    if(memoryError){memoryStatus('memoryStatus','Profil gespeichert, aber die Erinnerungsdaten konnten nicht aktualisiert werden: '+memoryError.message,true);await renderClaraTripPlans();return;}
-    memoryStatus('memoryStatus','Dein Profil und deine Reisevorlieben wurden gespeichert.');
+
+  const memoryContent={display_name:payload.display_name,interests:payload.interests,travel_pace:payload.travel_pace,budget_level:payload.budget_level};
+  const existing=await window.claraSupabase.from('clara_memories').select('id')
+    .eq('user_id',claraUser.id).eq('memory_type','travel_profile')
+    .order('created_at',{ascending:false}).limit(1).maybeSingle();
+  if(existing.error){memoryStatus('memoryStatus','Profil gespeichert, aber die vorhandene Erinnerung konnte nicht geprüft werden: '+existing.error.message,true);await renderClaraTripPlans();return;}
+  let memoryError=null;
+  if(existing.data?.id){
+    const updated=await window.claraSupabase.from('clara_memories').update({content:memoryContent})
+      .eq('id',existing.data.id).eq('user_id',claraUser.id).eq('memory_type','travel_profile').select('id');
+    memoryError=updated.error||(!updated.data?.length?new Error('Die vorhandene Erinnerung wurde nicht aktualisiert.'):null);
   }else{
-    memoryStatus('memoryStatus','Profil gespeichert. Memory-Zustimmung ist aus; Clara verwendet keine gespeicherten Erinnerungen. Bereits gespeicherte Einträge bleiben bis zur manuellen Löschung in deinem Konto.');
+    const inserted=await window.claraSupabase.from('clara_memories').insert({user_id:claraUser.id,memory_type:'travel_profile',content:memoryContent});
+    memoryError=inserted.error;
   }
+  if(memoryError){memoryStatus('memoryStatus','Profil gespeichert, aber die Erinnerungsdaten konnten nicht aktualisiert werden: '+memoryError.message,true);await renderClaraTripPlans();return;}
+  memoryStatus('memoryStatus','Dein Profil und deine Reisevorlieben wurden mit deiner Zustimmung gespeichert.');
   await renderClaraTripPlans();
 }
 async function loadClaraProfile(){if(!window.claraSupabase||!claraUser){memoryStatus('memoryStatus','Bitte zuerst anmelden.',true);return;}const {data,error}=await window.claraSupabase.from('clara_profiles').select('*').eq('user_id',claraUser.id).maybeSingle();if(error){memoryStatus('memoryStatus','Laden fehlgeschlagen: '+error.message,true);return;}if(!data){memoryStatus('memoryStatus','Noch kein Profil gespeichert.');return;}document.getElementById('memoryName').value=data.display_name||'';document.getElementById('memoryInterests').value=(data.interests||[]).join(', ');document.getElementById('memoryPace').value=data.travel_pace||'';document.getElementById('memoryBudget').value=data.budget_level||'';document.getElementById('memoryConsent').checked=!!data.consent_memory;memoryStatus('memoryStatus','Deine gespeicherten Angaben wurden geladen.');}
